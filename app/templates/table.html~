@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XsecDB Search Results</title>
+</head>  
+<style>
+
+html, body{
+
+height:100%;
+width:100%;
+margin:0;
+padding:0;
+background-color:#c0c0c0;
+color:#0c5449;
+overflow-x:scroll;
+}
+
+table{
+background-color:#c0c0c0;
+font-family: "Times New Roman", Times, serif;
+width:100%;
+border-width: 4px;
+border-style: groove;
+overflow: auto;
+}
+
+
+th, td{
+font-family: "Times New Roman", Times, serif;
+text-align: center;
+color:#000000;
+padding: 10px;
+
+}
+p{
+color: #000000;
+}
+a:link{
+color:blue;
+background-color: transparent;
+text-decoration:underline;
+}
+a:visited{
+color: #0c5449;
+background-color: transparent;
+text-decoration:none;
+}
+a:hover{
+color: #ffcc33;
+background-color:transparent;
+text-decoration:line-trhough;
+}
+a:active{
+color:red;
+background-color: transparent;
+text-decoration:overline;
+}
+</style>
+
+</head>
+
+  <body>
+    <h1 style="color:blue">Welcome to the Cross Section DB Tool!</h1>
+    <a href="/">Home--Go to home page</a>
+    <br>
+    <a href="/test">DBQuery--Query for data</a>
+    <br>
+    <a href="/insert">Insert--Insert data</a>
+    <br>
+    <a href="/update">Update--Update a data entry</a>
+    
+      <h2>These are the results!</h2>
+
+      <div style="overflow-x:auto;">
+
+	<table border = 1>
+
+	    <th>Process Name</th>
+	    <th>Cross Section[pb]</th>
+	    <th>Total Uncertainty[pb]</th>
+	    <th>Other Uncertainty</th>
+	    <th>Cuts</th>
+	    <th>Reweighting</th>
+	    <th>k-Factor</th>
+	    <th>Shower Tool</th>
+	    <th>Matrix Generator</th>
+	    <th>Accucracy</th>
+	    <th>Contact Person</th>
+	    <th>DAS(Primary Dataset Name</th>
+	    <th>McM prePID</th>
+	    <th>References</th>
+	    <th>Interval of Validity</th>
+	    <th>Object_ID</th>
+	  {% for key in result%}
+
+	    <tr>
+	      <td>{{ key["process_name"] }}</td>
+	      <td>{{ key["cross_section"] }}</td>
+	      <td>{{ key["total_uncertainty"] }}</td>
+	      <td>{{ key["other_uncertainty"] }}</td>
+	      <td>{{ key["cuts"] }}</td>
+	      <td>{{ key["reweighting"] }}</td>
+	      <td>{{ key["kFactor"] }}</td>
+	      <td>{{ key["shower"] }}</td>
+	      <td>{{ key["matrix_generator"] }}</td>
+	      <td>{{ key["accuracy"] }}</td>
+	      <td>{{ key["contact"] }}</td>
+	      <td>{{ key["DAS"] }}</td>
+	      <td>{{ key["MCM"] }}</td>
+	      <td>{{ key["refs"] }}</td>
+	      <td>{{ key["valid"] }}</td>
+	      <td>{{ key["_id"] }}</td>
+
+	    
+	    </tr>
+	    
+	    {% endfor %}
+
+	</table>
+      </div>
+
+  </body>
+</html>

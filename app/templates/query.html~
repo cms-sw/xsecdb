@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XsecDB Query</title>
+
+</head>
+<style>
+body{
+background-color: #c0c0c0;
+color: blue;
+}
+table{
+background-color: #c0c0c0;
+color: #000000;
+width: 100%;
+border-width: 4px;
+border-style: groove;
+overflow: auto;
+}
+th,td{
+font-family: "Times New Roman", Times, serif;
+text-align: center;
+color: #000000;
+padding: 10px;
+}
+p{
+color:#000000;
+}
+a:link{
+color: blue;
+background-color: transparent;
+text-decoration: underline;
+}
+a:visited{
+color: #0c5449;
+background-color: transparent;
+text-decoration: none;
+}
+a:hover{
+color: #ffcc33;
+background-color: transparent;
+text-decoration: through-line;
+}
+a:active{
+color: red;
+background-color: transparent;
+text-decoration: overline;
+}
+</style>
+<body>
+    <h2 style= "text-align: center; color: blue">Query Form</h2>
+<a href="/">Home--Go to the home page</a>
+<br>
+<a href="/test">DB Query--Query for data</a>
+<br>
+<a href="/insert">Insert--Insert data</a>
+<br>
+<a href="/update">Update--Update a data entry</a>
+<br>
+<br>
+<p> Welcome to the Query page! To query a set of data against the database select a search term from the dropdown menu. If any of the search terms in the dropdown are unclear, a brief description of them can be found in the DB Tool User's Guide under the Insert section. After selecting a search term from the dropdown input the value into the Search Value field. The search value need only be a contiguous substring of the search term. For example, to query on the process name "DYJetsToLL" one could enter "jets", "dy", "toll", or any other contiguous substring. The query operation is NOT case sensitive. Do not use explicit wild cards such as "*" or "$", these are not supported. Thus one should NOT try to perform any query of the type: "*jets*ll". 
+<br>
+    {% for message in form.value.errors %}
+       <div>{{ message }} </div>
+    {% endfor %}
+
+    <form action = "/test" method = post>
+      <fieldset>
+	<legend style= color:dark-blue>Query Form</legend>
+	{{ form.hidden_tag() }}
+
+	<div style= font-size:20px; font-weight:bold; margin-left:150px; font-family:"New Times Roman", Times, serif;>
+	  <table border = 1; style= font-family:"New Times Roman", Times, Sans-Serif;>
+	 <th> {{ form.key.label }}</th>
+	 <th>{{ form.value.label }}</th>
+	 <tr>
+	   <td> {{ form.key }}</td>
+	   <td> {{ form.value }}</td>
+	 <tr> 
+	  <td>{{ form.submit }}</td>
+
+	</div>
+      </fieldset>
+    </form>
+</body>
+</html>	  

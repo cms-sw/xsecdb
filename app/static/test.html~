@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Example - example-static-select-production</title>
+
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+<script src="static/query.js"></script>
+
+
+
+</head>
+<body ng-app="staticSelect">
+  <div ngcontroller="ExampleController">
+  <form name="myForm">
+    <label for="singleSelect">Single select: </label><br>
+    <select name="singleSelect" ng-model="input_data.selected_value" ng-options="item.key for item in keys.searchKeys">
+    </select><br>
+    Selected:{{input_data.selected_value}}
+  </form>
+  </div>
+</body>
+</html>
+  

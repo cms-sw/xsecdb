@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+
+  <body>
+    <form action="/insert" method="POST">
+       <input type="text" name="process_name" />
+       <input type="text" name="cross_section" />
+       <input type="text" name="total_uncertainty" />
+       <input type="text" name="other_uncertainty" />
+       <input type="text" name="cuts" />
+       <input type="text" name="reweighting" />
+       <input type="text" name="kFactor" />
+       <input type="text" name="shower" />
+       <input type="text" name="matrix_generator" />
+       <input type="text" name="contact" />
+       <input type="text" name="DAS" />
+       <input type="text" name="MCM" />
+       <input type="text" name="refs" />
+       <input type="text" name="valid" />
+       <input type="submit" name="submit" />
+     </form>
+ </body>
+</html>

@@ -1,0 +1,14 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - XsecDBTool</title>
+    {% else %}
+    <title>Welcome to XscDBTool</title>
+    {% endif %}
+  </head>
+  <body>
+    <div>XsecTool: <a href="/hello">Hello</a></div>
+    <hr>
+    {% block content %}{% endblock %}
+  </body>
+</html>

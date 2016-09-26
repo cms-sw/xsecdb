@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>XsecDB_Home</title>
+<!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
+</head>
+<style>
+body{
+   background-color: #c0c0c0;
+   color: blue;
+}
+p{
+color:#000000;
+}
+a:link{
+color:blue;
+background-color: transparent;
+text-decoration:underline;
+}
+a:visited{
+color: #0c5449;
+background-color: transparent;
+text-decoration:none;
+}
+a:hover{
+color: #ffcc33;
+background-color: transparent;
+text-decoration:line-through;
+}
+a:active{
+color: red;
+background-color: transparent;
+text-decoration:overline;
+}
+</style>
+<body>
+
+   <h1 style="blue">Welcome to the Generators Cross Section DB Tool Home Page!</h1>
+   <br>
+  <a href="/">Home--Go to the home page</a>
+  <br>
+  <a href="/test">DBQuery--Query for data</a>
+  <br>
+  <a href="/insert">Insert--Insert data</a>
+  <br>
+  <a href="/update">Update--Update a data entry</a>
+  <br>
+  <a href="https://indico.cern.ch/event/569221/contibutions/2301485/attachments/1334866/2019384/DBUsersGuide.pdf">User's Guide--Get instructions for using this tool</a>
+  <br>
+  <br>
+
+    <p>This is a prototype GUI for the Generators group Cross Section database. The database used is the MongoDB database. It supports the following functions:  Query, Insert, and Update. We hope that this GUI provides a user-friendly experience for searching and updating the Cross Section database. <p>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <title>{{ title }} - XsecApp</title>
+
+  <p>Hello, {{ user.nickname }}!</p>
+  <p>Welcome to the XsecDBTool!</p>  
+{% endblock %}
+

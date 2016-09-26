@@ -1,0 +1,9 @@
+{% extends "home.html" %}
+<head>
+<title>XsecDB Successful Insert/Update</title>
+</head>
+{% block content %}
+
+<p>Yor entry was successfully added to the database!</p>
+
+{% endblock %}

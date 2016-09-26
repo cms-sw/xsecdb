@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XsecDB Insert</title>
+</head>
+<style>
+body{
+background-color: #c0c0c0;
+color: blue;
+}
+table{
+background-color:#c0c0c0;
+color: #000000;
+width:100%;
+border-width: 4px;
+border-style: groove;
+overflow: auto;
+}
+th,td{
+font-family: "Times New Roman", Times, serif;
+text-align: center;
+color: #000000;
+padding: 10px;
+}
+p{
+color:#000000;
+}
+a:link{
+color:blue;
+background-color: transparent;
+text-decoration:underline;
+}
+a:visited{
+color: #0c5449;
+background-color: transparent;
+text-decoration:none;
+}
+a:hover{
+color: #ffcc33;
+background-color: transparent;
+text-decoration:line-through;
+}
+a:active{
+color: red;
+background-color: transparent;
+text-decoration:overline;
+}
+</style>
+
+<body>
+    <h2 style= "text-align: center;">Insert Form</h2>
+    <a href="/">Home--Go to home page</a>
+    <br>
+    <a href="/test">DBQuery--Query for data</a>
+    <br>
+    <a href="/insert">Insert--Insert data</a>
+    <br>
+    <a href="/update">Update--Update a data entry</a>
+    <br>
+    <a href="https://indico.cern.ch/event/569221/contributions/2301485/attachments/1334866/2019384/DBUsersGuide.pdf">User's Guide--Get instructions for using this tool</a>
+    <br>
+    <br>
+    <p>Welcome to the Insert page! To insert a set of data into the database, in each field either type in the value associated with the field key, or select the value from the dropdown menu as appropriate. ALL FIELDS ARE REQUIRED to have input before submission of the data will be accepted! If any of the keys are unfamiliar, a brief description of each key can be found in the DB Tool User's Guide under the Insert section. If an error is made while inserting the document into the database, the entry can be ammended using the Update function.</p>
+    {% for message in form.process_name.errors %}
+       <div>{{ message }} </div>
+    {% endfor %}
+
+    <form action = "/insert" method = post>
+      <fieldset>
+	<legend style= color:dark-blue>Insert Form</legend>
+	{{ form.hidden_tag() }}
+
+	<div style= font-size:20px; font-weight:bold; margin-left:150px; font-family:"New Times Roman", Times, serif;>
+	  <table border = 1; style= font-family:"New Times Roman", Times, Sans-Serif;>
+	 <th> {{ form.process_name.label }}</th>
+	 <th>{{ form.cross_section.label }}</th>
+	 <th>{{ form.total_uncertainty.label }}</th>
+	 <th>{{ form.other_uncertainty.label }}</th>
+	 <th>{{ form.cuts.label }}</th>
+
+	 <tr>
+	   <td> {{ form.process_name }}</td>
+	   <td> {{ form.cross_section }}</td>
+	   <td>{{ form.total_uncertainty }}</td>
+	   <td>{{ form.other_uncertainty }}</td>
+	   <td>{{ form.cuts }}</td>
+	  
+	 <tr>
+	   <th>{{ form.reweighting.label }}</th>
+	   <th>{{ form.kFactor.label }}</th>
+	   <th>{{ form.shower.label }}</th>
+	   <th>{{ form.matrix_generator.label }}</th>
+	   <th>{{ form.contact.label }}</th>
+	   <br>
+	 <tr>
+	   <td>{{ form.reweighting }}</td>
+	   <td>{{ form.kFactor }}</td>
+	   <td>{{ form.shower }}</td>
+	   <td>{{ form.matrix_generator }}</td>
+	   <td>{{ form.contact }}</td>
+
+	 <tr>
+	   <th>{{ form.DAS.label }}</th>
+	   <th>{{ form.MCM.label }}</th>
+	   <th>{{ form.refs.label }}</th>
+	   <th>{{ form.accuracy.label }}</th>
+	   <br>
+	 <tr>
+	   <td>{{ form.DAS }}</td>
+	   <td>{{ form.MCM }}</td>
+	   <td>{{ form.refs }}</td>
+	   <td>{{ form.accuracy }}</td>
+	   <br>
+
+	 <tr> 
+	  <td>{{ form.submit }}</td>
+
+	</div>
+      </fieldset>
+    </form>
+</body>
+<html>
+	  
