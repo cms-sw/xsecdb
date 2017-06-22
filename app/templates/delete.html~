@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<base href="/xsdb/">
 <title>XsecDB Delete</title>
 </head>
 <style>
@@ -49,13 +50,13 @@ text-decoration: overline;
 </style>
 <body>
     <h2 style= "text-align: center;">Delete Form</h2>
-    <a href="/">Home--Go to home page</a>
+    <a href="">Home--Go to home page</a>
     <br>
-    <a href="/test">DBQuery--Query for data</a>
+    <a href="query">DBQuery--Query for data</a>
     <br>
-    <a href="/insert">Insert--Insert data</a>
+    <a href="insert">Insert--Insert data</a>
     <br>
-    <a href="/update">Update--Update a data entry</a>
+    <a href="update">Update--Update a data entry</a>
     <br>
     <br>
     <p>Tread Carefully here as "with great power comes great responsibility"! This page allows for deleting data entries from the database. Once removed they are not saved and must be reinserted by again. If you wish to delete make sure that you delete the proper item! To delete an item simply copy and paste the ObjectID of the entry that you wish to delete and submit.</p>
@@ -65,7 +66,7 @@ text-decoration: overline;
 
     <form action = "/remove" method = post>
       <fieldset>
-	<legend>Update Form</legend>
+	<legend>Delete Form</legend>
 	{{ form.hidden_tag() }}
 
 	<div style= font-size:20px; font-weight:bold; margin-left:150px;>

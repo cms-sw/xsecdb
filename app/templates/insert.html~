@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<base href="/xsdb/">
 <title>XsecDB Insert</title>
 </head>
 <style>
@@ -50,13 +51,15 @@ text-decoration:overline;
 
 <body>
     <h2 style= "text-align: center;">Insert Form</h2>
-    <a href="/">Home--Go to home page</a>
+    <a href="">Home page</a>
     <br>
-    <a href="/test">DBQuery--Query for data</a>
+    <a href="query">Query for data</a>
     <br>
-    <a href="/insert">Insert--Insert data</a>
+    <a href="insert">Insert data</a>
     <br>
-    <a href="/update">Update--Update a data entry</a>
+    <a href="update">Update a data entry</a>
+    <br>
+    <a href="https://indico.cern.ch/event/581536/contributions/2358611/attachments/1366794/2070853/DBUsersGuidev2_1.pdf">User's Guide--Get instructions for using this tool</a>
     <br>
     <br>
     <p>Welcome to the Insert page! To insert a set of data into the database, in each field either type in the value associated with the field key, or select the value from the dropdown menu as appropriate. ALL FIELDS ARE REQUIRED to have input before submission of the data will be accepted! If any of the keys are unfamiliar, a brief description of each key can be found in the DB Tool User's Guide under the Insert section. If an error is made while inserting the document into the database, the entry can be ammended using the Update function.</p>
@@ -64,7 +67,7 @@ text-decoration:overline;
        <div>{{ message }} </div>
     {% endfor %}
 
-    <form action = "/insert" method = post>
+    <form action = "insert" method = post>
       <fieldset>
 	<legend style= color:dark-blue>Insert Form</legend>
 	{{ form.hidden_tag() }}
@@ -85,33 +88,43 @@ text-decoration:overline;
 	   <td>{{ form.cuts }}</td>
 	  
 	 <tr>
+	   <th>{{ form.energy.label }}</th>
 	   <th>{{ form.reweighting.label }}</th>
 	   <th>{{ form.kFactor.label }}</th>
 	   <th>{{ form.shower.label }}</th>
 	   <th>{{ form.matrix_generator.label }}</th>
-	   <th>{{ form.contact.label }}</th>
 	   <br>
 	 <tr>
+	   <td>{{ form.energy }}</td>
 	   <td>{{ form.reweighting }}</td>
 	   <td>{{ form.kFactor }}</td>
 	   <td>{{ form.shower }}</td>
 	   <td>{{ form.matrix_generator }}</td>
-	   <td>{{ form.contact }}</td>
 
 	 <tr>
+	   <th>{{ form.contact.label }}</th>
 	   <th>{{ form.DAS.label }}</th>
 	   <th>{{ form.MCM.label }}</th>
 	   <th>{{ form.refs.label }}</th>
-	   <th>{{ form.accuracy.label }}</th>
+	   <th>{{ form.comments.label }}</th>
 	   <br>
 	 <tr>
+	   <td>{{ form.contact }}</td>
 	   <td>{{ form.DAS }}</td>
 	   <td>{{ form.MCM }}</td>
 	   <td>{{ form.refs }}</td>
-	   <td>{{ form.accuracy }}</td>
+	   <td>{{ form.comments }}</td>
 	   <br>
 
 	 <tr> 
+	   <th>{{ form.accuracy.label }}</th>
+	   <th>{{ form.equivalent_lumi.label }}</th>
+	   <th>{{ form.fraction_negative_weight.label }}</th>
+	 <tr>
+	   <td>{{ form.accuracy }}</td>
+	   <td>{{ form.quivalent_lumi }}</td>
+	   <td>{{ form.fraction_negative_weight }}</td>
+	 <tr>
 	  <td>{{ form.submit }}</td>
 
 	</div>

@@ -67,7 +67,8 @@ text-decoration: overline;
        <div>{{ message }} </div>
     {% endfor %}
 
-    <form action = "/test" method = post>
+    <form action = "/search1/<form.key>/<form.value>" method = GET>
+
       <fieldset>
 	<legend style= color:dark-blue>Query Form</legend>
 	{{ form.hidden_tag() }}

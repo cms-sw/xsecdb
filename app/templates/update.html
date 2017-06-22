@@ -2,6 +2,7 @@
 <html lang="en">
 <meta charset="utf-8">
 <head>
+<base href="/xsdb/">
 <title>XsecDB Update</title>
 </head>
 <style>
@@ -49,15 +50,15 @@ text-decoration:overline;
 </style>
 <body>
     <h2 style= "text-align: center;">Update Form</h2>
-    <a href="/">Home--Go to home page</a>
+    <a href="">Home page</a>
     <br>
-    <a href="/test">DBQuery--Query for data</a>
+    <a href="query">Query for data</a>
     <br>
-    <a href="/insert">Insert--Insert data</a>
+    <a href="insert">Insert data</a>
     <br>
-    <a href="/update">Update--Update a data entry</a>
+    <a href="update">Update a data entry</a>
     <br>
-    <a href="https://indico.cern.ch/event/569221/contributions/2301485/attachments/1334866/2019384/DBUsersGuide.pdf">User's Guide--Get instructions for using this tool</a>
+    <a href="https://indico.cern.ch/event/581536/contributions/2358611/attachments/1366794/2070853/DBUsersGuidev2_1.pdf">User's Guide--Get instructions for using this tool</a>
     <br>
     <br>
     <p>Welcome to the Update page! To update a data entry, you will need to insert the ObjectID into the ObjectID field. To find out the value of the ObjectID for the entry that you wish to change you will need to query the database for the entry. From the results of this query, copy and paste the corresponding ObjectID from there into the ObjectID field. Then select the key that you would like to change from the dropdown menu. If any of the keys are unfamiliar, a brief description can be found in the DB Tool User's Guide under the Insert section. Next input the value that you would like to add to the data entry and submit.</p>
@@ -65,7 +66,7 @@ text-decoration:overline;
        <div>{{ message }} </div>
     {% endfor %}
 
-    <form action = "/update" method = post>
+    <form action = "update" method = post>
       <fieldset>
 	<legend>Update Form</legend>
 	{{ form.hidden_tag() }}

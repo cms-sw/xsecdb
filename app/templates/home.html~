@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <base href="/xsdb/">
   <title>XsecDB_Home</title>
 <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">-->
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
@@ -39,15 +40,21 @@ text-decoration:overline;
 
    <h1 style="blue">Welcome to the Generators Cross Section DB Tool Home Page!</h1>
    <br>
-  <a href="/">Home--Go to the home page</a>
-  <br>
-  <a href="/test">DBQuery--Query for data</a>
-  <br>
-  <a href="/insert">Insert--Insert data</a>
-  <br>
-  <a href="/update">Update--Update a data entry</a>
-  <br>
-  <a href="https://indico.cern.ch/event/569221/contibutions/2301485/attachments/1334866/2019384/DBUsersGuide.pdf">User's Guide--Get instructions for using this tool</a>
+ <div>
+  <a href="" target="_blank">Home page</a>
+ </div>
+ <div>
+  <a href="query" target="_blank">Query for data</a>
+ </div>
+ <div>
+  <a href="insert" target="_blank">Insert data</a>
+ </div>
+ <div>
+  <a href="update" target="_blank">Update a data entry</a>
+ </div
+ <div>
+  <a href="https://indico.cern.ch/event/581536/contributions/2358611/attachments/1366794/2070853/DBUsersGuidev2_1.pdf">User's Guide--Get instructions for using this tool</a>
+  </div>
   <br>
   <br>
 

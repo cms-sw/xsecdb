@@ -1,6 +1,7 @@
 import json
 from flask import Flask, render_template, send_from_directory, request
 from flask import jsonify, request, flash
+import pymongo
 from pymongo import MongoClient, ReturnDocument
 import re
 from datetime import datetime
@@ -12,6 +13,34 @@ from deleteForm import DeleteForm
 from queryForm import QueryForm
 
 from bson.objectid import ObjectId
+
+###imports for message service
+import smtplib
+
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
+from email.Utils import COMMASPACE, formatdate
+
+###function definition for message service
+
+def sendMailOnChanges(messageText, emailSubject, **kwargs):
+    msg = MIMEMultipart()
+    #send_from = "amlevin@mit.edu"
+    send_from = "shawn.gregory.zaleski@cern.ch"
+    msg['From'] = send_from
+    send_to = ["ek7121@wayne.edu"]
+    #send_to = ["shawn.gregory.zaleski@cern.ch"]
+    msg['To'] = COMMASPACE.join(send_to)
+    msg['Date'] = formatdate(localtime=True)
+    msg['Subject'] = emailSubject
+    try:
+        msg.attach(MIMEText(messageText))
+        smtpObj = smtplib.SMTP()
+        smtpObj.connect()
+        smtpObj.sendmail(send_from, send_to, msg.as_string())
+        smtpObj.close()
+    except Exception as e:
+        print "Error: unable to send email", e.__class__
 
 client = MongoClient()
 db = client.newAlphaTest
@@ -96,6 +125,10 @@ def insert():
             writeFile.write("\nDAS:"+request.form['DAS'])
             writeFile.write("\nMCM:"+request.form['MCM'])
             writeFile.close()
+
+            emailSubject = """An insert alert from your friendly XSDB tool"""
+            messageText = """A user has inserted the following information into the XSDB tool:\n==============================================================================\nProcess Name: """+str(request.form['process_name'])+"""\nCross_Section: """+str(request.form['cross_section'])+"""\nAccuracy: """+str(request.form['accuracy'])+"""\nTotalUncertainty: """+str(request.form['total_uncertainty'])+"""\nOther Uncertainty: """+str(request.form['other_uncertainty'])+"""\nCuts: """+str(request.form['cuts'])+"""\nk-Factor: """+str(request.form['kFactor'])+"""\nReqeighting: """+str(request.form['reweighting'])+"""\nShower Tool: """+str(request.form['shower'])+"""\nMatrix Generator: """+str(request.form['matrix_generator'])+"""\nContact: """+str(request.form['contact'])+"""\nReferences: """+str(request.form['refs'])+"""\nDAS link: """+str(request.form['DAS'])+"""\nMCM link: """+str(request.form['MCM'])+"""\n\nPlease confirm this at your earliest convenience."""
+            sendMailOnChanges(messageText, emailSubject)
             return render_template("success.html")
         
     elif request.method == 'GET':
@@ -191,4 +224,4 @@ def search1(key, user_input):
 #    return json.dumps({})
 
 if __name__ == "__main__":
-    app.run(debug=False, host='0.0.0.0', port=4241)
+    app.run(debug=True, host='0.0.0.0', port=4241)

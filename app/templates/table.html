@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<base href="/xsdb/">
 <title>XsecDB Search Results</title>
 </head>  
 <style>
@@ -63,13 +64,14 @@ text-decoration:overline;
 
   <body>
     <h1 style="color:blue">Welcome to the Cross Section DB Tool!</h1>
-    <a href="/">Home--Go to home page</a>
+    <a href="">Home</a>
     <br>
-    <a href="/test">DBQuery--Query for data</a>
+    <a href="query">Query for data</a>
     <br>
-    <a href="/insert">Insert--Insert data</a>
+    <a href="insert">Insert data</a>
     <br>
-    <a href="/update">Update--Update a data entry</a>
+    <a href="update">
+Update a data entry</a>
     
       <h2>These are the results!</h2>
 
@@ -82,6 +84,7 @@ text-decoration:overline;
 	    <th>Total Uncertainty[pb]</th>
 	    <th>Other Uncertainty</th>
 	    <th>Cuts</th>
+	    <th>Energy</th>
 	    <th>Reweighting</th>
 	    <th>k-Factor</th>
 	    <th>Shower Tool</th>
@@ -91,7 +94,12 @@ text-decoration:overline;
 	    <th>DAS(Primary Dataset Name</th>
 	    <th>McM prePID</th>
 	    <th>References</th>
-	    <th>Interval of Validity</th>
+	    <th>Comments</th>
+	    <th>Equivalent Lumi</th>
+	    <th>Fraction of Negative Weight</th>
+	    <th>Valid From</th>
+	    <th>Valid To</th>
+	    <th>Is Reference Value?</th>
 	    <th>Object_ID</th>
 	  {% for key in result%}
 
@@ -101,6 +109,7 @@ text-decoration:overline;
 	      <td>{{ key["total_uncertainty"] }}</td>
 	      <td>{{ key["other_uncertainty"] }}</td>
 	      <td>{{ key["cuts"] }}</td>
+	      <td>{{ key["energy"] }}</td>
 	      <td>{{ key["reweighting"] }}</td>
 	      <td>{{ key["kFactor"] }}</td>
 	      <td>{{ key["shower"] }}</td>
@@ -110,7 +119,12 @@ text-decoration:overline;
 	      <td>{{ key["DAS"] }}</td>
 	      <td>{{ key["MCM"] }}</td>
 	      <td>{{ key["refs"] }}</td>
-	      <td>{{ key["valid"] }}</td>
+	      <td>{{ key["comments"] }}</td>
+	      <td>{{ key["equivalent_lumi"] }}</td>
+	      <td>{{ key["fraction_negative_weight"] }}</td>
+	      <td>{{ key["validFrom"] }}</td>
+	      <td>{{ key["validTo"] }}</td>
+	      <td>{{ key["isValid"] }}</td>
 	      <td>{{ key["_id"] }}</td>
 
 	    

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="eng">
+    <head>
+        <base href="/xsdb/">
+        <title>Hello from Flask</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        {% if name %}
+            <h1>Hello {{ name }}!</h1>
+        {% else %}
+            <h1>Hello, World!</h1>
+            <h2>Antanas says sorry :(</h2>
+        {% endif %}
+        <img src="http://i.imgur.com/OBB7tLg.gif" alt="Never gonna give you up"></img>
+    </head>
+
+    <body style="text-align:center">
+        <div>
+            <a href="search" target="_blank">Search</a>
+        </div>
+        <div>
+            <a href="secondlink/123" target="_blank">Search2</a>
+        </div>
+    </body>
+</html>

@@ -1,9 +1,49 @@
-{% extends "home.html" %}
+<!DOCTYPE html>
 <head>
+<meta charset="utf-8">
 <title>XsecDB Successful Insert/Update</title>
 </head>
-{% block content %}
+<style>
+body{
+background-color: #c0c0c0;
+color: blue;
+}
+p{
+color:#000000;
+}
+a:link{
+color: blue;
+background-color: transparent;
+text-decoration: underline;
+}
+a:visited{
+color: #0c5449;
+background-color: transparent;
+text-decoration: none;
+}
+a:hover{
+color: #ffcc33;
+background-color: transparent;
+text-decoration: line-through;
+}
+a:active{
+color: red;
+background-color: transparent;
+text-decoration: overline;
+}
 
-<p>Yor entry was successfully added to the database!</p>
+</style>
+<body>
+  <a href="/"Home</a>
+  <br>
+  <a href="/query">Query for data</a>
+  <br>
+  <a href="/insert">Insert data</a>
+  <br>
+  <a href="/update">Update a data entry</a>
+  <br>
+  <br>
+  <p>Your entry was successfully added to the database! If you would like to continue using the DB Tool please click on one of the links above.</p>
 
-{% endblock %}
+</body>
+</html>

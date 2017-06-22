@@ -58,6 +58,8 @@ text-decoration: overline;
 <br>
 <a href="/update">Update--Update a data entry</a>
 <br>
+<a href="https://indico.cern.ch/event/569221/contributions/2301485/attachments/1334866/2019384/DBUsersGuide.pdf">User's Guide--Get instructions for using this tool</a>
+<br>
 <br>
 <p> Welcome to the Query page! To query a set of data against the database select a search term from the dropdown menu. If any of the search terms in the dropdown are unclear, a brief description of them can be found in the DB Tool User's Guide under the Insert section. After selecting a search term from the dropdown input the value into the Search Value field. The search value need only be a contiguous substring of the search term. For example, to query on the process name "DYJetsToLL" one could enter "jets", "dy", "toll", or any other contiguous substring. The query operation is NOT case sensitive. Do not use explicit wild cards such as "*" or "$", these are not supported. Thus one should NOT try to perform any query of the type: "*jets*ll". 
 <br>
@@ -65,7 +67,8 @@ text-decoration: overline;
        <div>{{ message }} </div>
     {% endfor %}
 
-    <form action = "/test" method = post>
+    <!--<form action = "/search1/<form.key>/<form.value>" method = GET>-->
+    <form action = "/test" method = GET>
       <fieldset>
 	<legend style= color:dark-blue>Query Form</legend>
 	{{ form.hidden_tag() }}
