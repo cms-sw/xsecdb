@@ -1,69 +1,73 @@
 <!doctype html>
 <html lang="en" ng-app='Example'>
+
 <head>
   <meta charset="utf-8">
   <title>XsecDBTool</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+    crossorigin="anonymous">
   <script src="https://code.angularjs.org/1.5.5/angular.min.js"></script>
   <script>
-   angular.module('Example', [])
-     .controller('ExampleController', ['$scope','$http', function($scope, $http) {
-       // some globals
-       $scope.glabal_data = { };
-       $scope.input_data = {};
+    angular.module('Example', [])
+      .controller('ExampleController', ['$scope', '$http', function ($scope, $http) {
+        // some globals
+        $scope.glabal_data = {};
+        $scope.input_data = {};
 
-       $scope.send_data = function()
-       {
-        console.log("Will send this data:", $scope.input_data);
-        $http.post('search',
-   $scope.input_data)
-        .success(function(data,status){
-   console.log('true on seding data with POST');
-   console.log(data);
-        $scope.global_data = {'POST': data}
-        })
-        .error(function(data,status){
-   console.log("error sending data", data);
-        })
-       };
+        $scope.send_data = function () {
+          console.log("Will send this data:", $scope.input_data);
+          $http.post('search',
+            $scope.input_data)
+            .success(function (data, status) {
+              console.log('true on seding data with POST');
+              console.log(data);
+              $scope.global_data = { 'POST': data }
+            })
+            .error(function (data, status) {
+              console.log("error sending data", data);
+            })
+        };
 
-   $scope.send_data1 = function()
-       {
-        console.log("Will send this data: with GET", $scope.input_data);
-        $http.get('search1'+'/'+$scope.input_data)
-        .success(function(data,status){
-   console.log('true on seding data');
-   console.log(data);
-        $scope.global_data['GET'] = {};
-        $scope.global_data['GET'] = data;
-        })
-        .error(function(data,status){
-   console.log("error sending data", data);
-        })
-       };
-     }]);
-</script>
+        $scope.send_data1 = function () {
+          console.log("Will send this data: with GET", $scope.input_data);
+          $http.get('search1' + '/' + $scope.input_data)
+            .success(function (data, status) {
+              console.log('true on seding data');
+              console.log(data);
+              $scope.global_data['GET'] = {};
+              $scope.global_data['GET'] = data;
+            })
+            .error(function (data, status) {
+              console.log("error sending data", data);
+            })
+        };
+      }]);
+
+  </script>
 </head>
+
 <body>
 
   <h1 style="color: blue">Welcome to the Generators Cross Section DB </h1>
-  <h2>Initial DB tool Test Page </h2> <!--- {{'yet' + '!'}}</p> --->
+  <h2>Initial DB tool Test Page </h2>
+  <!--- {{'yet' + '!'}}</p> --->
   <div ng-controller="ExampleController as exmplCtrl">
-   <div>
-     Input_data:{{input_data}}
-   </div>
-   <div>
-     <input type="text" placeholder="Search Key" ng-model="input_data['key']"></input>
-     <input type="text" placeholder="Search Value" ng-model="input_data['value']"></input>
-     </br>
-     <button type="button" class="btn btn-primary" ng-click="send_data()">Query with POST</button>
-     <a type="button" class="btn btn-warning" ng-href="search1/{{input_data}}" target="_blank">Query with GET</a>
-     <pre>{{global_data | json}}</pre>
-   </div>
-   <ul>
-    <li ng-repeat="(el,val) in global_data">{{el}}: {{val}}</li>
-   </ul>
+    <div>
+      Input_data:{{input_data}}
+    </div>
+    <div>
+      <input type="text" placeholder="Search Key" ng-model="input_data['key']"></input>
+      <input type="text" placeholder="Search Value" ng-model="input_data['value']"></input>
+      </br>
+      <button type="button" class="btn btn-primary" ng-click="send_data()">Query with POST</button>
+      <a type="button" class="btn btn-warning" ng-href="search1/{{input_data}}" target="_blank">Query with GET</a>
+      <pre>{{global_data | json}}</pre>
+    </div>
+    <ul>
+      <li ng-repeat="(el,val) in global_data">{{el}}: {{val}}</li>
+    </ul>
   </div>
 
 </body>
+
 </html>
