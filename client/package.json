@@ -4,13 +4,18 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "webpack-dev-server --public 188.185.74.109:4241 --port 4241 --hot --host 0.0.0.0 --config webpack.dev.config.js",
+    "start": "webpack-dev-server --public 188.185.74.109:8080 --port 8080 --hot --host 0.0.0.0 --config webpack.dev.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "axios": "^0.16.2",
+    "es6-promise": "~4.1.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "es6-promise": "~4.1.1"
+    "react-redux": "^5.0.5",
+    "react-router-dom": "~4.1.1",
+    "redux": "^3.7.1",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",

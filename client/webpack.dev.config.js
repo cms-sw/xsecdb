@@ -16,7 +16,7 @@ var HotReloader = new webpack.HotModuleReplacementPlugin();
 module.exports = {
   devtool: 'source-map',
   entry: [
-    'webpack-dev-server/client?http://188.185.74.109:4241',
+    'webpack-dev-server/client?http://188.185.74.109:8080',
     'webpack/hot/dev-server',
     './src/index.jsx'
   ],
