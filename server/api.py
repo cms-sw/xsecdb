@@ -1,13 +1,18 @@
 from flask import Flask, request, jsonify, make_response, render_template
 from pymongo import MongoClient
-from bson import json_util
+from bson.json_util import dumps
 from bson.objectid import ObjectId
 from time import gmtime, strftime
+import json
+
+from flask_cors import CORS
 
 from validate import validate_model
 from models.record import Record
 
+
 app = Flask(__name__)
+CORS(app)
 
 client = MongoClient('mongodb://WorkingVM:27017/')
 db = client.xsdb
@@ -65,9 +70,26 @@ def delete(record_id):
     return 'remove action'
 
 
-@app.route('/api/search/<key>/<value>', methods=['GET'])
-def search(key, value):
-    return 'search action'
+@app.route('/api/search', methods=['POST'])
+def search():
+    query = json.loads(request.data)
+    print type(query)
+
+    cursor = collection.find(query)
+    print cursor
+    result = dumps(cursor)
+
+    print result
+    return make_response(jsonify(result), 200)
+
+@app.route('/api/xsdb', methods=['GET'])
+def get_all():
+    cursor = collection.find()
+
+    result = dumps(cursor)
+    print result
+    return make_response(jsonify(result), 200)
+    # return make_response(jsonify(records), 200)
 
 # STATIC PAGES #
 

@@ -49,11 +49,11 @@ module.exports = {
       },
     ]
   },
-//   externals: {
-//     'Config': JSON.stringify({
-//       apiUrl: "http://localhost:5000/api/"
-//     })
-//   },
+  externals: {
+    'Config': JSON.stringify({
+      apiUrl: "http://188.185.74.109:4241/api"
+    })
+  },
   plugins: [HTMLWebpackPluginConfig, HotReloader],
   devServer: {
     contentBase: __dirname + '/dist',

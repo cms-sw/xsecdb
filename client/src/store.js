@@ -3,9 +3,16 @@ import thunk from 'redux-thunk';
 
 import rootReducer from './rootReducer';
 
+const defaultState = {
+    searchPage: {
+        records: []
+    }
+};
+
 const store = createStore(
-  rootReducer,
-  applyMiddleware(thunk)
+    rootReducer,
+    defaultState,
+    applyMiddleware(thunk)
 );
 
 export default store;
