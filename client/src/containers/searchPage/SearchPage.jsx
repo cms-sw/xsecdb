@@ -22,17 +22,7 @@ class SearchPage extends React.Component {
     render() {
         return (
             <div className="container">
-               
                 <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange} />
-
-                <div className="panel panel-default">
-                    <div className="panel-body">
-                        <b>DAS MCM accuracy comments contact cross_section cuts energy total_uncertainty
-                             process_name refs reweighting shower 
-                        </b>
-                    </div>
-                </div>
-
                 <RecordList records={this.props.search.records} />
             </div>
         )
@@ -43,8 +33,6 @@ class SearchPage extends React.Component {
     }
 
     onSearchButtonClick() {
-        console.log("Search !");
-        console.log(this.props.searchField)
         this.props.getFilteredRecords(this.props.searchField)
     }
 

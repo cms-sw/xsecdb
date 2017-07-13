@@ -10,6 +10,12 @@ const SearchBar = (props) => {
                 style={{ width: '90%' }} onChange={props.onSearchInputChange}
             />
             <SimpleButton onClick={props.onSearchButtonClick} text="Search" style={{ width: '10%' }} />
+
+            <div className="panel panel-default">
+                <div className="panel-body">
+                    <b>key=value, key=value,...</b>
+                </div>
+            </div>
         </div>
     )
 }

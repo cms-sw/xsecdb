@@ -2,7 +2,7 @@ import React from 'react';
 
 const RecordItemCell = ({ text }) => {
     return (
-        <div className="col-md-1">{text}</div>
+        <td>{text}</td>
     )
 }
 
