@@ -1,18 +1,33 @@
 import React from 'react';
 import RecordItemCell from './RecordItemCell';
+import SimpleButton from '../SimpleButton';
+
+//separate into config-like file
+const dictionary = [
+    "DAS", "MCM", "accuracy", "comments", "cross_section",
+    "cuts", "energy", "matrix_generator", "total_uncertainty",
+    "process_name"
+]
 
 const RecordItem = (props) => {
     return (
         <tr>
             {renderCells(props)}
+            <RecordItemCell text={<SimpleButton onClick={props.onEditClick} text="Edit" />} />
         </tr>
     )
 }
 
 function renderCells(props) {
-    const items = [props.DAS, props.MCM, props.accuracy, props.comments, props.cross_section, props.cuts,
-        props.energy, props.matrix_generator, props.total_uncertainty, props.process_name, props.shower]
-    return items.map((value, i) => <RecordItemCell text={value} key={i} />);
+    const items = dictionary.map(key => props[key]);
+
+    return items.map((value, i) =>
+        <RecordItemCell text={value} key={i} id={props.id}
+            onEditModeActivate={props.onEditModeActivate} isInEditMode={props.isInEditMode}
+            propertyName={dictionary[items.indexOf(value)]}
+            //onChange=
+        />
+    );
 }
 
 export default RecordItem;

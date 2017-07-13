@@ -11,6 +11,21 @@ const getRecordsSuccess = (records) => {
     }
 }
 
+export const searchFieldChange = (value) => {
+    return {
+        type: "SEARCH_FIELD_CHANGE",
+        value
+    }
+}
+
+export const recordCellChange = (value, recordId, propertyName) => {
+    return {
+        type: "RECORD_CELL_CHANGE",
+        value,
+        recordId
+    }
+}
+
 export const getAllRecords = () => (dispatch) => {
     dispatch({ type: "GET_ALL_RECORDS_REQUEST" });
 
@@ -25,13 +40,6 @@ export const getAllRecords = () => (dispatch) => {
             dispatch({ type: "GET_ALL_RECORDS_ERROR", error: error.message });
         })
 
-}
-
-export const searchFieldChange = (value) => {
-    return {
-        type: "SEARCH_FIELD_CHANGE",
-        value
-    }
 }
 
 export const getFilteredRecords = (query) => (dispatch) => {
@@ -49,7 +57,7 @@ export const getFilteredRecords = (query) => (dispatch) => {
 
 
 
-function getQueryObject(query) {
+function getQueryObject(query = "") {
     const _and = ",", _or = "|", _assing = "=";
 
     query = query.replace(/\s/g, "");
@@ -61,6 +69,20 @@ function getQueryObject(query) {
         const pp = pair.split(_assing);
         conditions[pp[0]] = pp[1];
     })
+    // For regex queries, query parsing should be moved to backend
+    // nested OR not supported in mongo 1.6
+    // const a = {
+    //     "$and": [
+    //         { "accuracy": "LO" },
+    //         {
+    //             "$or": [{
+    //                 "matrix_generator": "powheg"
+    //             }, {
+    //                 "matrix_generator": "herwig7"
+    //             }]
+    //         }
+    //     ]
+    // }
 
     return conditions;
 }
