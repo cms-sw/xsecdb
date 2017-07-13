@@ -1,108 +1,111 @@
 <!DOCTYPE html>
 <html lang="en" ng-app='Example'>
+
 <head>
   <meta charset="utf-8">
   <base href="/xsdb/">
   <title>XsecDBTool</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+    crossorigin="anonymous">
   <script src="https://code.angularjs.org/1.5.5/angular.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/angulajs/1.5.8/angular.min.js"></script> 
+  <script src="//ajax.googleapis.com/ajax/libs/angulajs/1.5.8/angular.min.js"></script>
   <script src="./static/query.js"></script>
   <script>
-   angular.module('Example', [])
-     .controller('ExampleController', ['$scope','$http', function($scope, $http) {
-       // some globals
-   $scope.keys = {
- 
-   searchKeys: [
-   
-   {key: 'process_name'},
-   
-   {key: 'cross_section'},
-   
-   {key: 'total_uncertainty'},
+    angular.module('Example', [])
+      .controller('ExampleController', ['$scope', '$http', function ($scope, $http) {
+        // some globals
+        $scope.keys = {
 
-   {key: 'other_uncertainty'},
+          searchKeys: [
 
-   {key: 'validFrom'},
-   
-   {key: 'validTo'},
-   
-   {key: 'equivalent_lumi'},
-   
-   {key: 'fraction_negative_weight'},
-   
-   {key: 'isValid'},
-   
-   {key: 'matrix_generator'},
+            { key: 'process_name' },
 
-   {key: 'DAS'},
+            { key: 'cross_section' },
 
-   {key: 'MCM'},
+            { key: 'total_uncertainty' },
 
-   {key: 'contact'},
+            { key: 'other_uncertainty' },
 
-   {key: 'shower'},
+            { key: 'validFrom' },
 
-   {key: 'kFactor'},
+            { key: 'validTo' },
 
-   {key: 'cuts'},
+            { key: 'equivalent_lumi' },
 
-   {key: 'reweighting'},
-   
-   {key: 'refs'},
+            { key: 'fraction_negative_weight' },
 
-   {key: 'energy'},
+            { key: 'isValid' },
 
-   {key: 'comments'}
-   
-   ],
-   
-   };
+            { key: 'matrix_generator' },
 
-       $scope.global_data = { };
-       $scope.input_data = {};
-  /*$scope.input_data = {'selected_value': $scope.searchKeys[0]};
-  $scope.forceUnknownOption = function() {
-     $scope.data.singleSelect= 'nonsense';
-   };*/
-       $scope.send_data = function()
-       {
-        console.log("Will send this data:", $scope.input_data);
-        $http.post('search',
-   $scope.input_data)
-        .success(function(data,status){
-   console.log('true on seding data with POST');
-   console.log(data);
-       $scope.global_data = {'POST': data}
-        })
-        .error(function(data,status){
-   console.log("error sending data", data);
-        })
-       };
+            { key: 'DAS' },
 
-   $scope.send_data1 = function()
-       {
-        console.log("Will send this data: with GET", $scope.input_data);
-        $http.get('search1'+'/'+$scope.input_data["key"]+"/"+$scope.input_data["value"])
-        .success(function(data,status){
-   console.log('true on seding data');
-   console.log(data);
-        $scope.global_data['GET'] = {};
-        $scope.global_data['GET'] = data;
-        })
-        .error(function(data,status){
-   console.log("error sending data", data);
-        })
-       };
-     }]);
-</script>
+            { key: 'MCM' },
+
+            { key: 'contact' },
+
+            { key: 'shower' },
+
+            { key: 'kFactor' },
+
+            { key: 'cuts' },
+
+            { key: 'reweighting' },
+
+            { key: 'refs' },
+
+            { key: 'energy' },
+
+            { key: 'comments' }
+
+          ],
+
+        };
+
+        $scope.global_data = {};
+        $scope.input_data = {};
+        /*$scope.input_data = {'selected_value': $scope.searchKeys[0]};
+        $scope.forceUnknownOption = function() {
+           $scope.data.singleSelect= 'nonsense';
+         };*/
+        $scope.send_data = function () {
+          console.log("Will send this data:", $scope.input_data);
+          $http.post('search',
+            $scope.input_data)
+            .success(function (data, status) {
+              console.log('true on seding data with POST');
+              console.log(data);
+              $scope.global_data = { 'POST': data }
+            })
+            .error(function (data, status) {
+              console.log("error sending data", data);
+            })
+        };
+
+        $scope.send_data1 = function () {
+          console.log("Will send this data: with GET", $scope.input_data);
+          $http.get('search1' + '/' + $scope.input_data["key"] + "/" + $scope.input_data["value"])
+            .success(function (data, status) {
+              console.log('true on seding data');
+              console.log(data);
+              $scope.global_data['GET'] = {};
+              $scope.global_data['GET'] = data;
+            })
+            .error(function (data, status) {
+              console.log("error sending data", data);
+            })
+        };
+      }]);
+
+  </script>
 
 </head>
+
 <body ng-app="staticSelect">
 
   <h1 style="color: blue">Welcome to the Generators Cross Section DB Tool! </h1>
-  <h2>Initial DB tool Test Page </h2> <!-- {{'yet' + '!'}}</p> -->
+  <h2>Initial DB tool Test Page </h2>
+  <!-- {{'yet' + '!'}}</p> -->
 
   <a href="">Home<a/>
   <br>
@@ -114,84 +117,84 @@
 
 
   <div ng-controller="ExampleController as exmplCtrl">
-   <div>
-     
-       <h2> Search keys <i>ARE CASE SENSITIVE</i> </h2>
-     <h2> Search values <i>ARE NOT CASE SENSITIVE</i> and only need to be a contiguous substring of the string value. </h2>
-     <h3> Please copy and paste the search key from the list below into the "Search Key" field </h3>
-  <div>
-     Input_data:{{input_data}}
-   </div>
+    <div>
+
+      <h2> Search keys <i>ARE CASE SENSITIVE</i> </h2>
+      <h2> Search values <i>ARE NOT CASE SENSITIVE</i> and only need to be a contiguous substring of the string value. </h2>
+      <h3> Please copy and paste the search key from the list below into the "Search Key" field </h3>
+      <div>
+        Input_data:{{input_data}}
+      </div>
 
 
-   <div>
-     <form name="myForm">
-       <label for="singleselect">Single Select: </label></br>
-       <select name="singleSelect" ng-model="input_data.selected_value" ng-options="x.key as x.key for x in keys.searchKeys"></select>
-<!--     <input type="text" placeholder="Search Key" ng-model="input_data['key']"></input>-->
-     <input type="text" placeholder="Search Value" ng-model="input_data['value']"></input>
-     </br>
-     </form>
-<!--     <button type="button" class="btn btn-primary" ng-click="send_data()">Query with POST</button>-->
-<!--     <a type="button" class="btn btn-warning" ng-click="send_data1()" target="_blank">Query with GET</a>-->
-     <a type="button" class="btn btn-primary" ng-href="search1/{{input_data['selected_value']}}/{{input_data['value']}}">Query</a><!-- target="_blank">Query</a>-->
-     <pre>{{global_data | json}}</pre>
-   </div>
-   <ul>
-    <li ng-repeat="(el,val) in global_data">{{el}}: {{val}}</li>
-   </ul>
+      <div>
+        <form name="myForm">
+          <label for="singleselect">Single Select: </label></br>
+          <select name="singleSelect" ng-model="input_data.selected_value" ng-options="x.key as x.key for x in keys.searchKeys"></select>
+          <!--     <input type="text" placeholder="Search Key" ng-model="input_data['key']"></input>-->
+          <input type="text" placeholder="Search Value" ng-model="input_data['value']"></input>
+          </br>
+        </form>
+        <!--     <button type="button" class="btn btn-primary" ng-click="send_data()">Query with POST</button>-->
+        <!--     <a type="button" class="btn btn-warning" ng-click="send_data1()" target="_blank">Query with GET</a>-->
+        <a type="button" class="btn btn-primary" ng-href="search1/{{input_data['selected_value']}}/{{input_data['value']}}">Query</a>
+        <!-- target="_blank">Query</a>-->
+        <pre>{{global_data | json}}</pre>
+      </div>
+      <ul>
+        <li ng-repeat="(el,val) in global_data">{{el}}: {{val}}</li>
+      </ul>
+    </div>
+
+
+    <h3> The following keys are seachable (they are followed by a brief description of the keys): </h3>
+    <dl>
+      <dt>process_name</dt>
+      <dd> - Primary Dataset name </dd>
+      <dt>cross_section</dt>
+      <dd> - Cross Section Value </dd>
+      <dt>total_uncertainty</dt>
+      <dd> -Total Uncertainty</dd>
+      <dt>other_uncertainty</dt>
+      <dd> - Other Uncertainties to be specified</dd>
+      <dt>shower</dt>
+      <dd> - LO shower generator tool </dd>
+      <dt>matrix_generator</dt>
+      <dd> - Matrix Generator Tool</dd>
+      <dt>DAS</dt>
+      <dd> -DAS link </dd>
+      <dt>MCM</dt>
+      <dd> - MCM link </dd>
+      <dt>kFactor</dt>
+      <dd> - k-factor value </dd>
+      <dt>cuts</dt>
+      <dd> - Any cuts on pT, m, hT, etc. </dd>
+      <dt>reweighting</dt>
+      <dd> - reweighting value</dd>
+      <dt>refs</dt>
+      <dd> - Any reference papers to be included </dd>
+      <dt>contact</dt>
+      <dd> - Contact(s) responsible for cross section value </dd>
+      <dt>valid</dt>
+      <dd> - Interval of vlidity for cross section information</dd>
+      <dt>energy</dt>
+      <dd> - Beam energy used for the sample</dd>
+      <dt>comments</dt>
+      <dd> - Items that are important to note for a sample that does not apply to many other samples</dd>
+    </dl>
+
   </div>
 
 
-     <h3> The following keys are seachable 
-(they are followed by a brief description of the keys): </h3>
-     <dl>
-       <dt>process_name</dt>
-       <dd> - Primary Dataset name </dd>
-       <dt>cross_section</dt>
-       <dd> - Cross Section Value </dd>
-       <dt>total_uncertainty</dt>
-       <dd> -Total Uncertainty</dd>
-       <dt>other_uncertainty</dt>
-       <dd> - Other Uncertainties to be specified</dd>
-       <dt>shower</dt>
-       <dd> - LO shower generator tool </dd>
-       <dt>matrix_generator</dt>
-       <dd> - Matrix Generator Tool</dd>
-       <dt>DAS</dt>
-       <dd> -DAS link </dd>
-       <dt>MCM</dt>
-       <dd> - MCM link </dd>
-       <dt>kFactor</dt>
-       <dd> - k-factor value </dd>
-       <dt>cuts</dt>
-       <dd> - Any cuts on pT, m, hT, etc. </dd>
-       <dt>reweighting</dt>
-       <dd> - reweighting value</dd>
-       <dt>refs</dt>
-       <dd> - Any reference papers to be included </dd>
-       <dt>contact</dt>
-       <dd> - Contact(s) responsible for cross section value </dd>
-       <dt>valid</dt>
-       <dd> - Interval of vlidity for cross section information</dd>
-       <dt>energy</dt>
-       <dd> - Beam energy used for the sample</dd>
-       <dt>comments</dt>
-       <dd> - Items that are important to note for a sample that does not apply to many other samples</dd>
-     </dl>
-
-   </div>
-
-
-<!-- Attempt to add angular dropdown -->
-<!--   <div ng-controller="ExampleController">
+  <!-- Attempt to add angular dropdown -->
+  <!--   <div ng-controller="ExampleController">
     <form name = "myForm">
       <label for="singleSelect"> Single select: </label><br>
        <select name="singleSelect" ng-model="input_data.selected_value" ng-options="x.key as x.key for x in keys.searchKeys"></select><br>
        Selected:{{input_data.selected_value}}
     </form>
    </div>-->
-<!--   <div ng-controller="ExampleController">
+  <!--   <div ng-controller="ExampleController">
    <form name="myForm">
      <label for="singleSelect"> Single select: </label><br>
      <select name="singleSelect" ng-model="input_data.selected_value" ng-options="item.key for item.key in keys.searchKeys">
@@ -203,5 +206,5 @@
 
 
 </body>
-</html>
 
+</html>

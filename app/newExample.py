@@ -22,7 +22,7 @@ from email.MIMEText import MIMEText
 from email.Utils import COMMASPACE, formatdate
 
 
-client = MongoClient('mongodb://vocms0171:27017/')
+client = MongoClient('mongodb://WorkingVM:27017/')
 db = client.xsdb
 collection = db.xsdbCollection
 
@@ -105,7 +105,7 @@ def insert():
             collection.insert({'process_name':request.form['process_name'],'cross_section':request.form['cross_section'],'total_uncertainty':request.form['total_uncertainty'],'other_uncertainty':request.form['other_uncertainty'],'cuts':request.form['cuts'],'energy':request.form['energy'],'kFactor':request.form['kFactor'],'reweighting':request.form['reweighting'],'shower':request.form['shower'],'matrix_generator':request.form['matrix_generator'],'contact':request.form['contact'],'DAS':request.form['DAS'],'MCM':request.form['MCM'],'refs':request.form['refs'],'accuracy':request.form['accuracy'],'comments':request.form['comments'],'validFrom':now.strftime('%Y-%m-%d'),'validTo':"present",'isValid':"YES",'equivalent_lumi':request.form['equivalent_lumi'],'fraction_negative_weight':request.form['fraction_negative_weight']})
 #'valid':request.form['valid'],'test':request.form['test']})
 
-            
+            '''
             writeFile = open("/home/app/newLog.txt", "a")
             writeFile.write("\n\nThis is an insert operation!")
             writeFile.write("\n\n"+now.strftime('%H:%M:%S %Y-%m-%d'))
@@ -124,10 +124,11 @@ def insert():
             writeFile.write("\nDAS:"+request.form['DAS'])
             writeFile.write("\nMCM:"+request.form['MCM'])
             writeFile.close()
+            '''
 
             messageText = """Dear DB tool admin,\n\nThe following information was inserted into the DB tool by a user:\n\nProcess Name: """+request.form['process_name']+"""\nCross Section: """+request.form['cross_section']+"""\nTotal Uncertainty: """+request.form['total_uncertainty']+"""\nOther Uncertainty: """+request.form['other_uncertainty']+"""\nCuts: """+request.form['cuts']+"""\nK-Factor: """+request.form['kFactor']+"""\nReweighting: """+request.form['reweighting']+"""\nShower Tool: """+request.form['shower']+"""\nMatrix Generator: """+request.form['matrix_generator']+"""\nAccuracy: """+request.form['accuracy']+"""\nContact: """+request.form['contact']+"""\nReferences: """+request.form['refs']+"""\nDAS link: """+request.form['DAS']+"""\nMCM link: """+request.form['MCM']+"""\n\nPlease confirm the above information in the tool at your earliest convenience."""
             emailSubject = "DB Tool Insert performed"
-            sendMailOnChanges(messageText, emailSubject)
+            # sendMailOnChanges(messageText, emailSubject)
 
             return render_template("success.html")
         
