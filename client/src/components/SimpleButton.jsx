@@ -5,7 +5,7 @@ const SimpleButton = (props) => {
         <button type="button" className="btn btn-default"
             onClick={props.onClick}
             style={props.style}
-        >{props.text}</button>
+        >{props.children}</button>
     )
 }
 

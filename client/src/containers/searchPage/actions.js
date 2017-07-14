@@ -4,10 +4,24 @@ import axios from 'axios';
 axios.defaults.baseURL = apiUrl;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
+
+
 const getRecordsSuccess = (records) => {
     return {
         type: "GET_RECORDS_SUCCESS",
         records
+    }
+}
+
+export const addRecord = () => {
+    return {
+        type: "ADD_RECORD"
+    }
+}
+
+export const removeUnsavedRecord = () => {
+    return {
+        type: "REMOVE_UNSAVED_RECORD",
     }
 }
 
@@ -27,14 +41,27 @@ export const recordCellChange = (value, recordId, propertyName) => {
     }
 }
 
+export const insertRecord = (record) => (dispatch) => {
+    dispatch({ type: "INSERT_RECORD_REQUEST" });
+
+    axios.post('xsdb', record)
+        .then(response => {
+            dispatch({
+                type: "INSERT_RECORD_SUCCESS",
+                record: response.data
+            })
+        })
+        .catch(error => {
+            console.log(error);
+            dispatch({ type: "INSERT_RECORD_ERROR", error: error.message });
+        })
+
+}
+
 export const updateRecord = (recordId, record) => (dispatch) => {
     dispatch({ type: "UPDATE_RECORD_REQUEST" });
 
     axios.put('xsdb/' + recordId, record)
-        // .then(response => {
-        //     console.log(response)
-        //     JSON.parse(response.data)
-        // })
         .then(response => {
             dispatch({
                 type: "UPDATE_RECORD_SUCCESS",

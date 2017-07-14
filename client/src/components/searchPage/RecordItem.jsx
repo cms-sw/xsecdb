@@ -33,11 +33,15 @@ function renderCells(props) {
 function renderButton(props) {
     if (props.isInEditMode) {
         return <RecordItemCell
-            text={<SimpleButton onClick={props.onSaveButtonClick.bind(this, props.id)} text="Save" />}
+            text={<SimpleButton onClick={props.onSaveButtonClick.bind(this, props.id)} text="Save" >
+                    Save
+                </SimpleButton>}
         />
     } else {
         return <RecordItemCell
-            text={<SimpleButton onClick={props.onEditModeActivate.bind(this, props.id)} text="Edit" />}
+            text={<SimpleButton onClick={props.onEditModeActivate.bind(this, props.id)}>
+                    Edit
+                </SimpleButton>}
         />
     }
 }

@@ -1,7 +1,41 @@
 
+//external - config file (?)
+const emptyRecord = {
+    id: null,
+    DAS: "",
+    MCM: "",
+    accuracy: "",
+    comments: "",
+    contact: "",
+    cross_section: "",
+    cuts: "",
+    energy: "",
+    equivalent_lumi: "",
+    fraction_negative_weight: "",
+    isValid: "",
+    kFactor: "",
+    matrix_generator: "",
+    other_uncertainty: "",
+    process_name: "",
+    refs: "",
+    reweighting: "",
+    shower: "",
+    total_uncertainty: "",
+    validFrom: "",
+    validTo: ""
+}
+
 const searchPageReducer = (state = [], action) => {
     console.log(action);
     switch (action.type) {
+        case "ADD_RECORD":
+            return Object.assign({}, state, {
+                records: [emptyRecord, ...state.records]
+            })
+        case "REMOVE_UNSAVED_RECORD":
+            return Object.assign({}, state, {
+                records: state.records.filter(record => record.id != null)
+            })
         case "GET_RECORDS_SUCCESS":
             const records = action.records.map(r => Object.assign({}, r, { id: r._id.$oid }));
 
