@@ -52,8 +52,10 @@ def insert():
 @app.route('/api/xsdb/<record_id>', methods=['PUT'])
 def update(record_id):
     if validate_model(request.data):
+        record = request.get_json()
+        del record["_id"]
         
-        collection.update({'_id': ObjectId(record_id)}, request.get_json())
+        collection.update({'_id': ObjectId(record_id)}, record)
         
         result = collection.find_one({'_id': ObjectId(record_id)})
         print result

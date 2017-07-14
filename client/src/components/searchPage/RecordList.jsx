@@ -16,6 +16,7 @@ class RecordList extends React.Component {
         }
 
         this.onEditModeActivate = this.onEditModeActivate.bind(this);
+        this.onSaveButtonClick = this.onSaveButtonClick.bind(this);
     }
 
     render() {
@@ -38,6 +39,8 @@ class RecordList extends React.Component {
                             <RecordItem {...record} key={i} 
                                 isInEditMode={this.state.editingRecordId == record.id}
                                 onEditModeActivate={this.onEditModeActivate}
+                                onSaveButtonClick={this.onSaveButtonClick}
+                                onRecordCellChange={this.props.onRecordCellChange}
                             />
                         )}
                     </tbody>
@@ -52,6 +55,15 @@ class RecordList extends React.Component {
         })
 
         //update previous record
+    }
+
+    onSaveButtonClick(recordId){
+        this.setState({
+            editingRecordId: null
+        })
+
+        //save
+        this.props.updateRecord(recordId);
     }
 }
 

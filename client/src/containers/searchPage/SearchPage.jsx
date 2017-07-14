@@ -12,18 +12,22 @@ import * as actionCreators from './actions';
 import { recordList } from '../../mockData/data';
 
 class SearchPage extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.onSearchInputChange = this.onSearchInputChange.bind(this);
         this.onSearchButtonClick = this.onSearchButtonClick.bind(this);
+        this.onRecordCellChange = this.onRecordCellChange.bind(this);
+        this.updateRecord = this.updateRecord.bind(this);
     }
 
     render() {
         return (
             <div className="container">
                 <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange} />
-                <RecordList records={this.props.search.records} />
+                <RecordList records={this.props.search.records} onRecordCellChange={this.onRecordCellChange} 
+                    updateRecord={this.updateRecord}
+                />
             </div>
         )
     }
@@ -36,8 +40,18 @@ class SearchPage extends React.Component {
         this.props.getFilteredRecords(this.props.searchField)
     }
 
-    onSearchInputChange(e){
+    onSearchInputChange(e) {
         this.props.searchFieldChange(e.target.value);
+    }
+
+    onRecordCellChange(value, recordId, propertyName) {
+        console.log(value + " " + recordId + " " + propertyName);
+        this.props.recordCellChange(value, recordId, propertyName);
+    }
+
+    updateRecord(recordId) {
+        const record = this.props.search.records.find(r => r.id == recordId);
+        this.props.updateRecord(recordId, record);
     }
 }
 

@@ -22,8 +22,30 @@ export const recordCellChange = (value, recordId, propertyName) => {
     return {
         type: "RECORD_CELL_CHANGE",
         value,
-        recordId
+        recordId,
+        propertyName
     }
+}
+
+export const updateRecord = (recordId, record) => (dispatch) => {
+    dispatch({ type: "UPDATE_RECORD_REQUEST" });
+
+    axios.put('xsdb/' + recordId, record)
+        // .then(response => {
+        //     console.log(response)
+        //     JSON.parse(response.data)
+        // })
+        .then(response => {
+            dispatch({
+                type: "UPDATE_RECORD_SUCCESS",
+                response
+            })
+        })
+        .catch(error => {
+            console.log(error);
+            dispatch({ type: "UPDATE_RECORD_ERROR", error: error.message });
+        })
+
 }
 
 export const getAllRecords = () => (dispatch) => {

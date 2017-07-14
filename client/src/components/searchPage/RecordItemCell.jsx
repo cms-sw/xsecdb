@@ -12,6 +12,7 @@ class RecordItemCell extends React.Component {
 
         this.onDoubleClick = this.onDoubleClick.bind(this);
         this.onBlur = this.onBlur.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
 
     render() {
@@ -28,13 +29,17 @@ class RecordItemCell extends React.Component {
         if (this.props.isInEditMode) {
             return (
                 <input type="text" className="form-control"
-                    style={this.props.style} onChange={this.props.onChange}
-                    value={this.state.value}
+                    style={this.props.style} onChange={this.onChange}
+                    value={this.props.text}
                 />
             )
         } else {
-            return this.state.value;
+            return this.props.text;
         }
+    }
+
+    onChange(e){
+        this.props.onRecordCellChange(e.target.value, this.props.id, this.props.propertyName)
     }
 
     onDoubleClick(e) {

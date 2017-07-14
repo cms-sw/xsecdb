@@ -13,21 +13,33 @@ const RecordItem = (props) => {
     return (
         <tr>
             {renderCells(props)}
-            <RecordItemCell text={<SimpleButton onClick={props.onEditClick} text="Edit" />} />
+            {renderButton(props)}
         </tr>
     )
 }
 
 function renderCells(props) {
-    const items = dictionary.map(key => props[key]);
+    const items = dictionary.map(key => ({ value: props[key], key: key }));
 
-    return items.map((value, i) =>
-        <RecordItemCell text={value} key={i} id={props.id}
+    return items.map((item, i) =>
+        <RecordItemCell text={item.value} key={i} id={props.id}
             onEditModeActivate={props.onEditModeActivate} isInEditMode={props.isInEditMode}
-            propertyName={dictionary[items.indexOf(value)]}
-            //onChange=
+            propertyName={item.key}
+            onRecordCellChange={props.onRecordCellChange}
         />
     );
+}
+
+function renderButton(props) {
+    if (props.isInEditMode) {
+        return <RecordItemCell
+            text={<SimpleButton onClick={props.onSaveButtonClick.bind(this, props.id)} text="Save" />}
+        />
+    } else {
+        return <RecordItemCell
+            text={<SimpleButton onClick={props.onEditModeActivate.bind(this, props.id)} text="Edit" />}
+        />
+    }
 }
 
 export default RecordItem;

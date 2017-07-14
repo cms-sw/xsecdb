@@ -9,15 +9,18 @@ const searchPageReducer = (state = [], action) => {
         case "SEARCH_FIELD_CHANGE":
             return Object.assign({}, state, { searchField: action.value });
         case "RECORD_CELL_CHANGE":
-            const index = getRecordIndexById(action.recordId);
-            return Object.assign({}, state, {
+            const index = getRecordIndexById(action.recordId, state.records);
+            const a = Object.assign({}, state, {
                 records: [
-                    ...state.records.splice(0, index),
+                    ...state.records.slice(0, index),
                     Object.assign({}, state.records[index], {
                         [action.propertyName]: action.value
-                    })
+                    }),
+                    ...state.records.slice(index + 1)
                 ]
             });
+            console.log(a)
+            return a;
         default:
             return state;
     }
