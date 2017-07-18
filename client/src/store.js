@@ -6,7 +6,8 @@ import rootReducer from './rootReducer';
 const defaultState = {
     searchPage: {
         records: []
-    }
+    },
+    editPage: []
 };
 
 const store = createStore(

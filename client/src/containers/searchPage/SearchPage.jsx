@@ -9,8 +9,6 @@ import SearchBar from '../../components/searchPage/SearchBar';
 
 import * as actionCreators from './actions';
 
-import { recordList } from '../../mockData/data';
-
 class SearchPage extends React.Component {
     constructor(props) {
         super(props);

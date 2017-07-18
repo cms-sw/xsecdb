@@ -44,7 +44,7 @@ export const recordCellChange = (value, recordId, propertyName) => {
 export const insertRecord = (record) => (dispatch) => {
     dispatch({ type: "INSERT_RECORD_REQUEST" });
 
-    axios.post('xsdb', record)
+    axios.post('insert', record)
         .then(response => {
             dispatch({
                 type: "INSERT_RECORD_SUCCESS",
@@ -61,7 +61,7 @@ export const insertRecord = (record) => (dispatch) => {
 export const updateRecord = (recordId, record) => (dispatch) => {
     dispatch({ type: "UPDATE_RECORD_REQUEST" });
 
-    axios.put('xsdb/' + recordId, record)
+    axios.put('update/' + recordId, record)
         .then(response => {
             dispatch({
                 type: "UPDATE_RECORD_SUCCESS",
@@ -118,20 +118,6 @@ function getQueryObject(query = "") {
         const pp = pair.split(_assing);
         conditions[pp[0]] = pp[1];
     })
-    // For regex queries, query parsing should be moved to backend
-    // nested OR not supported in mongo 1.6
-    // const a = {
-    //     "$and": [
-    //         { "accuracy": "LO" },
-    //         {
-    //             "$or": [{
-    //                 "matrix_generator": "powheg"
-    //             }, {
-    //                 "matrix_generator": "herwig7"
-    //             }]
-    //         }
-    //     ]
-    // }
 
     return conditions;
 }

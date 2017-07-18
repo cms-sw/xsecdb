@@ -1,7 +1,6 @@
 import React from 'react';
 import RecordItem from './RecordItem';
 import SimpleButton from '../SimpleButton';
-import InserForm from './InsertForm';
 
 const header = [
     "DAS", "MCM", "accuracy", "comments", "cross_section",
@@ -34,7 +33,6 @@ class RecordList extends React.Component {
                     >
                         <span className="glyphicon glyphicon-plus" aria-hidden="true" />
                     </SimpleButton>
-                    <InserForm />
                 </div>
 
                 <table className="table">
