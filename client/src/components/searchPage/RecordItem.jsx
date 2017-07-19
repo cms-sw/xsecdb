@@ -2,7 +2,7 @@ import React from 'react';
 import RecordItemCell from './RecordItemCell';
 import SimpleButton from '../SimpleButton';
 
-//separate into config-like file
+//TODO: Selecting columns to show
 const dictionary = [
     "DAS", "MCM", "accuracy", "comments", "cross_section",
     "cuts", "energy", "matrix_generator", "total_uncertainty",
@@ -22,28 +22,20 @@ function renderCells(props) {
     const items = dictionary.map(key => ({ value: props[key], key: key }));
 
     return items.map((item, i) =>
-        <RecordItemCell text={item.value} key={i} id={props.id}
-            onEditModeActivate={props.onEditModeActivate} isInEditMode={props.isInEditMode}
-            propertyName={item.key}
-            onRecordCellChange={props.onRecordCellChange}
-        />
+        <RecordItemCell key={i}>
+            {item.value}
+        </RecordItemCell>
     );
 }
 
 function renderButton(props) {
-    if (props.isInEditMode) {
-        return <RecordItemCell
-            text={<SimpleButton onClick={props.onSaveButtonClick.bind(this, props.id)} text="Save" >
-                    Save
-                </SimpleButton>}
-        />
-    } else {
-        return <RecordItemCell
-            text={<SimpleButton onClick={props.onEditModeActivate.bind(this, props.id)}>
-                    Edit
-                </SimpleButton>}
-        />
-    }
+    return (
+        <RecordItemCell>
+            <SimpleButton>
+                Edit
+            </SimpleButton>
+        </RecordItemCell>
+    )
 }
 
 export default RecordItem;

@@ -50,5 +50,8 @@ def delete(message):
 def get(message):
     logger_debug.debug("GET: " + str(message))
 
+def search(message):
+    logger_debug.debug("SEARCH" + str(message))
+
 def access(message):
     logger_access.info(message)

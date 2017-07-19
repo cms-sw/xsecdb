@@ -9,19 +9,6 @@ const header = [
 ]
 
 class RecordList extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            editingRecordId: null,
-            insertMode: false
-        }
-
-        this.onEditModeActivate = this.onEditModeActivate.bind(this);
-        this.onSaveButtonClick = this.onSaveButtonClick.bind(this);
-        this.onAddButtonClick = this.onAddButtonClick.bind(this);
-    }
-
     render() {
         return (
             <div className="panel panel-default">
@@ -29,7 +16,7 @@ class RecordList extends React.Component {
                 <div className="panel-heading">Panel heading</div>
                 <div className="panel-body">
                     <SimpleButton style={{backgroundColor: 'limegreen'}}
-                        onClick={this.onAddButtonClick}
+                        onClick={() => {console.log("add clicked")}}
                     >
                         <span className="glyphicon glyphicon-plus" aria-hidden="true" />
                     </SimpleButton>
@@ -43,52 +30,12 @@ class RecordList extends React.Component {
                     </thead>
                     <tbody>
                         {this.props.records.map((record, i) =>
-                            <RecordItem {...record} key={i} 
-                                isInEditMode={this.state.editingRecordId == record.id}
-                                onEditModeActivate={this.onEditModeActivate}
-                                onSaveButtonClick={this.onSaveButtonClick}
-                                onRecordCellChange={this.props.onRecordCellChange}
-                            />
+                            <RecordItem {...record} key={i} />
                         )}
                     </tbody>
                 </table>
             </div>
         );
-    }
-
-    onAddButtonClick(e){
-        this.props.addRecord();
-        this.setState({
-            editingRecordId: null,
-            insertMode: true
-        })
-        //remove unsaved record
-    }
-
-    onEditModeActivate(recordId) {
-        //remove unsaved records
-        if(this.state.insertMode){
-            this.props.removeUnsavedRecord();
-        }
-        
-        this.setState({
-            editingRecordId: recordId,
-            insertMode: false
-        })
-        //update previous record
-    }
-
-    onSaveButtonClick(recordId){
-        if(this.state.insertMode){
-            this.props.insertRecord();
-        }else{
-            this.props.updateRecord(recordId);
-        }
-
-        this.setState({
-            editingRecordId: null,
-            insertMode: false
-        })
     }
 }
 

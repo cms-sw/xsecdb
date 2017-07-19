@@ -11,7 +11,8 @@ from flask_cors import CORS
 from validate import validate_model
 import logger
 from models.record import Record
-from models.fields import fields
+# Defined structure for input fields
+from models.fields import fields as record_structure
 
 app = Flask(__name__)
 CORS(app)
@@ -20,37 +21,50 @@ client = MongoClient('mongodb://WorkingVM:27017/')
 db = client.xsdb
 collection = db.xsdbCollection
 
-
-@app.before_request
-def before_request():
-    print 'Before request'
-
-
-@app.teardown_request
-def teardown_request(exception):
-    print 'after request (successful or not)'
-
-
 @app.route('/', methods=['GET'])
 def index():
+    # render public folder contents
     return 'index route'
 
 
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
     logger.get(record_id)
- 
-    result = collection.find_one({'_id': ObjectId(record_id)})
-    result["id"] = record_id
+
+    record = collection.find_one({'_id': ObjectId(record_id)})
+    del record['_id']
+    
+    result = {}
+
+    # Map record fields to structure
+    for key, value in record.iteritems():
+        if key in record_structure:
+            result[key] = record_structure[key]
+            result[key]['value'] = value
+        else:
+            result[key] = value
 
     return make_response(jsonify(result), 200)
 
 @app.route('/api/get', methods=['GET'])
 def get_by_id_():
- 
-    result = fields
+    id_ = ObjectId('595f672d42cdba7464e552c2')
+    record = record_structure
 
-    return make_response(jsonify(result), 200)
+    result = collection.find_one({'_id': id_})
+    del result['_id']
+  
+    _dic = {}
+    _dic['id'] = '595f672d42cdba7464e552c2'
+
+    for key, value in result.iteritems():
+        if key in record_structure:
+            _dic[key] = record_structure[key]
+            _dic[key]['value'] = value
+        else:
+            _dic[key] = value
+
+    return make_response(jsonify(_dic), 200)
 
 
 @app.route('/api/insert', methods=['POST'])
@@ -98,9 +112,9 @@ def search():
     query = json.loads(request.data)
     search_dictionary = {}
 
-    logger.debug(query)
+    logger.search(query)
 
-    for key in query.keys():
+    for key in query:
         search_dictionary[key] = re.compile(query[key], re.I)
 
     cursor = collection.find(search_dictionary)

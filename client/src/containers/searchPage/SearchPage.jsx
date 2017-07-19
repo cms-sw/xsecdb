@@ -15,19 +15,13 @@ class SearchPage extends React.Component {
 
         this.onSearchInputChange = this.onSearchInputChange.bind(this);
         this.onSearchButtonClick = this.onSearchButtonClick.bind(this);
-        this.onRecordCellChange = this.onRecordCellChange.bind(this);
-        this.updateRecord = this.updateRecord.bind(this);
     }
 
     render() {
         return (
             <div className="container">
                 <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange} />
-                <RecordList records={this.props.search.records} onRecordCellChange={this.onRecordCellChange} 
-                    updateRecord={this.updateRecord}
-                    addRecord={this.props.addRecord}
-                    removeUnsavedRecord={this.props.removeUnsavedRecord}
-                />
+                <RecordList records={this.props.search.records}/>
             </div>
         )
     }
@@ -42,20 +36,6 @@ class SearchPage extends React.Component {
 
     onSearchInputChange(e) {
         this.props.searchFieldChange(e.target.value);
-    }
-
-    onRecordCellChange(value, recordId, propertyName) {
-        this.props.recordCellChange(value, recordId, propertyName);
-    }
-
-    updateRecord(recordId) {
-        const record = this.props.search.records.find(r => r.id == recordId);
-        this.props.updateRecord(recordId, record);
-    }
-
-    insertRecord(recordId) {
-        const record = this.props.search.records.find(r => r.id == recordId);
-        this.props.insertRecords(recordId, record);
     }
 }
 

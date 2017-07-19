@@ -1,124 +1,109 @@
-fields = [
-    {
-        'name': "DAS",
+fields = {
+    "DAS": {
         'title': "DAS",
         'type': "text",
         'value': "test DAS"
     },
-    {
-        'name': "MCM",
+    "MCM": {
         'title': "MCM",
         'type': "text",
         'value': "eMCeM"
     },
-    {
-        'name': "accuracy",
+    "accuracy": {
         'title': "accuracy",
         'type': "text",
         'value': "accuracy"
     },
-    {
-        'name': "contact",
+    "contact": {
         'title': "contact",
         'type': "text",
         'value': "contactation"
     },
-    {
-        'name': "comments",
+    "comments": {
         'title': "comments",
         'type': "text",
         'value': "test comment"
     },
-    {
-        'name': "cuts",
+    "cuts": {
         'title': "cuts",
         'type': "text",
         'value': "test cuts"
     },
-    {
-        'name': "cross_section",
+    "cross_section": {
         'title': "cross_section",
         'type': "text",
         'value': "section section"
     },
-    {
-        'name': "equivalent_lumi",
+    "equivalent_lumi": {
         'title': "equivalent_lumi",
         'type': "text",
         'value': "test lumi"
     },
-    {
-        'name': "energy",
+    "energy": {
         'title': "energy",
         'type': "number",
         'value': 13
     },
-    {
-        'name': "isValid",
+    "isValid": {
         'title': "Is Valid",
         'type': "checkbox",
         'value': False
     },
-    {
-        'name': "fraction_negative_weight",
+    "fraction_negative_weight": {
         'title': "fraction_negative_weight",
         'type': "text",
         'value': "negative weight"
     },
-    {
-        'name': "matrix_generator",
+    "matrix_generator": {
         'title': "Matrix generator",
         'type': "select",
         'options': ["2x2", "3x3", "8x8"],
         'value': "3x3"
     },
-    {
-        'name': "kFactor",
+    "kFactor": {
         'title': "kFactor",
         'type': "text",
         'value': "K Factor"
     },
-    {
-        'name': "other_uncertainty",
+    "other_uncertainty": {
         'title': "Other uncertainity",
         'type': "text",
         'value': "Uncertainity"
     },
-    {
-        'name': "process_'name'",
-        'title': "Process 'name'",
+    "process_name": {
+        'title': "Process name",
         'type': "text",
         'value': "Some process"
     },
-    {
-        'name': "reweighting",
+    "reweighting": {
         'title': "Reweighting",
         'type': "text",
         'value': "Reeweighting"
     },
-    {
-        'name': "shower",
+    "shower": {
         'title': "Shower",
         'type': "select",
         'options': ["shower1", "shower2", "no shower"],
         'value': "no shower"
     },
-    {
-        'name': "total_uncertainty",
+    "total_uncertainty": {
         'title': "Total uncertainty",
         'type': "number",
         'value': 9
     },
-    {
-        'name': "validFrom",
+    "validFrom": {
         'title': "Valid from",
         'type': "date",
         'value': "2017-06-08"
     },
-    {
-        'name': "validTo",
+    "validTo": {
+        'title': "Valid to",
+        'type': "date",
+        'value': "2017-08-08"
+    },
+    "Test_additional": {
         'title': "Valid to",
         'type': "date",
         'value': "2017-08-08"
     }
-]
+}
