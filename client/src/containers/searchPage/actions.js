@@ -13,18 +13,6 @@ const getRecordsSuccess = (records) => {
     }
 }
 
-export const addRecord = () => {
-    return {
-        type: "ADD_RECORD"
-    }
-}
-
-export const removeUnsavedRecord = () => {
-    return {
-        type: "REMOVE_UNSAVED_RECORD",
-    }
-}
-
 export const searchFieldChange = (value) => {
     return {
         type: "SEARCH_FIELD_CHANGE",
@@ -58,21 +46,20 @@ export const insertRecord = (record) => (dispatch) => {
 
 }
 
-export const updateRecord = (recordId, record) => (dispatch) => {
-    dispatch({ type: "UPDATE_RECORD_REQUEST" });
+export const deleteRecord = (recordId) => (dispatch) => {
+    dispatch({ type: "DELETE_RECORD_REQUEST" });
 
-    axios.put('update/' + recordId, record)
+    axios.delete('delete/' + recordId)
         .then(response => {
             dispatch({
-                type: "UPDATE_RECORD_SUCCESS",
-                response
+                type: "DELETE_RECORD_SUCCESS",
+                recordId
             })
         })
         .catch(error => {
             console.log(error);
-            dispatch({ type: "UPDATE_RECORD_ERROR", error: error.message });
+            dispatch({ type: "DELETE_RECORD_ERROR", error: error.message });
         })
-
 }
 
 export const getAllRecords = () => (dispatch) => {
@@ -80,15 +67,11 @@ export const getAllRecords = () => (dispatch) => {
 
     axios.get('xsdb')
         .then(response => {
-            const records = JSON.parse(response.data);
-            dispatch(getRecordsSuccess(records));
+            dispatch(getRecordsSuccess(response.data));
         })
         .catch(error => {
-            console.log(error)
-
             dispatch({ type: "GET_ALL_RECORDS_ERROR", error: error.message });
         })
-
 }
 
 export const getFilteredRecords = (query) => (dispatch) => {
@@ -97,13 +80,11 @@ export const getFilteredRecords = (query) => (dispatch) => {
     dispatch({ type: "GET_FILTERED_RECORDS_REQUEST" });
 
     axios.post('search', params)
-        .then(response => JSON.parse(response.data))
-        .then(records => {
-            dispatch(getRecordsSuccess(records))
+        .then(response => {
+            dispatch(getRecordsSuccess(response.data))
         })
         .catch(error => console.log(error))
 }
-
 
 
 function getQueryObject(query = "") {

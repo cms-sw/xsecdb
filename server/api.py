@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 from time import gmtime, strftime
 import json
 import re
+import copy
 
 from flask_cors import CORS
 
@@ -35,36 +36,38 @@ def get_by_id(record_id):
     del record['_id']
     
     result = {}
+    result['id'] = {
+        'name': 'id',
+        'value': record_id,
+        'type': 'not_render'
+    }
+
+    # Make a copy of field structure, to not mutate it
+    dic_ = copy.deepcopy(record_structure)
 
     # Map record fields to structure
     for key, value in record.iteritems():
-        if key in record_structure:
-            result[key] = record_structure[key]
+        if key in dic_:
+            result[key] = dic_[key]
             result[key]['value'] = value
         else:
-            result[key] = value
+            result[key] = {
+                'title': key,
+                'type': 'text',
+                'value': value
+            }
+    
+    for key in dic_:
+        if key not in result:
+            result[key] = dic_[key]
 
     return make_response(jsonify(result), 200)
 
 @app.route('/api/get', methods=['GET'])
-def get_by_id_():
-    id_ = ObjectId('595f672d42cdba7464e552c2')
-    record = record_structure
+def get_empty():
+    logger.get("Empty record")
 
-    result = collection.find_one({'_id': id_})
-    del result['_id']
-  
-    _dic = {}
-    _dic['id'] = '595f672d42cdba7464e552c2'
-
-    for key, value in result.iteritems():
-        if key in record_structure:
-            _dic[key] = record_structure[key]
-            _dic[key]['value'] = value
-        else:
-            _dic[key] = value
-
-    return make_response(jsonify(_dic), 200)
+    return make_response(jsonify(record_structure), 200)
 
 
 @app.route('/api/insert', methods=['POST'])
@@ -77,13 +80,14 @@ def insert():
 
         result = collection.find_one({'_id': record_id})
         result["id"] = str(record_id)
+        del result["_id"]
 
         return make_response(jsonify(result), 201)
     else:
         return {'error': 'Incorrect data format'}, 400
 
 
-@app.route('/api/update/<record_id>', methods=['PUT'])
+@app.route('/api/update/<record_id>', methods=['POST'])
 def update(record_id):
     logger.update(request.get_json())
 
@@ -94,6 +98,7 @@ def update(record_id):
 
         result = collection.find_one({'_id': ObjectId(record_id)})
         result["id"] = record_id
+        del result["_id"]
 
         return make_response(jsonify(result), 201)
     else:
@@ -104,7 +109,9 @@ def update(record_id):
 def delete(record_id):
     logger.delete(record_id)
 
-    return 'remove action'
+    collection.remove({'_id': ObjectId(record_id)})
+
+    return make_response('success', 200)
 
 
 @app.route('/api/search', methods=['POST'])
@@ -120,7 +127,7 @@ def search():
     cursor = collection.find(search_dictionary)
     result = dumps(cursor)
 
-    return make_response(jsonify(result), 200)
+    return make_response(result, 200)
 
 
 @app.route('/api/xsdb', methods=['GET'])
@@ -128,8 +135,8 @@ def get_all():
     cursor = collection.find()
 
     result = dumps(cursor)
-    return make_response(jsonify(result), 200)
+    return make_response(result, 200)
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=4241)
+    app.run(debug=True, host='0.0.0.0', port=4241, threaded=True)

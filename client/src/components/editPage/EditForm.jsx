@@ -1,6 +1,7 @@
 import React from 'react';
 import SimpleButton from '../SimpleButton';
 import DynamicField from './DynamicField';
+import { Link } from 'react-router-dom';
 
 const INPUTS_IN_ROW = 4;
 
@@ -19,7 +20,9 @@ class EditForm extends React.Component {
                     <button type="button" className="btn btn-success"
                         onClick={this.props.onSaveRecord}
                     >Save</button>
-                    <button type="button" className="btn btn-warning">Cancel</button>
+                    <Link to="/">
+                        <button type="button" className="btn btn-warning">Cancel</button>
+                    </Link>
                 </div>
             </div>
 
@@ -27,7 +30,7 @@ class EditForm extends React.Component {
     }
 
     renderForm() {
-        const fields = this.props.fields;
+        const fields = this.props.fields.filter(f => f.type.toLowerCase() !== "not_render");
         const n = Math.ceil(fields.length / INPUTS_IN_ROW);
 
         let row;
@@ -52,7 +55,7 @@ class EditForm extends React.Component {
         for (let i = index; i < count; i++) {
             result.push((
                 <div className="col-lg-3 col-sm-6" key={i}>
-                    <DynamicField key={i} {...fields[i]} onChange={this.props.onFieldChange}/>
+                    <DynamicField key={i} {...fields[i]} onChange={this.props.onFieldChange} />
                 </div>
             ))
         }

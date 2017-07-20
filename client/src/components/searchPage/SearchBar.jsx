@@ -6,12 +6,16 @@ import SimpleButton from '../SimpleButton';
 const SearchBar = (props) => {
     return (
         <div className="form-inline">
-            <InputField placeholder={"Search query..."} id="searchField"
-                style={{ width: '90%' }} onChange={props.onSearchInputChange}
-            />
-            <SimpleButton onClick={props.onSearchButtonClick} style={{ width: '10%' }} >
-                Search
-            </SimpleButton>
+            <form className="inline-form">
+                <InputField placeholder={"Search query..."} id="searchField"
+                    style={{ width: '90%' }} onChange={props.onSearchInputChange}
+                />
+                <div style={{ width: '10%', display: 'inline-block' }} >
+                <button type="submit" className="btn btn-default" 
+                    onClick={props.onSearchButtonClick}
+                >Submit</button>
+                </div>
+            </form>
 
             <div className="panel panel-default">
                 <div className="panel-body">

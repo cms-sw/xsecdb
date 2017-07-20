@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import RecordItemCell from './RecordItemCell';
 import SimpleButton from '../SimpleButton';
 
@@ -31,9 +33,15 @@ function renderCells(props) {
 function renderButton(props) {
     return (
         <RecordItemCell>
-            <SimpleButton>
-                Edit
-            </SimpleButton>
+            <Link to={`edit/${props.id}`} >
+                <SimpleButton>Edit</SimpleButton>
+            </Link>
+            <button type="button" className="btn btn-danger"
+                onClick={props.onDeleteButtonClick.bind(this, props.id)}
+            >
+                Delete
+            </button>
+
         </RecordItemCell>
     )
 }

@@ -27,23 +27,9 @@ class EditPage extends React.Component {
         )
     }
 
-    componentDidMount() {
-        //GET INPUT FIELDS FROM BACKEND
-        this.props.getEditFieldsSuccess(dataFields);
+    componentDidMount() { 
         const recordId = this.props.match.params.recordId;
-
-        //IF UPDATING RECORD
-        if (recordId) {
-            //GET DATA AND WIRE IT TO FIELDS 
-
-        } else {
-            //FILL FIELDS WITH DEFAULT VALUES
-
-        }
-
-        //ELSE 
-        //(Maybe do A U B, where A is fields from backend and B is record fields)
-
+        this.props.getRecord(recordId);
     }
 
     onEditFieldChange(propertyName, e) {
@@ -53,10 +39,11 @@ class EditPage extends React.Component {
     }
 
     onSaveRecord() {
-        const record = {};
+        this.props.saveRecord(this.props.record);
+    }
 
-        this.props.record.map(field => record[field.name] = field.value);
-        this.props.saveRecord(record);
+    isInsertMode() {
+        return !!this.props.record.id;
     }
 }
 

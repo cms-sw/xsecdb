@@ -15,13 +15,17 @@ class SearchPage extends React.Component {
 
         this.onSearchInputChange = this.onSearchInputChange.bind(this);
         this.onSearchButtonClick = this.onSearchButtonClick.bind(this);
+        this.onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
     }
 
     render() {
         return (
             <div className="container">
                 <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange} />
-                <RecordList records={this.props.search.records}/>
+                <RecordList 
+                    records={this.props.search.records}
+                    onDeleteButtonClick={this.onDeleteButtonClick}
+                />
             </div>
         )
     }
@@ -30,12 +34,18 @@ class SearchPage extends React.Component {
         this.props.getAllRecords();
     }
 
-    onSearchButtonClick() {
+    onSearchButtonClick(e) {
+        e.preventDefault();
         this.props.getFilteredRecords(this.props.searchField)
     }
 
     onSearchInputChange(e) {
         this.props.searchFieldChange(e.target.value);
+    }
+
+    onDeleteButtonClick(recordId, e) {
+        console.log("delete" + recordId);
+        this.props.deleteRecord(recordId);
     }
 }
 

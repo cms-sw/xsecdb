@@ -16,18 +16,18 @@ const DynamicField = (props) => {
             )
         case "CHECKBOX":
             return (
-                // <div className="form-group" htmlFor={props.name}>
-                //     <label>
-                //         <input type="checkbox" name={props.name} value={props.value} onChange={props.onChange} />
-                //         {props.title}
-                //     </label>
-                // </div>
-                <div className="form-group">
-                    <label className="control-label" htmlFor={props.name}>{props.title}</label>
-                    <input type="checkbox" className="form-control" name={props.name} checked={props.value}
-                        onChange={onChange}
-                    />
+                <div className="form-group" htmlFor={props.name}>
+                    <label>
+                        <input type="checkbox" name={props.name} value={props.value} onChange={props.onChange} />
+                        {props.title}
+                    </label>
                 </div>
+                // <div className="form-group">
+                //     <label className="control-label" htmlFor={props.name}>{props.title}</label>
+                //     <input type="checkbox" className="form-control" name={props.name} checked={props.value}
+                //         onChange={onChange}
+                //     />
+                // </div>
             )
         case "DATE":
             return <p>Date</p>
@@ -54,7 +54,7 @@ const DynamicField = (props) => {
                 </div>
             )
         default:
-            return <p>Text</p>;
+            return <div/>;
     }
 }
 

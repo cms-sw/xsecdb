@@ -53,6 +53,10 @@ const searchPageReducer = (state = [], action) => {
                     ...state.records.slice(index + 1)
                 ]
             });
+        case "DELETE_RECORD_SUCCESS":
+            return Object.assign({}, state, {
+                records: state.records.filter(record => record.id != action.recordId)
+            });
         default:
             return state;
     }
