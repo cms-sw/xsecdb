@@ -17,7 +17,8 @@
     "redux": "^3.7.1",
     "redux-thunk": "^2.2.0",
     "react-router-redux": "~5.0.0-alpha.6",
-    "history": "~4.6.3"
+    "history": "~4.6.3",
+    "query-string": "~4.3.4"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",

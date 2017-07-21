@@ -18,7 +18,7 @@ const DynamicField = (props) => {
             return (
                 <div className="form-group" htmlFor={props.name}>
                     <label>
-                        <input type="checkbox" name={props.name} value={props.value} onChange={props.onChange} />
+                        <input type="checkbox" name={props.name} checked={props.value} onChange={onChange} />
                         {props.title}
                     </label>
                 </div>
@@ -30,7 +30,14 @@ const DynamicField = (props) => {
                 // </div>
             )
         case "DATE":
-            return <p>Date</p>
+            return (
+                <div className="form-group">
+                    <label className="control-label" htmlFor={props.name}>{props.title}</label>
+                    <input type="text" className="form-control" name={props.name} value={props.value}
+                        onChange={onChange} disabled
+                    />
+                </div>
+            )
         case "NUMBER":
             return (
                 <div className="form-group">
@@ -54,7 +61,7 @@ const DynamicField = (props) => {
                 </div>
             )
         default:
-            return <div/>;
+            return <div />;
     }
 }
 

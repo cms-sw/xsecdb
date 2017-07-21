@@ -42,7 +42,7 @@ fields = {
     "energy": {
         'title': "energy",
         'type': "number",
-        'value': 13
+        'value': "13"
     },
     "isValid": {
         'title': "Is Valid",
@@ -89,7 +89,7 @@ fields = {
     "total_uncertainty": {
         'title': "Total uncertainty",
         'type': "number",
-        'value': 9
+        'value': "9"
     },
     "validFrom": {
         'title': "Valid from",
@@ -101,9 +101,14 @@ fields = {
         'type': "date",
         'value': "2017-08-08"
     },
-    "Test_additional": {
-        'title': "Valid to",
+    "createdOn": {
+        'title': "Created on",
         'type': "date",
-        'value': "2017-08-08"
-    }
+        'value': ""
+    },
+    "changedOn": {
+        'title': "Changed on",
+        'type': "date",
+        'value': ""
+    },
 }

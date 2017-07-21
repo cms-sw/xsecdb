@@ -1,5 +1,7 @@
 import { apiUrl } from 'Config';
 import axios from 'axios';
+import { push } from 'react-router-redux';
+import qs from 'query-string';
 
 axios.defaults.baseURL = apiUrl;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -18,6 +20,7 @@ export const searchFieldChange = (value) => {
         type: "SEARCH_FIELD_CHANGE",
         value
     }
+    
 }
 
 export const recordCellChange = (value, recordId, propertyName) => {
@@ -62,10 +65,10 @@ export const deleteRecord = (recordId) => (dispatch) => {
         })
 }
 
-export const getAllRecords = () => (dispatch) => {
+export const getInitialRecords = (query) => (dispatch) => {
     dispatch({ type: "GET_ALL_RECORDS_REQUEST" });
 
-    axios.get('xsdb')
+    axios.post('search', query)
         .then(response => {
             dispatch(getRecordsSuccess(response.data));
         })
@@ -82,6 +85,10 @@ export const getFilteredRecords = (query) => (dispatch) => {
     axios.post('search', params)
         .then(response => {
             dispatch(getRecordsSuccess(response.data))
+
+            dispatch(push({
+                search: qs.stringify(params)
+            }))
         })
         .catch(error => console.log(error))
 }

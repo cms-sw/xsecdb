@@ -75,8 +75,13 @@ def insert():
     logger.insert(request.get_json())
 
     if validate_model(request.data):
-        valid_from = strftime("%Y-%m-%d", gmtime())
-        record_id = collection.insert(request.get_json())
+        record = request.get_json()
+
+        curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        record['createdOn'] = curr_date
+        record['changedOn'] = curr_date
+
+        record_id = collection.insert(record)
 
         result = collection.find_one({'_id': record_id})
         result["id"] = str(record_id)
@@ -92,7 +97,9 @@ def update(record_id):
     logger.update(request.get_json())
 
     if validate_model(request.data):
+        
         record = request.get_json()
+        record['changedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
         collection.update({'_id': ObjectId(record_id)}, record)
 
@@ -109,7 +116,7 @@ def update(record_id):
 def delete(record_id):
     logger.delete(record_id)
 
-    collection.remove({'_id': ObjectId(record_id)})
+    collection.delete_one({'_id': ObjectId(record_id)})
 
     return make_response('success', 200)
 

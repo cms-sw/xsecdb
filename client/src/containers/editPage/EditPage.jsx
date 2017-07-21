@@ -33,6 +33,8 @@ class EditPage extends React.Component {
     }
 
     onEditFieldChange(propertyName, e) {
+        const a = 8;
+
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
         this.props.editFieldChange(value, propertyName);

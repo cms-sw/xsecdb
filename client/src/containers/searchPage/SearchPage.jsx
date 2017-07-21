@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import qs from 'query-string';
 
 import InputField from '../../components/InputField';
 import SimpleButton from '../../components/SimpleButton';
@@ -22,7 +23,7 @@ class SearchPage extends React.Component {
         return (
             <div className="container">
                 <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange} />
-                <RecordList 
+                <RecordList
                     records={this.props.search.records}
                     onDeleteButtonClick={this.onDeleteButtonClick}
                 />
@@ -31,12 +32,14 @@ class SearchPage extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getAllRecords();
+        //If there's any query parameters - use them in search
+        const searchQuery = qs.parse(this.props.location.search);
+        this.props.getInitialRecords(searchQuery);
     }
 
     onSearchButtonClick(e) {
         e.preventDefault();
-        this.props.getFilteredRecords(this.props.searchField)
+        this.props.getFilteredRecords(this.props.searchField);
     }
 
     onSearchInputChange(e) {
@@ -44,7 +47,6 @@ class SearchPage extends React.Component {
     }
 
     onDeleteButtonClick(recordId, e) {
-        console.log("delete" + recordId);
         this.props.deleteRecord(recordId);
     }
 }

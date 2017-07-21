@@ -13,7 +13,7 @@ const SearchBar = (props) => {
                 <div style={{ width: '10%', display: 'inline-block' }} >
                 <button type="submit" className="btn btn-default" 
                     onClick={props.onSearchButtonClick}
-                >Submit</button>
+                >Search</button>
                 </div>
             </form>
 

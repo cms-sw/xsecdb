@@ -28,14 +28,6 @@ const emptyRecord = {
 const searchPageReducer = (state = [], action) => {
     console.log(action);
     switch (action.type) {
-        case "ADD_RECORD":
-            return Object.assign({}, state, {
-                records: [emptyRecord, ...state.records]
-            })
-        case "REMOVE_UNSAVED_RECORD":
-            return Object.assign({}, state, {
-                records: state.records.filter(record => record.id != null)
-            })
         case "GET_RECORDS_SUCCESS":
             const records = action.records.map(r => Object.assign({}, r, { id: r._id.$oid }));
 
