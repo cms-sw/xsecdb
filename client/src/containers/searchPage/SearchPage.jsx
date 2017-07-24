@@ -24,8 +24,10 @@ class SearchPage extends React.Component {
             <div className="container">
                 <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange} />
                 <RecordList
-                    records={this.props.search.records}
+                    records={this.props.records}
                     onDeleteButtonClick={this.onDeleteButtonClick}
+                    columns={this.props.columns}
+                    visibleColumnToggle={this.props.visibleColumnToggle}
                 />
             </div>
         )
@@ -35,6 +37,8 @@ class SearchPage extends React.Component {
         //If there's any query parameters - use them in search
         const searchQuery = qs.parse(this.props.location.search);
         this.props.getInitialRecords(searchQuery);
+
+        this.props.getRecordFields();
     }
 
     onSearchButtonClick(e) {
@@ -54,6 +58,8 @@ class SearchPage extends React.Component {
 const mapStateToProps = (state) => {
     return {
         search: state.searchPage,
+        records: state.searchPage.records,
+        columns: state.searchPage.columns,
         searchField: state.searchPage.searchField
     }
 }

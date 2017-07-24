@@ -1,40 +1,44 @@
 import React from 'react';
 import RecordItem from './RecordItem';
 import SimpleButton from '../SimpleButton';
+import PanelHeading from './PanelHeading';
 import { Link } from 'react-router-dom';
 
-const header = [
-    "DAS", "MCM", "accuracy", "comments", "cross_section",
-    "cuts", "energy", "matrix_generator", "total_uncertainty",
-    "process_name", "Actions"
-]
-
 class RecordList extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {}
+    }
+
     render() {
         return (
             <div className="panel panel-default">
-
-                <div className="panel-heading">Panel heading</div>
-                <div className="panel-body">
-                    <Link to="/edit">
-                        <SimpleButton style={{ backgroundColor: 'limegreen' }}>
-                            <span className="glyphicon glyphicon-plus" aria-hidden="true" />
-                        </SimpleButton>
-                    </Link>
+                <PanelHeading 
+                    columns={this.props.columns}
+                    visibleColumnToggle={this.props.visibleColumnToggle}
+                />
+                <div className="table-responsive">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                {
+                                    this.props.columns.filter(col => col.isVisible == true)
+                                        .map((col, i) => <th key={i}>{col.name}</th>)
+                                }
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.props.records.map((record, i) =>
+                                <RecordItem {...record} key={i}
+                                    onDeleteButtonClick={this.props.onDeleteButtonClick}
+                                    columns={this.props.columns}
+                                />
+                            )}
+                        </tbody>
+                    </table>
                 </div>
-
-                <table className="table">
-                    <thead>
-                        <tr>
-                            {header.map((value, i) => <th key={i}>{value}</th>)}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.props.records.map((record, i) =>
-                            <RecordItem {...record} key={i} onDeleteButtonClick={this.props.onDeleteButtonClick}/>
-                        )}
-                    </tbody>
-                </table>
             </div>
         );
     }

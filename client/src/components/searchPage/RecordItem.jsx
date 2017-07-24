@@ -4,13 +4,6 @@ import { Link } from 'react-router-dom';
 import RecordItemCell from './RecordItemCell';
 import SimpleButton from '../SimpleButton';
 
-//TODO: Selecting columns to show
-const dictionary = [
-    "DAS", "MCM", "accuracy", "comments", "cross_section",
-    "cuts", "energy", "matrix_generator", "total_uncertainty",
-    "process_name"
-]
-
 const RecordItem = (props) => {
     return (
         <tr>
@@ -21,7 +14,12 @@ const RecordItem = (props) => {
 }
 
 function renderCells(props) {
-    const items = dictionary.map(key => ({ value: props[key], key: key }));
+    const items = props.columns.reduce((acc, col) => {
+        if(col.isVisible){
+            acc.push({ value: props[col.name], key: col.name })
+        }
+        return acc;
+    }, []);
 
     return items.map((item, i) =>
         <RecordItemCell key={i}>

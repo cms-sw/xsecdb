@@ -10,7 +10,8 @@ const middleware = routerMiddleware(history)
 
 const defaultState = {
     searchPage: {
-        records: []
+        records: [],
+        columns:[]
     },
     editPage: []
 };

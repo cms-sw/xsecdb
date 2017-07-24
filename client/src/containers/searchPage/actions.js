@@ -15,36 +15,51 @@ const getRecordsSuccess = (records) => {
     }
 }
 
+const updateUrlParams = (params) => (dispatch, getStore) => {
+    console.log(getStore().searchPage)
+    const selection = getStore().searchPage.columns.map(c => c.isVisible | 0);
+    console.log(selection);
+
+    dispatch(push({
+        search: qs.stringify(params)
+    }))
+}
+
 export const searchFieldChange = (value) => {
     return {
         type: "SEARCH_FIELD_CHANGE",
         value
     }
-    
+
 }
 
-export const recordCellChange = (value, recordId, propertyName) => {
+export const visibleColumnToggle = (index) => {
     return {
-        type: "RECORD_CELL_CHANGE",
-        value,
-        recordId,
-        propertyName
+        type: "VISIBLE_COLUMNS_TOGGLE",
+        index
     }
 }
 
-export const insertRecord = (record) => (dispatch) => {
-    dispatch({ type: "INSERT_RECORD_REQUEST" });
+export const getRecordFields = () => (dispatch) => {
+    dispatch({ type: "GET_RECORD_FIELDS_REQUEST" });
 
-    axios.post('insert', record)
+    axios.get('fields')
         .then(response => {
+            const columns = response.data.map(field => {
+                return {
+                    name: field,
+                    isVisible: true
+                }
+            })
+
             dispatch({
-                type: "INSERT_RECORD_SUCCESS",
-                record: response.data
+                type: "GET_RECORD_FIELDS_SUCCESS",
+                fields: columns
             })
         })
         .catch(error => {
             console.log(error);
-            dispatch({ type: "INSERT_RECORD_ERROR", error: error.message });
+            dispatch({ type: "GET_RECORD_FIELDS_ERROR", error: error.message });
         })
 
 }
@@ -84,14 +99,14 @@ export const getFilteredRecords = (query) => (dispatch) => {
 
     axios.post('search', params)
         .then(response => {
-            dispatch(getRecordsSuccess(response.data))
+            dispatch(getRecordsSuccess(response.data));
 
-            dispatch(push({
-                search: qs.stringify(params)
-            }))
+            dispatch(updateUrlParams(params));
         })
         .catch(error => console.log(error))
 }
+
+
 
 
 function getQueryObject(query = "") {

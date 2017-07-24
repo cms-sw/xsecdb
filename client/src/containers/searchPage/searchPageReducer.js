@@ -34,17 +34,17 @@ const searchPageReducer = (state = [], action) => {
             return Object.assign({}, state, { records: records });
         case "SEARCH_FIELD_CHANGE":
             return Object.assign({}, state, { searchField: action.value });
-        case "RECORD_CELL_CHANGE":
-            const index = getRecordIndexById(action.recordId, state.records);
+        case "VISIBLE_COLUMNS_TOGGLE":
+            const i = action.index;
             return Object.assign({}, state, {
-                records: [
-                    ...state.records.slice(0, index),
-                    Object.assign({}, state.records[index], {
-                        [action.propertyName]: action.value
-                    }),
-                    ...state.records.slice(index + 1)
+                columns: [
+                    ...state.columns.slice(0, i),
+                    Object.assign({}, state.columns[i], { isVisible: !state.columns[i].isVisible }),
+                    ...state.columns.slice(i + 1)
                 ]
             });
+        case "GET_RECORD_FIELDS_SUCCESS":
+            return Object.assign({}, state, { columns: action.fields });
         case "DELETE_RECORD_SUCCESS":
             return Object.assign({}, state, {
                 records: state.records.filter(record => record.id != action.recordId)

@@ -27,7 +27,6 @@ def index():
     # render public folder contents
     return 'index route'
 
-
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
     logger.get(record_id)
@@ -137,12 +136,10 @@ def search():
     return make_response(result, 200)
 
 
-@app.route('/api/xsdb', methods=['GET'])
-def get_all():
-    cursor = collection.find()
-
-    result = dumps(cursor)
-    return make_response(result, 200)
+@app.route('/api/fields', methods=['GET'])
+def get_fields():
+    result = record_structure.keys()
+    return make_response(jsonify(result), 200)
 
 
 if __name__ == "__main__":
