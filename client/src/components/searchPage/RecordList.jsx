@@ -1,7 +1,7 @@
 import React from 'react';
 import RecordItem from './RecordItem';
 import SimpleButton from '../SimpleButton';
-import PanelHeading from './PanelHeading';
+import PanelHeader from './PanelHeader';
 import { Link } from 'react-router-dom';
 
 class RecordList extends React.Component {
@@ -14,7 +14,7 @@ class RecordList extends React.Component {
     render() {
         return (
             <div className="panel panel-default">
-                <PanelHeading 
+                <PanelHeader 
                     columns={this.props.columns}
                     visibleColumnToggle={this.props.visibleColumnToggle}
                 />

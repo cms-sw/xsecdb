@@ -1,5 +1,10 @@
 import axios from 'axios';
+import { columnParameterName } from 'Config';
 import { push } from 'react-router-redux';
+import { history } from '../../store';
+import qs from 'query-string';
+
+import { getQueryObject, getSearchPageUrlByParams } from '../../utils/parsing';
 
 export const editFieldChange = (value, propertyName) => {
     return {
@@ -25,7 +30,6 @@ export const getRecord = (recordId) => (dispatch) => {
     axios.get(url)
         .then(response => {
             const fields = [];
-            console.log(response.data)
             //convert object into array of fields
             Object.keys(response.data).map(key => {
                 fields.push({
@@ -44,13 +48,14 @@ export const getRecord = (recordId) => (dispatch) => {
         })
 } 
 
-export const saveRecord = (recordFields) => (dispatch) => {
+export const saveRecord = (recordFields) => (dispatch, getState) => {
     dispatch({type: "SAVE_RECORD_REQUEST"});
 
     const record = {};
     let url;
     recordFields.map(field => record[field.name] = field.value);
 
+    //Creating new record or editing old
     if(!record.id){
         url = 'insert';
     }else{
@@ -58,16 +63,23 @@ export const saveRecord = (recordFields) => (dispatch) => {
         delete record.id;
     }
 
+    const redirectSearchUrl = getSearchPageUrlByParams(getState().searchPage, columnParameterName);
+
     axios.post(url, record)
         .then(response => {
             dispatch({
                 type: "SAVE_RECORD_SUCCESS",
                 record: response.data
             });
-            dispatch(push("/"))
+            dispatch(push(redirectSearchUrl))
         })
         .catch(error => {
             console.log(error);
             dispatch({type: "SAVE_RECORD_ERROR"});
-        })
+        })    
+}
+
+export const onCancelEdit = () => (dispatch, getState) =>{
+    const redirectSearchUrl = getSearchPageUrlByParams(getState().searchPage, columnParameterName);
+    dispatch(push(redirectSearchUrl));
 }

@@ -14,7 +14,7 @@ const style = {
     }
 }
 
-class PanelHeading extends React.Component {
+class PanelHeader extends React.Component {
     constructor(props) {
         super(props);
 
@@ -73,4 +73,4 @@ class PanelHeading extends React.Component {
     }
 }
 
-export default PanelHeading;
+export default PanelHeader;

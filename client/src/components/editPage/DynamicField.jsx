@@ -22,12 +22,6 @@ const DynamicField = (props) => {
                         {props.title}
                     </label>
                 </div>
-                // <div className="form-group">
-                //     <label className="control-label" htmlFor={props.name}>{props.title}</label>
-                //     <input type="checkbox" className="form-control" name={props.name} checked={props.value}
-                //         onChange={onChange}
-                //     />
-                // </div>
             )
         case "DATE":
             return (

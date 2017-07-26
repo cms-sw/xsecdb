@@ -22,6 +22,7 @@ class EditPage extends React.Component {
                 <EditForm onFieldChange={this.onEditFieldChange}
                     fields={this.props.record}
                     onSaveRecord={this.onSaveRecord}
+                    onCancelEdit={this.props.onCancelEdit}
                 />
             </div>
         )
@@ -33,25 +34,20 @@ class EditPage extends React.Component {
     }
 
     onEditFieldChange(propertyName, e) {
-        const a = 8;
-
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
         this.props.editFieldChange(value, propertyName);
     }
 
     onSaveRecord() {
         this.props.saveRecord(this.props.record);
-    }
-
-    isInsertMode() {
-        return !!this.props.record.id;
+        console.log(this.props.search)
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        record: state.editPage
+        record: state.editPage,
+        search: state.searchPage
     }
 }
 

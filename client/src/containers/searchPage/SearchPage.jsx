@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import qs from 'query-string';
+import { columnParameterName } from 'Config';
 
 import InputField from '../../components/InputField';
 import SimpleButton from '../../components/SimpleButton';
@@ -22,7 +23,9 @@ class SearchPage extends React.Component {
     render() {
         return (
             <div className="container">
-                <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange} />
+                <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange} 
+                    searchFieldValue={this.props.searchField}
+                />
                 <RecordList
                     records={this.props.records}
                     onDeleteButtonClick={this.onDeleteButtonClick}
@@ -36,9 +39,13 @@ class SearchPage extends React.Component {
     componentDidMount() {
         //If there's any query parameters - use them in search
         const searchQuery = qs.parse(this.props.location.search);
-        this.props.getInitialRecords(searchQuery);
+        const selectedColumns = searchQuery[columnParameterName];
+        delete searchQuery[columnParameterName];
 
-        this.props.getRecordFields();
+        this.props.getInitialRecords(searchQuery);
+        this.props.getRecordFields(selectedColumns);
+
+        this.props.fillSearchInput(searchQuery);
     }
 
     onSearchButtonClick(e) {

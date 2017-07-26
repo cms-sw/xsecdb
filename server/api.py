@@ -1,18 +1,16 @@
+import json
+import re
+import copy
+import logger
+
 from flask import Flask, request, jsonify, make_response, render_template
 from pymongo import MongoClient
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from time import gmtime, strftime
-import json
-import re
-import copy
-
 from flask_cors import CORS
-
 from validate import validate_model
-import logger
 from models.record import Record
-# Defined structure for input fields
 from models.fields import fields as record_structure
 
 app = Flask(__name__)
@@ -134,7 +132,6 @@ def search():
     result = dumps(cursor)
 
     return make_response(result, 200)
-
 
 @app.route('/api/fields', methods=['GET'])
 def get_fields():

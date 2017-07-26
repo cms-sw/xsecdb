@@ -1,11 +1,12 @@
-import { apiUrl } from 'Config';
+import { apiUrl, columnParameterName } from 'Config';
 import axios from 'axios';
 import { push } from 'react-router-redux';
 import qs from 'query-string';
 
+import { getQueryObject, getVisibleColumnsInt, getVisibleColumnsArray } from '../../utils/parsing';
+
 axios.defaults.baseURL = apiUrl;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
-
 
 
 const getRecordsSuccess = (records) => {
@@ -15,11 +16,11 @@ const getRecordsSuccess = (records) => {
     }
 }
 
-const updateUrlParams = (params) => (dispatch, getStore) => {
-    console.log(getStore().searchPage)
-    const selection = getStore().searchPage.columns.map(c => c.isVisible | 0);
-    console.log(selection);
+const updateUrlParams = (params) => (dispatch, getState) => {
+    //selected visible columns
+    const selection = getVisibleColumnsInt(getState().searchPage.columns);
 
+    params[columnParameterName] = selection;
     dispatch(push({
         search: qs.stringify(params)
     }))
@@ -30,25 +31,38 @@ export const searchFieldChange = (value) => {
         type: "SEARCH_FIELD_CHANGE",
         value
     }
-
 }
 
-export const visibleColumnToggle = (index) => {
-    return {
+export const fillSearchInput = (query) => {
+    let result = "";
+
+    Object.keys(query).map(key => {
+         result += key + "=" + query[key] + ","
+    })
+    
+    result = result.slice(0, result.length - 1);
+    return searchFieldChange(result);
+}
+
+export const visibleColumnToggle = (index) => (dispatch, getState) => {
+    dispatch({
         type: "VISIBLE_COLUMNS_TOGGLE",
         index
-    }
+    })
+    const params = qs.parse(getState().router.location.search);
+    dispatch(updateUrlParams(params));
 }
 
-export const getRecordFields = () => (dispatch) => {
+export const getRecordFields = (selectedColumns) => (dispatch) => {
     dispatch({ type: "GET_RECORD_FIELDS_REQUEST" });
 
     axios.get('fields')
         .then(response => {
-            const columns = response.data.map(field => {
+            const visibleColumns = getVisibleColumnsArray(selectedColumns, response.data.length);
+            const columns = response.data.map((field, i) => {
                 return {
                     name: field,
-                    isVisible: true
+                    isVisible: visibleColumns[i]
                 }
             })
 
@@ -61,7 +75,6 @@ export const getRecordFields = () => (dispatch) => {
             console.log(error);
             dispatch({ type: "GET_RECORD_FIELDS_ERROR", error: error.message });
         })
-
 }
 
 export const deleteRecord = (recordId) => (dispatch) => {
@@ -108,19 +121,3 @@ export const getFilteredRecords = (query) => (dispatch) => {
 
 
 
-
-function getQueryObject(query = "") {
-    const _and = ",", _or = "|", _assing = "=";
-
-    query = query.replace(/\s/g, "");
-
-    const pairs = query.split(_and);
-    const conditions = {};
-
-    pairs.map(pair => {
-        const pp = pair.split(_assing);
-        conditions[pp[0]] = pp[1];
-    })
-
-    return conditions;
-}

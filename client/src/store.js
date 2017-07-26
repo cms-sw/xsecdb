@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createHistory from 'history/createBrowserHistory';
 import { routerMiddleware } from 'react-router-redux'
@@ -11,15 +11,21 @@ const middleware = routerMiddleware(history)
 const defaultState = {
     searchPage: {
         records: [],
-        columns:[]
+        columns:[],
+        searchField: ""
     },
     editPage: []
 };
 
+const enhancers = compose(
+    applyMiddleware(...[middleware, thunk]),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+);
+
 const store = createStore(
     rootReducer,
     defaultState,
-    applyMiddleware(...[middleware, thunk])
+    enhancers
 );
 
 export { history };

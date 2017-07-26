@@ -20,12 +20,11 @@ class EditForm extends React.Component {
                     <button type="button" className="btn btn-success"
                         onClick={this.props.onSaveRecord}
                     >Save</button>
-                    <Link to="/">
-                        <button type="button" className="btn btn-warning">Cancel</button>
-                    </Link>
+                    <button type="button" className="btn btn-warning"
+                        onClick={this.props.onCancelEdit}
+                    >Cancel</button>
                 </div>
             </div>
-
         );
     }
 
