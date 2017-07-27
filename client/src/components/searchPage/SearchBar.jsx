@@ -7,17 +7,17 @@ const SearchBar = (props) => {
     return (
         <div className="form-inline">
             <form className="inline-form">
-                {/* <InputField placeholder={} id="searchField"
-                    style={} onChange={props.onSearchInputChange}
-                /> */}
                 <input type="text" className="form-control"
-                    id="searchField" placeholder="Search query..." style={{ width: '90%' }} 
+                    id="searchField" placeholder="Search query..." style={{ width: '85%' }}
                     onChange={props.onSearchInputChange} value={props.searchFieldValue}
                 />
-                <div style={{ width: '10%', display: 'inline-block' }} >
+                <div style={{ width: '15%', display: 'inline-block' }} >
                     <button type="submit" className="btn btn-default"
                         onClick={props.onSearchButtonClick}
                     >Search</button>
+                    <button type="button" className="btn btn-default"
+                        onClick={props.onClearButtonClick}
+                    >Clear</button>
                 </div>
             </form>
 

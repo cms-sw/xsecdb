@@ -11,6 +11,15 @@ const style = {
     },
     row: {
         textAlign: 'center'
+    },
+    left: {
+        display: 'inline-block',
+        width: '50%'
+    },
+    right: {
+        display: 'inline-block',
+        width: '50%',
+        textAlign: 'right'
     }
 }
 
@@ -32,20 +41,23 @@ class PanelHeader extends React.Component {
                 <div className="panel-heading" style={style.heading}
                     onClick={this.onToggleOpen}
                 >
-                    <p>Panel Heading</p>
+                    <div style={style.left}>
+                        <p>Visible columns
+                            {this.state.open && <span className="glyphicon glyphicon-menu-up" aria-hidden="true" />}
+                            {!this.state.open && <span className="glyphicon glyphicon-menu-down" aria-hidden="true" />}
+                        </p>
+                    </div>
+                    <div style={style.right}>
+                        <Link to="/edit">
+                            <button type="button" className="btn btn-success">New record</button>
+                        </Link>
+                    </div>
                 </div>
                 {this.state.open &&
                     <div className="panel-body">
-
-                        <Link to="/edit">
-                            <SimpleButton style={{ backgroundColor: 'limegreen' }}>
-                                <span className="glyphicon glyphicon-plus" aria-hidden="true" />
-                            </SimpleButton>
-                        </Link>
                         <div className="row" style={style.row}>
                             {this.renderFields()}
                         </div>
-
                     </div>
                 }
             </div>
@@ -68,7 +80,7 @@ class PanelHeader extends React.Component {
         })
     }
 
-    onChangeCheckbox(index, e){
+    onChangeCheckbox(index, e) {
         this.props.visibleColumnToggle(index);
     }
 }

@@ -20,7 +20,7 @@ class RecordList extends React.Component {
                 />
                 <div className="table-responsive">
                     <table className="table">
-                        <thead>
+                        <thead style={{borderTop: '2px solid #dedede'}} >
                             <tr>
                                 {
                                     this.props.columns.filter(col => col.isVisible == true)

@@ -6,6 +6,7 @@ import { columnParameterName } from 'Config';
 
 import InputField from '../../components/InputField';
 import SimpleButton from '../../components/SimpleButton';
+import Pagination from '../../components/Pagination';
 import RecordList from '../../components/searchPage/RecordList';
 import SearchBar from '../../components/searchPage/SearchBar';
 
@@ -18,6 +19,8 @@ class SearchPage extends React.Component {
         this.onSearchInputChange = this.onSearchInputChange.bind(this);
         this.onSearchButtonClick = this.onSearchButtonClick.bind(this);
         this.onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
+        this.onClearButtonClick = this.onClearButtonClick.bind(this);
+        this.onChangePagination = this.onChangePagination.bind(this);
     }
 
     render() {
@@ -25,12 +28,16 @@ class SearchPage extends React.Component {
             <div className="container">
                 <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange} 
                     searchFieldValue={this.props.searchField}
+                    onClearButtonClick={this.onClearButtonClick}
                 />
                 <RecordList
                     records={this.props.records}
                     onDeleteButtonClick={this.onDeleteButtonClick}
                     columns={this.props.columns}
                     visibleColumnToggle={this.props.visibleColumnToggle}
+                />
+                <Pagination recordCount={333} currentPage={2} pageSize={20}
+                    onChangePagination={this.onChangePagination}
                 />
             </div>
         )
@@ -53,12 +60,21 @@ class SearchPage extends React.Component {
         this.props.getFilteredRecords(this.props.searchField);
     }
 
+    onClearButtonClick(e) {
+        this.props.getFilteredRecords("");
+        this.props.searchFieldChange("");
+    }
+
     onSearchInputChange(e) {
         this.props.searchFieldChange(e.target.value);
     }
 
     onDeleteButtonClick(recordId, e) {
         this.props.deleteRecord(recordId);
+    }
+
+    onChangePagination(pageNumber, pageSize){
+        console.log("fetch page " + pageNumber + " " + pageSize + " records")
     }
 }
 
