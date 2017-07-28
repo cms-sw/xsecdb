@@ -1,30 +1,3 @@
-
-//external - config file (?)
-const emptyRecord = {
-    id: null,
-    DAS: "",
-    MCM: "",
-    accuracy: "",
-    comments: "",
-    contact: "",
-    cross_section: "",
-    cuts: "",
-    energy: "",
-    equivalent_lumi: "",
-    fraction_negative_weight: "",
-    isValid: "",
-    kFactor: "",
-    matrix_generator: "",
-    other_uncertainty: "",
-    process_name: "",
-    refs: "",
-    reweighting: "",
-    shower: "",
-    total_uncertainty: "",
-    validFrom: "",
-    validTo: ""
-}
-
 const searchPageReducer = (state = [], action) => {
     console.log(action);
     switch (action.type) {
@@ -48,6 +21,13 @@ const searchPageReducer = (state = [], action) => {
         case "DELETE_RECORD_SUCCESS":
             return Object.assign({}, state, {
                 records: state.records.filter(record => record.id != action.recordId)
+            });
+        case "CHANGE_PAGINATION":
+            return Object.assign({}, state, {
+                pagination: {
+                    pageSize: action.pageSize,
+                    currentPage: action.currentPage
+                }
             });
         default:
             return state;

@@ -12,7 +12,8 @@ const defaultState = {
     searchPage: {
         records: [],
         columns:[],
-        searchField: ""
+        searchField: "",
+        pagination: { pageSize: 10, currentPage: 0}
     },
     editPage: []
 };

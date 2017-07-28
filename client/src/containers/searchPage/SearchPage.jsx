@@ -26,7 +26,7 @@ class SearchPage extends React.Component {
     render() {
         return (
             <div className="container">
-                <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange} 
+                <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange}
                     searchFieldValue={this.props.searchField}
                     onClearButtonClick={this.onClearButtonClick}
                 />
@@ -36,8 +36,9 @@ class SearchPage extends React.Component {
                     columns={this.props.columns}
                     visibleColumnToggle={this.props.visibleColumnToggle}
                 />
-                <Pagination recordCount={333} currentPage={2} pageSize={20}
+                <Pagination recordCount={this.props.records.length}
                     onChangePagination={this.onChangePagination}
+                    {...this.props.pagination}
                 />
             </div>
         )
@@ -46,17 +47,34 @@ class SearchPage extends React.Component {
     componentDidMount() {
         //If there's any query parameters - use them in search
         const searchQuery = qs.parse(this.props.location.search);
+
+        //Extract selected columns information
         const selectedColumns = searchQuery[columnParameterName];
+        //Extract pagination information
+        const { pageSize, currentPage } = searchQuery;
+
+        //Leave only search information on searchQuery object
         delete searchQuery[columnParameterName];
+        delete searchQuery['pageSize'];
+        delete searchQuery['currentPage'];
 
+        //If there's pagination information add it to application state
+        if (currentPage && pageSize) {
+            this.props.changePaginationState(currentPage, pageSize);
+        }
+
+        //Fetch records without updating url
         this.props.getInitialRecords(searchQuery);
+        //Fetch columns and map with columns to display
         this.props.getRecordFields(selectedColumns);
-
+        //Fill search field from url search params
         this.props.fillSearchInput(searchQuery);
     }
 
     onSearchButtonClick(e) {
         e.preventDefault();
+        //Search action resets page to 0
+        this.props.changePaginationState(0, this.props.pagination.pageSize)
         this.props.getFilteredRecords(this.props.searchField);
     }
 
@@ -73,8 +91,10 @@ class SearchPage extends React.Component {
         this.props.deleteRecord(recordId);
     }
 
-    onChangePagination(pageNumber, pageSize){
-        console.log("fetch page " + pageNumber + " " + pageSize + " records")
+    onChangePagination(pageNumber, pageSize) {
+        this.props.changePagination(pageNumber, pageSize);
+        //request records using search query from searchfield and pagination parameters
+        this.props.getFilteredRecords(this.props.searchField);
     }
 }
 
@@ -83,7 +103,8 @@ const mapStateToProps = (state) => {
         search: state.searchPage,
         records: state.searchPage.records,
         columns: state.searchPage.columns,
-        searchField: state.searchPage.searchField
+        searchField: state.searchPage.searchField,
+        pagination: state.searchPage.pagination
     }
 }
 

@@ -16,16 +16,6 @@ const getRecordsSuccess = (records) => {
     }
 }
 
-const updateUrlParams = (params) => (dispatch, getState) => {
-    //selected visible columns
-    const selection = getVisibleColumnsInt(getState().searchPage.columns);
-
-    params[columnParameterName] = selection;
-    dispatch(push({
-        search: qs.stringify(params)
-    }))
-}
-
 export const searchFieldChange = (value) => {
     return {
         type: "SEARCH_FIELD_CHANGE",
@@ -37,11 +27,25 @@ export const fillSearchInput = (query) => {
     let result = "";
 
     Object.keys(query).map(key => {
-         result += key + "=" + query[key] + ","
+        result += key + "=" + query[key] + ","
     })
-    
+
     result = result.slice(0, result.length - 1);
     return searchFieldChange(result);
+}
+
+export const changePaginationState = (currentPage, pageSize) => {
+    return {
+        type: "CHANGE_PAGINATION",
+        currentPage: parseInt(currentPage),
+        pageSize: parseInt(pageSize)
+    }
+}
+
+export const changePagination = (currentPage, pageSize) => (dispatch, getState) => {
+    dispatch(changePaginationState(currentPage, pageSize));
+    const params = qs.parse(getState().router.location.search);
+    dispatch(updateUrlParams(params));
 }
 
 export const visibleColumnToggle = (index) => (dispatch, getState) => {
@@ -65,7 +69,6 @@ export const getRecordFields = (selectedColumns) => (dispatch) => {
                     isVisible: visibleColumns[i]
                 }
             })
-
             dispatch({
                 type: "GET_RECORD_FIELDS_SUCCESS",
                 fields: columns
@@ -93,10 +96,15 @@ export const deleteRecord = (recordId) => (dispatch) => {
         })
 }
 
-export const getInitialRecords = (query) => (dispatch) => {
+export const getInitialRecords = (query, pageSize, currentPage) => (dispatch, getState) => {
     dispatch({ type: "GET_ALL_RECORDS_REQUEST" });
 
-    axios.post('search', query)
+    const request = {
+        search: query,
+        pagination: getState().searchPage.pagination
+    }
+
+    axios.post('search', request)
         .then(response => {
             dispatch(getRecordsSuccess(response.data));
         })
@@ -105,12 +113,17 @@ export const getInitialRecords = (query) => (dispatch) => {
         })
 }
 
-export const getFilteredRecords = (query) => (dispatch) => {
+export const getFilteredRecords = (query) => (dispatch, getState) => {
     const params = getQueryObject(query);
 
     dispatch({ type: "GET_FILTERED_RECORDS_REQUEST" });
 
-    axios.post('search', params)
+    const request = {
+        search: params,
+        pagination: getState().searchPage.pagination
+    }
+
+    axios.post('search', request)
         .then(response => {
             dispatch(getRecordsSuccess(response.data));
 
@@ -119,5 +132,20 @@ export const getFilteredRecords = (query) => (dispatch) => {
         .catch(error => console.log(error))
 }
 
+function updateUrlParams(params) {
+    return (dispatch, getState) => {
+        //selected visible columns
+        const selection = getVisibleColumnsInt(getState().searchPage.columns);
+        params[columnParameterName] = selection;
 
+        //get pagination information
+        const { pageSize, currentPage } = getState().searchPage.pagination;
+        params['pageSize'] = pageSize;
+        params['currentPage'] = currentPage;
+
+        dispatch(push({
+            search: qs.stringify(params)
+        }))
+    }
+}
 

@@ -6,11 +6,6 @@ const preventDefault = e => e.preventDefault();
 export default class Pagination extends React.Component {
     constructor(props){
         super(props);
-        this.state = {
-            currentPage: props.currentPage,
-            pageSize: props.pageSize
-        }
-
         this.onPageSizeChange = this.onPageSizeChange.bind(this);
     }
 
@@ -27,7 +22,7 @@ export default class Pagination extends React.Component {
                         <label className="control-label" htmlFor="for">Page size</label>
                     </div>
                     <div className="col-xs-7">
-                        <select className="form-control selectpicker" value={this.state.pageSize}
+                        <select className="form-control selectpicker" value={this.props.pageSize}
                             onChange={this.onPageSizeChange}
                         >
                             <option value={10}>10</option>
@@ -44,8 +39,8 @@ export default class Pagination extends React.Component {
 
     renderNavigation() {
         const recordCount = this.props.recordCount;
-        const recordsPerPage = this.state.pageSize;
-        const currentPage = this.state.currentPage;
+        const recordsPerPage = this.props.pageSize;
+        const currentPage = this.props.currentPage;
 
         const pageCount = Math.ceil(recordCount / recordsPerPage);
 
@@ -54,7 +49,7 @@ export default class Pagination extends React.Component {
         let prevHandler = this.onCurrentPageChange.bind(this, currentPage - 1);
         let nextHandler = this.onCurrentPageChange.bind(this, currentPage + 1);
         
-        if(currentPage >= pageCount){
+        if(recordCount < recordsPerPage){
             nextHandler = preventDefault;
         }
 
@@ -72,37 +67,26 @@ export default class Pagination extends React.Component {
         </li>)
 
         //First page
-        if (currentPage - M > 1) {
+        if (currentPage - M > 0) {
             result.push(<li key={-1}>
-                <a href="#" onClick={this.onCurrentPageChange.bind(this, 1)}>1</a>
+                <a href="#" onClick={this.onCurrentPageChange.bind(this, 0)}>0</a>
             </li>)
         }
         //...
-        if (currentPage - M > 2) {
+        if (currentPage - M > 1) {
             result.push(<li className="disabled" key={0}><a href="#">...</a></li>)
         }
 
-        //M pages on each side of current page
-        for (let i = currentPage - M; i <= currentPage + M; i++) {
-            if (i > 0 && i <= pageCount) {
+        // //M pages before current page
+        for (let i = currentPage - M; i <= currentPage; i++) {
+            if (i >= 0) {
                 result.push(<li className={i == currentPage ? "active" : ""} key={i}>
                     <a href="#" onClick={this.onCurrentPageChange.bind(this, i)}>{i}</a>
                 </li>)
             }
         }
-
-        //...
-        if (currentPage + M < pageCount - 1) {
-            result.push(<li key={pageCount + 1} className="disabled" ><a href="#">...</a></li>)
-        }
-        //LastPage
-        if (currentPage + M < pageCount) {
-            result.push(<li key={pageCount + 2}>
-                <a href="#" onClick={this.onCurrentPageChange.bind(this, pageCount)}>{pageCount}</a>
-            </li>)
-        }
         //Next >>
-        result.push(<li key={pageCount + 3} className={currentPage < pageCount ? "" : "disabled"}>
+        result.push(<li key={recordCount + 3} className={recordCount < recordsPerPage ? "disabled" : ""}>
             <a href="#" aria-label="Next" onClick={nextHandler} aria-disabled={true}>
                 <span aria-hidden="true">&raquo;</span>
             </a>
@@ -113,27 +97,13 @@ export default class Pagination extends React.Component {
 
     onCurrentPageChange(pageNumber, e) {
         e.preventDefault();
-        this.setState({
-            currentPage: pageNumber
-        })
-
-        this.props.onChangePagination(pageNumber, this.state.pageSize);
+        this.props.onChangePagination(pageNumber, this.props.pageSize);
     }
 
     onPageSizeChange(e){
         const pageSize = e.target.value;
-        //To keep current page in boundaries [1:maxPage]
-        const maxPage = Math.ceil(this.props.recordCount / pageSize);
-        let currentPage = this.state.currentPage;
-
-        if(this.state.currentPage > maxPage){
-            currentPage = maxPage;
-        }
-
-        this.setState({
-            pageSize,
-            currentPage
-        })
+        //To keep current page in boundaries [0:maxPage]
+        let currentPage = 0;
 
         this.props.onChangePagination(currentPage, pageSize);
     }

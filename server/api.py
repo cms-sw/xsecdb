@@ -120,15 +120,18 @@ def delete(record_id):
 
 @app.route('/api/search', methods=['POST'])
 def search():
-    query = json.loads(request.data)
-    search_dictionary = {}
+    json_data = json.loads(request.data)
+    logger.search(json_data)
 
-    logger.search(query)
+    query = json_data['search']
+    page_size = json_data['pagination']['pageSize']
+    current_page = json_data['pagination']['currentPage']
+    search_dictionary = {}
 
     for key in query:
         search_dictionary[key] = re.compile(query[key], re.I)
 
-    cursor = collection.find(search_dictionary)
+    cursor = collection.find(search_dictionary).skip(current_page * page_size).limit(page_size)
     result = dumps(cursor)
 
     return make_response(result, 200)
