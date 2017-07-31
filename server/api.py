@@ -20,10 +20,12 @@ client = MongoClient('mongodb://WorkingVM:27017/')
 db = client.xsdb
 collection = db.xsdbCollection
 
+
 @app.route('/', methods=['GET'])
 def index():
     # render public folder contents
     return 'index route'
+
 
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
@@ -31,7 +33,7 @@ def get_by_id(record_id):
 
     record = collection.find_one({'_id': ObjectId(record_id)})
     del record['_id']
-    
+
     result = {}
     result['id'] = {
         'name': 'id',
@@ -45,7 +47,7 @@ def get_by_id(record_id):
     # Map record fields to structure
     for key, value in record.iteritems():
         if key in dic_:
-            result[key] = dic_[key]
+            result[key] = dic_[key]  # type, disabled, title
             result[key]['value'] = value
         else:
             result[key] = {
@@ -53,12 +55,14 @@ def get_by_id(record_id):
                 'type': 'text',
                 'value': value
             }
-    
+
+    # Add keys of new fields (which currently are not in record)
     for key in dic_:
         if key not in result:
             result[key] = dic_[key]
 
     return make_response(jsonify(result), 200)
+
 
 @app.route('/api/get', methods=['GET'])
 def get_empty():
@@ -94,7 +98,7 @@ def update(record_id):
     logger.update(request.get_json())
 
     if validate_model(request.data):
-        
+
         record = request.get_json()
         record['changedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
@@ -131,15 +135,30 @@ def search():
     for key in query:
         search_dictionary[key] = re.compile(query[key], re.I)
 
-    cursor = collection.find(search_dictionary).skip(current_page * page_size).limit(page_size)
+    cursor = collection.find(search_dictionary).skip(
+        current_page * page_size).limit(page_size)
     result = dumps(cursor)
 
     return make_response(result, 200)
+
 
 @app.route('/api/fields', methods=['GET'])
 def get_fields():
     result = record_structure.keys()
     return make_response(jsonify(result), 200)
+
+
+@app.route('/api/approve', methods=['POST'])
+def approve_records():
+    recordIds = json.loads(request.data)
+
+    logger.debug("APPROVE:" + str(recordIds))
+
+    curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    object_ids = map(lambda x: ObjectId(x), recordIds)
+    collection.update_many({'_id': {'$in': object_ids}}, {'$set': {'status': 'Approved', 'changedOn': curr_date}})
+
+    return make_response('success', 200)
 
 
 if __name__ == "__main__":

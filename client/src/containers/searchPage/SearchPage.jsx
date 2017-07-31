@@ -10,6 +10,8 @@ import Pagination from '../../components/Pagination';
 import RecordList from '../../components/searchPage/RecordList';
 import SearchBar from '../../components/searchPage/SearchBar';
 
+import Alert from '../../components/Alert';
+
 import * as actionCreators from './actions';
 
 class SearchPage extends React.Component {
@@ -21,19 +23,28 @@ class SearchPage extends React.Component {
         this.onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
         this.onClearButtonClick = this.onClearButtonClick.bind(this);
         this.onChangePagination = this.onChangePagination.bind(this);
+        this.onToggleSelectedRow = this.onToggleSelectedRow.bind(this);
+        this.onToggleSelectAllRows = this.onToggleSelectAllRows.bind(this);
+        this.onApproveRecordsClick = this.onApproveRecordsClick.bind(this);
     }
 
     render() {
         return (
-            <div className="container">
+            <div style={{ margin: "0 2%" }}>
+                <Alert autoCloseTime={5000} />
                 <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange}
                     searchFieldValue={this.props.searchField}
                     onClearButtonClick={this.onClearButtonClick}
                 />
                 <RecordList
                     records={this.props.records}
-                    onDeleteButtonClick={this.onDeleteButtonClick}
                     columns={this.props.columns}
+                    selectedRows={this.props.selectedRows}
+
+                    onDeleteButtonClick={this.onDeleteButtonClick}
+                    onToggleSelectedRow={this.onToggleSelectedRow}
+                    onToggleSelectAllRows={this.onToggleSelectAllRows}
+                    onApproveRecordsClick={this.onApproveRecordsClick}
                     visibleColumnToggle={this.props.visibleColumnToggle}
                 />
                 <Pagination recordCount={this.props.records.length}
@@ -96,6 +107,26 @@ class SearchPage extends React.Component {
         //request records using search query from searchfield and pagination parameters
         this.props.getFilteredRecords(this.props.searchField);
     }
+
+    onToggleSelectedRow(recordId, e) {
+        if (this.props.selectedRows.includes(recordId)) {
+            this.props.deselectRecordRow(recordId);
+        } else {
+            this.props.selectRecordRow(recordId);
+        }
+    }
+
+    onToggleSelectAllRows(e) {
+        if (this.props.selectedRows.length == this.props.records.length) {
+            this.props.deselectAllRecordRows();
+        } else {
+            this.props.selectAllRecordRows();
+        }
+    }
+
+    onApproveRecordsClick(e) {
+        this.props.approveRecords(this.props.selectedRows);
+    }
 }
 
 const mapStateToProps = (state) => {
@@ -104,7 +135,8 @@ const mapStateToProps = (state) => {
         records: state.searchPage.records,
         columns: state.searchPage.columns,
         searchField: state.searchPage.searchField,
-        pagination: state.searchPage.pagination
+        pagination: state.searchPage.pagination,
+        selectedRows: state.searchPage.selected
     }
 }
 

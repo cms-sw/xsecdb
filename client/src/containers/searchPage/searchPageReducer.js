@@ -22,6 +22,22 @@ const searchPageReducer = (state = [], action) => {
             return Object.assign({}, state, {
                 records: state.records.filter(record => record.id != action.recordId)
             });
+        case "SELECT_RECORD_ROW":
+            return Object.assign({}, state, {
+                selected: [...state.selected, action.recordId]
+            });
+        case "DESELECT_RECORD_ROW":
+            return Object.assign({}, state, {
+                selected: state.selected.filter(id => id != action.recordId)
+            });
+        case "SELECT_ALL_RECORD_ROWS":
+            return Object.assign({}, state, {
+                selected: state.records.map(r => r.id)
+            });
+        case "DESELECT_ALL_RECORD_ROWS":
+            return Object.assign({}, state, {
+                selected: []
+            });
         case "CHANGE_PAGINATION":
             return Object.assign({}, state, {
                 pagination: {

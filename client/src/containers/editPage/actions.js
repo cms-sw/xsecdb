@@ -21,6 +21,14 @@ export const getEditFieldsSuccess = (fields) => {
     }
 }
 
+const showAlert = (message, status) => {
+    return {
+        type: "SHOW_ALERT",
+        message,
+        status
+    }
+}
+
 // GETS existing record OR fields only if in create mode
 export const getRecord = (recordId) => (dispatch) => {
     dispatch({type: "GET_RECORD_BY_ID_REQUEST"});
@@ -44,7 +52,7 @@ export const getRecord = (recordId) => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch({type: "GET_RECORD_BY_ID_ERROR"});
+            dispatch(showAlert(error.message, "ERROR"));
         })
 } 
 
@@ -71,11 +79,12 @@ export const saveRecord = (recordFields) => (dispatch, getState) => {
                 type: "SAVE_RECORD_SUCCESS",
                 record: response.data
             });
-            dispatch(push(redirectSearchUrl))
+            dispatch(push(redirectSearchUrl));
+            dispatch(showAlert(`Record saved successfully!`, "SUCCESS"));
         })
         .catch(error => {
             console.log(error);
-            dispatch({type: "SAVE_RECORD_ERROR"});
+            dispatch(showAlert(error.message, "ERROR"));
         })    
 }
 

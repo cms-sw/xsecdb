@@ -23,6 +23,32 @@ export const searchFieldChange = (value) => {
     }
 }
 
+export const selectRecordRow = (recordId) => {
+    return {
+        type: "SELECT_RECORD_ROW",
+        recordId
+    }
+}
+
+export const deselectRecordRow = (recordId) => {
+    return {
+        type: "DESELECT_RECORD_ROW",
+        recordId
+    }
+}
+
+export const selectAllRecordRows = () => {
+    return {
+        type: "SELECT_ALL_RECORD_ROWS"
+    }
+}
+
+export const deselectAllRecordRows = () => {
+    return {
+        type: "DESELECT_ALL_RECORD_ROWS"
+    }
+}
+
 export const fillSearchInput = (query) => {
     let result = "";
 
@@ -57,6 +83,14 @@ export const visibleColumnToggle = (index) => (dispatch, getState) => {
     dispatch(updateUrlParams(params));
 }
 
+const showAlert = (message, status) => {
+    return {
+        type: "SHOW_ALERT",
+        message,
+        status
+    }
+}
+
 export const getRecordFields = (selectedColumns) => (dispatch) => {
     dispatch({ type: "GET_RECORD_FIELDS_REQUEST" });
 
@@ -75,8 +109,7 @@ export const getRecordFields = (selectedColumns) => (dispatch) => {
             })
         })
         .catch(error => {
-            console.log(error);
-            dispatch({ type: "GET_RECORD_FIELDS_ERROR", error: error.message });
+            dispatch(showAlert(error.message, "ERROR"));
         })
 }
 
@@ -92,11 +125,11 @@ export const deleteRecord = (recordId) => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch({ type: "DELETE_RECORD_ERROR", error: error.message });
+            dispatch(showAlert(error.message, "ERROR"));
         })
 }
 
-export const getInitialRecords = (query, pageSize, currentPage) => (dispatch, getState) => {
+export const getInitialRecords = (query) => (dispatch, getState) => {
     dispatch({ type: "GET_ALL_RECORDS_REQUEST" });
 
     const request = {
@@ -109,7 +142,7 @@ export const getInitialRecords = (query, pageSize, currentPage) => (dispatch, ge
             dispatch(getRecordsSuccess(response.data));
         })
         .catch(error => {
-            dispatch({ type: "GET_ALL_RECORDS_ERROR", error: error.message });
+            dispatch(showAlert(error.message, "ERROR"));
         })
 }
 
@@ -126,10 +159,32 @@ export const getFilteredRecords = (query) => (dispatch, getState) => {
     axios.post('search', request)
         .then(response => {
             dispatch(getRecordsSuccess(response.data));
-
             dispatch(updateUrlParams(params));
+            //Needs a separate action, because this one is used on page(pagination) change
+            //dispatch(showAlert(`Found ${response.data.length} records`, "SUCCESS"));
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            dispatch(showAlert(error.message, "ERROR"));
+        })
+}
+
+export const approveRecords = (recordIds) => (dispatch, getState) => {
+    dispatch({ type: "APPROVE_RECORDS_REQUEST" });
+
+    if(recordIds.length < 1){
+        dispatch(showAlert("There is no records selected", "ERROR"));
+        return;
+    }
+
+    axios.post('approve', recordIds)
+        .then(response => {
+            dispatch(showAlert("Approved successfully", "SUCCESS"));
+            dispatch({type: "DESELECT_ALL_RECORD_ROWS"})
+            dispatch(getFilteredRecords(getState().searchPage.searchField));
+        })
+        .catch(error => {
+            dispatch(showAlert(error.message, "ERROR"));
+        })
 }
 
 function updateUrlParams(params) {

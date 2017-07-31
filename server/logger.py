@@ -44,7 +44,7 @@ def get(message):
     logger_error.debug("GET: " + str(message))
 
 def search(message):
-    logger_error.debug("SEARCH " + str(message))
+    logger_error.debug("SEARCH: " + str(message))
 
 def debug(message):
     logger_error.debug(message)

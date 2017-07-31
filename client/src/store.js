@@ -11,11 +11,15 @@ const middleware = routerMiddleware(history)
 const defaultState = {
     searchPage: {
         records: [],
-        columns:[],
+        columns: [],
+        selected: [],
         searchField: "",
-        pagination: { pageSize: 10, currentPage: 0}
+        pagination: { pageSize: 10, currentPage: 0 }
     },
-    editPage: []
+    editPage: [],
+    utils: {
+        message: ""
+    }
 };
 
 const enhancers = compose(

@@ -4,9 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import * as actionCreators from './actions';
 import EditForm from '../../components/editPage/EditForm';
-
-
-import dataFields from '../../mockData/formFields';
+import Alert from '../../components/Alert';
 
 class EditPage extends React.Component {
     constructor(props) {
@@ -18,7 +16,8 @@ class EditPage extends React.Component {
 
     render() {
         return (
-            <div className="container">
+            <div style={{margin: "0 2%"}}>
+                <Alert autoCloseTime={5000}/>
                 <EditForm onFieldChange={this.onEditFieldChange}
                     fields={this.props.record}
                     onSaveRecord={this.onSaveRecord}

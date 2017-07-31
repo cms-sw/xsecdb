@@ -14,24 +14,31 @@ const RecordItem = (props) => {
 }
 
 function renderCells(props) {
-    const items = props.columns.reduce((acc, col) => {
-        if(col.isVisible){
-            acc.push({ value: props[col.name], key: col.name })
+    //Record cells only of visible columns
+    const items = props.columns.reduce((acc, col, i) => {
+        if (col.isVisible) {
+            acc.push(<td key={i}>{props.record[col.name]}</td>)
         }
         return acc;
     }, []);
 
-    return items.map((item, i) =>
-        <RecordItemCell key={i}>
-            {item.value}
-        </RecordItemCell>
-    );
+
+    const checkBoxCell = (<td key={-1} style={{ borderRight: '1px solid #e8e8e8', verticalAlign: 'middle', textAlign: 'center' }}
+        onClick={props.onToggleSelectedRow.bind(this, props.record['id'])}
+        role="button"
+    >
+        <input type="checkbox" checked={props.isSelected}/>
+    </td>);
+
+    items.unshift(checkBoxCell)
+
+    return items;
 }
 
 function renderButton(props) {
     return (
-        <RecordItemCell>
-            <Link to={`edit/${props.id}`} >
+        <td>
+            <Link to={`edit/${props.record.id}`} >
                 <SimpleButton>Edit</SimpleButton>
             </Link>
             <button type="button" className="btn btn-danger"
@@ -39,8 +46,7 @@ function renderButton(props) {
             >
                 Delete
             </button>
-
-        </RecordItemCell>
+        </td>
     )
 }
 
