@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-
-  <title>{{ title }} - XsecApp</title>
-
-  <p>Please enter your query below:</p>
-
-
-{% endblock %}
