@@ -34,7 +34,7 @@ module.exports = {
   },
   externals: {
     'Config': JSON.stringify({
-      apiUrl: "/api",
+      apiUrl: "xsdb/api",
       columnParameterName: 'columns'
     })
   },

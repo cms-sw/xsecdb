@@ -6,7 +6,7 @@ import { routerMiddleware } from 'react-router-redux'
 import rootReducer from './rootReducer';
 
 const history = createHistory();
-const middleware = routerMiddleware(history)
+const middleware = routerMiddleware(history);
 
 const defaultState = {
     searchPage: {

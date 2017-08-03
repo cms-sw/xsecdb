@@ -1,5 +1,7 @@
+# install frontend dependencies
+cd client && npm install && npm install --save history
 # compile frontend files
-cd client && npm install && npm run compile && cd ..
+npm run compile && cd ..
 
 # create logs directory if doesn't exist
 mkdir -p logs
@@ -10,3 +12,4 @@ mkdir -p logs
 pip install -r requirements.txt
 # run server
 python server/api.py
+
