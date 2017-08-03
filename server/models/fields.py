@@ -2,55 +2,63 @@ fields = {
     "DAS": {
         'title': "DAS",
         'type': "text",
-        'value': "test DAS",
+        'value': "",
         'disabled': False
     },
     "MCM": {
         'title': "MCM",
         'type': "text",
-        'value': "eMCeM",
+        'value': "",
+        'disabled': False
+    },
+    "refs": {
+        'title': "refs",
+        'type': "text",
+        'value': "",
         'disabled': False
     },
     "accuracy": {
         'title': "accuracy",
-        'type': "text",
-        'value': "accuracy",
+        'type': "select",
+        'options': ["LO", "NLO", "NNLO", "NNNLO", "unknown"],
+        'value': "unknown",
         'disabled': False
     },
     "contact": {
         'title': "contact",
         'type': "text",
-        'value': "contactation",
+        'value': "",
         'disabled': False
     },
     "comments": {
         'title': "comments",
         'type': "text",
-        'value': "test comment",
+        'value': "",
         'disabled': False
     },
     "cuts": {
         'title': "cuts",
         'type': "text",
-        'value': "test cuts",
+        'value': "",
         'disabled': False
     },
     "cross_section": {
         'title': "cross_section",
         'type': "text",
-        'value': "section section",
+        'value': "",
         'disabled': False
     },
     "equivalent_lumi": {
         'title': "equivalent_lumi",
         'type': "text",
-        'value': "test lumi",
+        'value': "",
         'disabled': False
     },
     "energy": {
         'title': "energy",
-        'type': "number",
-        'value': "13",
+        'type': "select",
+        'options': ["6", "7", "8", "13", "14"],
+        'value': "6",
         'disabled': False
     },
     "isValid": {
@@ -62,63 +70,63 @@ fields = {
     "fraction_negative_weight": {
         'title': "fraction_negative_weight",
         'type': "text",
-        'value': "negative weight",
+        'value': "",
         'disabled': False
     },
     "matrix_generator": {
         'title': "Matrix generator",
         'type': "select",
-        'options': ["2x2", "3x3", "8x8"],
-        'value': "3x3",
+        'options': ["none", "none", "Sherpa", "Herwig++", "Herwig7", "Powheg", "Madgraph"],
+        'value': "none",
         'disabled': False
     },
     "kFactor": {
         'title': "kFactor",
         'type': "text",
-        'value': "K Factor",
+        'value': "",
         'disabled': False
     },
     "other_uncertainty": {
         'title': "Other uncertainity",
         'type': "text",
-        'value': "Uncertainity",
+        'value': "",
         'disabled': False
     },
     "process_name": {
         'title': "Process name",
         'type': "text",
-        'value': "Some process",
+        'value': "",
         'disabled': False
     },
     "reweighting": {
         'title': "Reweighting",
         'type': "text",
-        'value': "Reeweighting",
+        'value': "",
         'disabled': False
     },
     "shower": {
         'title': "Shower",
         'type': "select",
-        'options': ["shower1", "shower2", "no shower"],
-        'value': "no shower",
+        'options': ["none", "Pythia8", "Sherpa", "Herwig++", "Herwig7", "Powheg", "Madgraph"],
+        'value': "none",
         'disabled': False
     },
     "total_uncertainty": {
         'title': "Total uncertainty",
-        'type': "number",
-        'value': "9",
+        'type': "text",
+        'value': "",
         'disabled': False
     },
     "validFrom": {
         'title': "Valid from",
         'type': "date",
-        'value': "2017-06-08",
+        'value': "?",
         'disabled': True
     },
     "validTo": {
         'title': "Valid to",
         'type': "date",
-        'value': "2017-08-08",
+        'value': "2020",
         'disabled': True
     },
     "createdOn": {
