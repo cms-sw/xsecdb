@@ -28,6 +28,7 @@ def index():
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
     logger.debug("GET " + record_id)
+    logger.debug(request.headers)
 
     record = collection.find_one({'_id': ObjectId(record_id)})
     del record['_id']

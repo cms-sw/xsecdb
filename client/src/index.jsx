@@ -14,9 +14,7 @@ import App from './App';
 const Router = (
     <Provider store={store}>
         <ConnectedRouter history={history}>
-             <BrowserRouter basename="/xsdb"> 
-                <App />
-             </BrowserRouter> 
+            <App />
         </ConnectedRouter>
     </Provider>
 )
