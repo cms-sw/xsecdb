@@ -4,7 +4,7 @@ const M = 2;
 const preventDefault = e => e.preventDefault();
 
 export default class Pagination extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.onPageSizeChange = this.onPageSizeChange.bind(this);
     }
@@ -42,23 +42,24 @@ export default class Pagination extends React.Component {
         const recordsPerPage = this.props.pageSize;
         const currentPage = this.props.currentPage;
 
-        const pageCount = Math.ceil(recordCount / recordsPerPage);
-
         let result = [];
 
         let prevHandler = this.onCurrentPageChange.bind(this, currentPage - 1);
         let nextHandler = this.onCurrentPageChange.bind(this, currentPage + 1);
-        
-        if(recordCount < recordsPerPage){
+
+        const notNext = recordCount < recordsPerPage;
+        const notPrev = currentPage < 1;
+
+        if (notNext) {
             nextHandler = preventDefault;
         }
 
-        if(currentPage <= 1){
+        if (notPrev) {
             prevHandler = preventDefault;
         }
 
         //<< Previuos
-        result.push(<li className={currentPage > 1 ? "" : "disabled"} key={-2}>
+        result.push(<li className={notPrev ? "disabled" : ""} key={-1}>
             <a href="#" aria-label="Previous"
                 onClick={prevHandler}
             >
@@ -68,25 +69,30 @@ export default class Pagination extends React.Component {
 
         //First page
         if (currentPage - M > 0) {
-            result.push(<li key={-1}>
+            result.push(<li key={-2}>
                 <a href="#" onClick={this.onCurrentPageChange.bind(this, 0)}>0</a>
             </li>)
         }
         //...
         if (currentPage - M > 1) {
-            result.push(<li className="disabled" key={0}><a href="#">...</a></li>)
+            result.push(<li className="disabled" key={-3}><a href="#">...</a></li>)
         }
 
         // //M pages before current page
-        for (let i = currentPage - M; i <= currentPage; i++) {
+        for (let i = currentPage - M; i < currentPage; i++) {
             if (i >= 0) {
-                result.push(<li className={i == currentPage ? "active" : ""} key={i}>
+                result.push(<li key={i}>
                     <a href="#" onClick={this.onCurrentPageChange.bind(this, i)}>{i}</a>
                 </li>)
             }
         }
+        //Current page
+        result.push(<li className={"active"} key={-4}>
+            <a href="#" onClick={preventDefault}>{currentPage}</a>
+        </li>);
+
         //Next >>
-        result.push(<li key={recordCount + 3} className={recordCount < recordsPerPage ? "disabled" : ""}>
+        result.push(<li key={-5} className={notNext ? "disabled" : ""}>
             <a href="#" aria-label="Next" onClick={nextHandler} aria-disabled={true}>
                 <span aria-hidden="true">&raquo;</span>
             </a>
@@ -100,11 +106,10 @@ export default class Pagination extends React.Component {
         this.props.onChangePagination(pageNumber, this.props.pageSize);
     }
 
-    onPageSizeChange(e){
+    onPageSizeChange(e) {
         const pageSize = e.target.value;
         //To keep current page in boundaries [0:maxPage]
         let currentPage = 0;
-
         this.props.onChangePagination(currentPage, pageSize);
     }
 }

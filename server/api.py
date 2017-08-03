@@ -10,26 +10,24 @@ from bson.objectid import ObjectId
 from time import gmtime, strftime
 from flask_cors import CORS
 from validate import validate_model
-from models.record import Record
 from models.fields import fields as record_structure
+from config import CONFIG
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../client/dist", template_folder="../client/templates")
 CORS(app)
 
-client = MongoClient('mongodb://WorkingVM:27017/')
+client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
 collection = db.xsdbCollection
 
 
 @app.route('/', methods=['GET'])
 def index():
-    # render public folder contents
-    return 'index route'
-
+    return render_template('index.html')
 
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
-    logger.get(record_id)
+    logger.debug("GET " + record_id)
 
     record = collection.find_one({'_id': ObjectId(record_id)})
     del record['_id']
@@ -66,14 +64,15 @@ def get_by_id(record_id):
 
 @app.route('/api/get', methods=['GET'])
 def get_empty():
-    logger.get("Empty record")
+    logger.debug("GET Empty record")
 
     return make_response(jsonify(record_structure), 200)
 
 
 @app.route('/api/insert', methods=['POST'])
 def insert():
-    logger.insert(request.get_json())
+    #logger.insert(request.get_json())
+    logger.debug("INSERT " + str(request.get_json()))
 
     if validate_model(request.data):
         record = request.get_json()
@@ -96,6 +95,7 @@ def insert():
 @app.route('/api/update/<record_id>', methods=['POST'])
 def update(record_id):
     logger.update(request.get_json())
+    logger.debug("UPDATE " + str(request.get_json()))
 
     if validate_model(request.data):
 
@@ -115,7 +115,7 @@ def update(record_id):
 
 @app.route('/api/delete/<record_id>', methods=['DELETE'])
 def delete(record_id):
-    logger.delete(record_id)
+    logger.debug("DELETE " + record_id)
 
     collection.delete_one({'_id': ObjectId(record_id)})
 
@@ -125,7 +125,7 @@ def delete(record_id):
 @app.route('/api/search', methods=['POST'])
 def search():
     json_data = json.loads(request.data)
-    logger.search(json_data)
+    logger.debug("SEARCH " + str(json_data))
 
     query = json_data['search']
     page_size = json_data['pagination']['pageSize']
@@ -163,3 +163,4 @@ def approve_records():
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=4241, threaded=True)
+    

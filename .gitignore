@@ -1,5 +1,6 @@
 .vscode
 *.pyc
 client/node_modules
+client/dist
 npm-debug.log
 logs/*

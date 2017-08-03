@@ -85,11 +85,13 @@ class SearchPage extends React.Component {
     onSearchButtonClick(e) {
         e.preventDefault();
         //Search action resets page to 0
-        this.props.changePaginationState(0, this.props.pagination.pageSize)
+        this.props.changePaginationState(0, this.props.pagination.pageSize);
+        this.props.deselectAllRecordRows();
         this.props.getFilteredRecords(this.props.searchField);
     }
 
     onClearButtonClick(e) {
+        this.props.deselectAllRecordRows();
         this.props.getFilteredRecords("");
         this.props.searchFieldChange("");
     }
@@ -103,9 +105,9 @@ class SearchPage extends React.Component {
     }
 
     onChangePagination(pageNumber, pageSize) {
-        this.props.changePagination(pageNumber, pageSize);
-        //request records using search query from searchfield and pagination parameters
+        this.props.changePaginationState(pageNumber, pageSize);
         this.props.getFilteredRecords(this.props.searchField);
+        this.props.deselectAllRecordRows();
     }
 
     onToggleSelectedRow(recordId, e) {
@@ -126,6 +128,7 @@ class SearchPage extends React.Component {
 
     onApproveRecordsClick(e) {
         this.props.approveRecords(this.props.selectedRows);
+        this.props.deselectAllRecordRows();
     }
 }
 

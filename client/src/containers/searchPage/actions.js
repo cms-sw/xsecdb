@@ -8,7 +8,6 @@ import { getQueryObject, getVisibleColumnsInt, getVisibleColumnsArray } from '..
 axios.defaults.baseURL = apiUrl;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-
 const getRecordsSuccess = (records) => {
     return {
         type: "GET_RECORDS_SUCCESS",
@@ -122,6 +121,7 @@ export const deleteRecord = (recordId) => (dispatch) => {
                 type: "DELETE_RECORD_SUCCESS",
                 recordId
             })
+            dispatch(showAlert("Record deleted", "SUCCESS"))
         })
         .catch(error => {
             console.log(error);

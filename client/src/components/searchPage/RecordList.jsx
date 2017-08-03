@@ -4,6 +4,17 @@ import SimpleButton from '../SimpleButton';
 import PanelHeader from './PanelHeader';
 import { Link } from 'react-router-dom';
 
+const styles = {
+    th: {
+        borderRight: '1px solid #e8e8e8'
+    },
+    checkbox: {
+        borderRight: '1px solid #e8e8e8',
+        verticalAlign: 'middle',
+        textAlign: 'center'
+    }
+}
+
 class RecordList extends React.Component {
     constructor(props) {
         super(props);
@@ -24,12 +35,12 @@ class RecordList extends React.Component {
                     <table className="table">
                         <thead style={{borderTop: '2px solid #dedede'}} >
                             <tr>
-                                <th onClick={this.props.onToggleSelectAllRows}>
+                                <th onClick={this.props.onToggleSelectAllRows} style={styles.checkbox}>
                                     <input type="checkbox" checked={this.props.selectedRows.length == this.props.records.length}/>
                                 </th>
                                 {
                                     this.props.columns.filter(col => col.isVisible == true)
-                                        .map((col, i) => <th key={i}>{col.name}</th>)
+                                        .map((col, i) => <th key={i} style={styles.th}>{col.name}</th>)
                                 }
                                 <th>Actions</th>
                             </tr>
