@@ -19,7 +19,6 @@ client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
 collection = db.xsdbCollection
 
-
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
@@ -68,6 +67,8 @@ def get_empty():
 
     return make_response(jsonify(record_structure), 200)
 
+def validate_model(record):
+    return True
 
 @app.route('/api/insert', methods=['POST'])
 def insert():

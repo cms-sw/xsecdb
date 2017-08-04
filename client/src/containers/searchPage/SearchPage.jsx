@@ -100,7 +100,7 @@ class SearchPage extends React.Component {
         this.props.searchFieldChange(e.target.value);
     }
 
-    onDeleteButtonClick(recordId, e) {
+    onDeleteButtonClick(recordId) {
         this.props.deleteRecord(recordId);
     }
 

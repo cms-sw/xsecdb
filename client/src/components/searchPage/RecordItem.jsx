@@ -58,7 +58,7 @@ function renderButton(props) {
                 <SimpleButton>Edit</SimpleButton>
             </Link>
             <button type="button" className="btn btn-danger"
-                onClick={props.onDeleteButtonClick.bind(this, props.record.id)}
+                onClick={props.onDeleteButtonClick}
             >
                 Delete
             </button>
