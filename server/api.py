@@ -9,7 +9,6 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId
 from time import gmtime, strftime
 from flask_cors import CORS
-from validate import validate_model
 from models.fields import fields as record_structure
 from config import CONFIG
 
