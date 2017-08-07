@@ -1,11 +1,17 @@
 import React from 'react';
 
 const M = 2;
+const pageSizes = [10, 20, 30, 40, 50]
 const preventDefault = e => e.preventDefault();
 
 export default class Pagination extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            recordCount: this.props.recordCount
+        }
+
         this.onPageSizeChange = this.onPageSizeChange.bind(this);
     }
 
@@ -25,11 +31,7 @@ export default class Pagination extends React.Component {
                         <select className="form-control selectpicker" value={this.props.pageSize}
                             onChange={this.onPageSizeChange}
                         >
-                            <option value={10}>10</option>
-                            <option value={20}>20</option>
-                            <option value={30}>30</option>
-                            <option value={40}>40</option>
-                            <option value={50}>50</option>
+                            {this.renderPageSizeSelect()}
                         </select>
                     </div>
                 </div>
@@ -39,6 +41,7 @@ export default class Pagination extends React.Component {
 
     renderNavigation() {
         const recordCount = this.props.recordCount;
+        //const recordCount = this.state.recordCount;
         const recordsPerPage = this.props.pageSize;
         const currentPage = this.props.currentPage;
 
@@ -99,6 +102,21 @@ export default class Pagination extends React.Component {
         </li>)
 
         return result;
+    }
+
+    renderPageSizeSelect() {
+        const result = [];
+
+        //Add "custom" page size selection option
+        if(!pageSizes.includes(this.props.pageSize)){
+            pageSizes.push(this.props.pageSize)
+        }
+
+        pageSizes.map((pageSizeValue, i) => {
+            result.push(<option value={pageSizeValue} key={i}>{pageSizeValue}</option>)
+        });
+
+        return result;        
     }
 
     onCurrentPageChange(pageNumber, e) {

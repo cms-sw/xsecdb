@@ -6,6 +6,8 @@ import {
 import SearchPage from './containers/searchPage/SearchPage';
 import EditPage from './containers/editPage/EditPage';
 
+import Alert from './components/Alert'
+
 const App = () => {
     return (
         <div>
@@ -25,6 +27,8 @@ const App = () => {
                 <Route path="/about" render={() => <h1>About page</h1>} />
                 {/* TODO 404 */}
             </Switch>
+
+            <Alert autoCloseTime={5000} />
         </div>
     )
 }

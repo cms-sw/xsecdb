@@ -29,6 +29,11 @@ class RecordList extends React.Component {
     }
 
     render() {
+        let checkAllChecked = false;
+        if(this.props.selectedRows.length || this.props.records.length){
+            checkAllChecked = (this.props.selectedRows.length == this.props.records.length);
+        }
+
         return (
             <div className="panel panel-default">
                 <PanelHeader
@@ -42,7 +47,7 @@ class RecordList extends React.Component {
                         <thead style={{ borderTop: '2px solid #dedede' }} >
                             <tr>
                                 <th onClick={this.props.onToggleSelectAllRows} style={styles.checkbox}>
-                                    <input type="checkbox" checked={this.props.selectedRows.length == this.props.records.length} />
+                                    <input type="checkbox" checked={checkAllChecked} />
                                 </th>
                                 {
                                     this.props.columns.filter(col => col.isVisible == true)
@@ -86,7 +91,7 @@ class RecordList extends React.Component {
     }
 
     //Delete deleteCadidate
-    handleDeleteButtonClick(recordId, e){
+    handleDeleteButtonClick(recordId, e) {
         this.toggleDeleteDialog(null);
         this.props.onDeleteButtonClick(this.state.deleteCandidateId);
     }

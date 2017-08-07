@@ -31,7 +31,6 @@ class SearchPage extends React.Component {
     render() {
         return (
             <div style={{ margin: "0 2%" }}>
-                <Alert autoCloseTime={5000} />
                 <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange}
                     searchFieldValue={this.props.searchField}
                     onClearButtonClick={this.onClearButtonClick}

@@ -112,7 +112,7 @@ export const getRecordFields = (selectedColumns) => (dispatch) => {
         })
 }
 
-export const deleteRecord = (recordId) => (dispatch) => {
+export const deleteRecord = (recordId) => (dispatch, getState) => {
     dispatch({ type: "DELETE_RECORD_REQUEST" });
 
     axios.delete('delete/' + recordId)
@@ -121,6 +121,7 @@ export const deleteRecord = (recordId) => (dispatch) => {
                 type: "DELETE_RECORD_SUCCESS",
                 recordId
             })
+            dispatch(getFilteredRecords(getState().searchPage.searchField, true));
             dispatch(showAlert("Record deleted", "SUCCESS"))
         })
         .catch(error => {
@@ -146,7 +147,7 @@ export const getInitialRecords = (query) => (dispatch, getState) => {
         })
 }
 
-export const getFilteredRecords = (query) => (dispatch, getState) => {
+export const getFilteredRecords = (query, notShowAlert) => (dispatch, getState) => {
     const params = getQueryObject(query);
 
     dispatch({ type: "GET_FILTERED_RECORDS_REQUEST" });
@@ -160,8 +161,10 @@ export const getFilteredRecords = (query) => (dispatch, getState) => {
         .then(response => {
             dispatch(getRecordsSuccess(response.data));
             dispatch(updateUrlParams(params));
-            //Needs a separate action, because this one is used on page(pagination) change
-            //dispatch(showAlert(`Found ${response.data.length} records`, "SUCCESS"));
+
+            if(!notShowAlert){
+                dispatch(showAlert(`Found ${response.data.length} records`, "SUCCESS"));
+            }
         })
         .catch(error => {
             dispatch(showAlert(error.message, "ERROR"));

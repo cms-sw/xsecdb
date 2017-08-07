@@ -17,7 +17,6 @@ const style = {
         minWidth: '160px',
         padding: '6px'
     }
-
 }
 
 const RecordItem = (props) => {
