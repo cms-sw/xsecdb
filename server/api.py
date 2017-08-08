@@ -3,7 +3,8 @@ import re
 import copy
 import logger
 
-from flask import Flask, request, jsonify, make_response, render_template
+from flask import Flask, request, jsonify, make_response, render_template, abort
+from functools import wraps
 from pymongo import MongoClient
 from bson.json_util import dumps
 from bson.objectid import ObjectId
@@ -12,21 +13,52 @@ from flask_cors import CORS
 from models.fields import fields as record_structure
 from config import CONFIG
 
-app = Flask(__name__, static_folder="../client/dist", template_folder="../client/templates")
+app = Flask(__name__, static_folder="../client/dist",
+            template_folder="../client/templates")
 CORS(app)
 
 client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
 collection = db.xsdbCollection
 
+##
+def validate_model(record):
+    return True
+
+def is_user_in_group(required_group):
+    logger.debug(request.headers)
+    adfs_group = request.headers.get('Adfs-Group')
+
+    if adfs_group is not None:
+        groups = adfs_group.split(";")
+
+        return required_group in groups
+    else:
+        return False
+
+# Decorator wrapped into function which accepts required e-group
+def auth_user_group(required_group):
+    def decorated_function(f):
+        @wraps(f)
+        def func_wrapper(*args, **kwargs):
+
+            if not is_user_in_group(required_group):
+                abort(403, "Insufficient permissions")
+
+            return f(*args, **kwargs)
+        return func_wrapper
+    return decorated_function
+##
+
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
+
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
     logger.debug("GET " + record_id)
-    logger.debug(request.headers)
 
     record = collection.find_one({'_id': ObjectId(record_id)})
     del record['_id']
@@ -62,59 +94,62 @@ def get_by_id(record_id):
 
 
 @app.route('/api/get', methods=['GET'])
+@auth_user_group('xsdb-users')
 def get_empty():
     logger.debug("GET Empty record")
 
     return make_response(jsonify(record_structure), 200)
 
-def validate_model(record):
-    return True
 
 @app.route('/api/insert', methods=['POST'])
+@auth_user_group('xsdb-users')
 def insert():
-    #logger.insert(request.get_json())
     logger.debug("INSERT " + str(request.get_json()))
 
     if validate_model(request.data):
-        record = request.get_json()
-
+        user_login = request.headers.get("Adfs-Login")
         curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        record = request.get_json()
+        
         record['createdOn'] = curr_date
-        record['changedOn'] = curr_date
+        record['modifiedOn'] = curr_date
+        record['createdBy'] = user_login
+        record['modifiedBy'] = user_login
 
         record_id = collection.insert(record)
 
         result = collection.find_one({'_id': record_id})
         result["id"] = str(record_id)
-        del result["_id"]
 
-        return make_response(jsonify(result), 201)
+        return make_response(dumps(result), 201)
     else:
         return {'error': 'Incorrect data format'}, 400
 
 
 @app.route('/api/update/<record_id>', methods=['POST'])
+@auth_user_group('xsdb-users')
 def update(record_id):
-    logger.update(request.get_json())
     logger.debug("UPDATE " + str(request.get_json()))
 
     if validate_model(request.data):
+        user_login = request.headers.get("Adfs-Login")
 
         record = request.get_json()
-        record['changedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        record['modifiedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        record['modifiedBy'] = user_login
 
         collection.update({'_id': ObjectId(record_id)}, record)
 
         result = collection.find_one({'_id': ObjectId(record_id)})
         result["id"] = record_id
-        del result["_id"]
 
-        return make_response(jsonify(result), 201)
+        return make_response(dumps(result), 201)
     else:
         return {'error': 'Incorrect data format'}, 400
 
 
 @app.route('/api/delete/<record_id>', methods=['DELETE'])
+@auth_user_group('xsdb-admins')
 def delete(record_id):
     logger.debug("DELETE " + record_id)
 
@@ -150,18 +185,24 @@ def get_fields():
 
 
 @app.route('/api/approve', methods=['POST'])
+@auth_user_group('xsdb-approval')
 def approve_records():
     recordIds = json.loads(request.data)
+    user_login = request.headers.get("Adfs-Login")
 
-    logger.debug("APPROVE:" + str(recordIds))
+    logger.debug("APPROVE:" + str(recordIds) + " - USER " + user_login)
 
     curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     object_ids = map(lambda x: ObjectId(x), recordIds)
-    collection.update_many({'_id': {'$in': object_ids}}, {'$set': {'status': 'Approved', 'changedOn': curr_date}})
+    collection.update_many({'_id': {'$in': object_ids}}, {
+                           '$set': {
+                               'status': 'Approved',
+                               'modifiedOn': curr_date,
+                               'approvedBy': user_login
+    }})
 
     return make_response('success', 200)
 
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
-    

@@ -38,7 +38,6 @@ class EditPage extends React.Component {
 
     onSaveRecord() {
         this.props.saveRecord(this.props.record);
-        console.log(this.props.search)
     }
 }
 

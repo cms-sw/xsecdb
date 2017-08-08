@@ -45,15 +45,22 @@ export const getVisibleColumnsArray = (intSelection, reqLength) => {
     return result;
 }
 
+//forms url string from searchState (search query, selected columns, pagination) 
 export const getSearchPageUrlByParams = (searchState, columnParameterName) => {
     let query = {};
+
+    // Search query
     if(searchState.searchField){
         query = getQueryObject(searchState.searchField);
     }
 
+    // Selected Columns
     if(searchState.columns.length !== 0){
         query[columnParameterName] = getVisibleColumnsInt(searchState.columns);
     }
+
+    //Pagination 
+    query = Object.assign({}, query, searchState.pagination);
     
     const redirectSearchUrl = '/?' + qs.stringify(query);
 

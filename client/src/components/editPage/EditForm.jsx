@@ -8,13 +8,6 @@ const INPUTS_IN_ROW = 4;
 class EditForm extends React.Component {
 
     render() {
-
-        if (process.env.NODE_ENV !== 'production') {
-            console.log("DEVELOPMENT")
-        }else{
-            console.log("PRODUCTION")
-        }
-
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">Panel heading</div>

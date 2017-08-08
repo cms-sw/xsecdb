@@ -117,27 +117,33 @@ fields = {
         'value': "",
         'disabled': False
     },
-    "validFrom": {
-        'title': "Valid from",
-        'type': "date",
-        'value': "?",
-        'disabled': True
-    },
-    "validTo": {
-        'title': "Valid to",
-        'type': "date",
-        'value': "2020",
-        'disabled': True
-    },
     "createdOn": {
         'title': "Created on",
         'type': "date",
         'value': "",
         'disabled': True
     },
-    "changedOn": {
-        'title': "Changed on",
+    "modifiedOn": {
+        'title': "Modified on",
         'type': "date",
+        'value': "",
+        'disabled': True
+    },
+    "createdBy": {
+        'title': "Created by",
+        'type': "text",
+        'value': "",
+        'disabled': True
+    },
+    "modifiedBy": {
+        'title': "Modified by",
+        'type': "text",
+        'value': "",
+        'disabled': True
+    },
+    "approvedBy": {
+        'title': "Approved by",
+        'type': "text",
         'value': "",
         'disabled': True
     },
