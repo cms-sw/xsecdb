@@ -36,7 +36,7 @@ def get_user_groups():
 
 def is_user_in_group(required_group):
     logger.debug(request.headers)
-    return True
+    # return True
 
     groups = get_user_groups()
     return required_group in groups
