@@ -183,7 +183,7 @@ export const approveRecords = (recordIds) => (dispatch, getState) => {
         .then(response => {
             dispatch(showAlert("Approved successfully", "SUCCESS"));
             dispatch({type: "DESELECT_ALL_RECORD_ROWS"})
-            dispatch(getFilteredRecords(getState().searchPage.searchField));
+            dispatch(getFilteredRecords(getState().searchPage.searchField, true));
         })
         .catch(error => {
             dispatch(showAlert(error.message, "ERROR"));

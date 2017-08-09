@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import RecordItemCell from './RecordItemCell';
 import SimpleButton from '../SimpleButton';
 
+import { isAdmin } from '../../auth/AuthService';
+
 const style = {
     checkbox: {
         borderRight: '1px solid #e8e8e8',
@@ -56,11 +58,12 @@ function renderButton(props) {
             <Link to={`edit/${props.record.id}`} >
                 <SimpleButton>Edit</SimpleButton>
             </Link>
-            <button type="button" className="btn btn-danger"
-                onClick={props.onDeleteButtonClick}
-            >
-                Delete
-            </button>
+            {
+                isAdmin() &&
+                <button type="button" className="btn btn-danger"
+                    onClick={props.onDeleteButtonClick}>Delete
+                </button>
+            }
         </td>
     )
 }

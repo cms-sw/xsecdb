@@ -19,6 +19,9 @@ const defaultState = {
     editPage: [],
     utils: {
         message: ""
+    },
+    auth: {
+        roles: []
     }
 };
 

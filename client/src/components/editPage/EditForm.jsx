@@ -1,7 +1,8 @@
 import React from 'react';
 import SimpleButton from '../SimpleButton';
 import DynamicField from './DynamicField';
-import { Link } from 'react-router-dom';
+import { isUser } from '../../auth/AuthService';
+
 
 const INPUTS_IN_ROW = 4;
 
@@ -17,12 +18,15 @@ class EditForm extends React.Component {
                     </form>
                 </div>
                 <div className="panel-footer">
-                    <button type="button" className="btn btn-success"
-                        onClick={this.props.onSaveRecord}
-                    >Save</button>
+                    {
+                        isUser() &&
+                        <button type="button" className="btn btn-success"
+                            onClick={this.props.onSaveRecord}>Save
+                        </button>
+                    }
                     <button type="button" className="btn btn-warning"
-                        onClick={this.props.onCancelEdit}
-                    >Cancel</button>
+                        onClick={this.props.onCancelEdit}>Cancel
+                    </button>
                 </div>
             </div>
         );

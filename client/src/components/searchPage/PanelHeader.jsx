@@ -2,6 +2,8 @@ import React from 'react';
 import SimpleButton from '../SimpleButton';
 import { Link } from 'react-router-dom';
 
+import { isApproval, isUser } from '../../auth/AuthService';
+
 const style = {
     heading: {
         backgroundColor: "#f5f5f5"
@@ -47,13 +49,19 @@ class PanelHeader extends React.Component {
                         </p>
                     </div>
                     <div style={style.right}>
-                        <button type="button" style={{ marginRight: '5px' }}
-                            className="btn btn-primary"
-                            onClick={this.props.onApproveRecordsClick}>Approve selected ({this.props.selectedRecordsCount})</button>
-
-                        <Link to="/edit">
-                            <button type="button" className="btn btn-success">New record</button>
-                        </Link>
+                        {
+                            isApproval() &&
+                            <button type="button" style={{ marginRight: '5px' }}
+                                className="btn btn-primary"
+                                onClick={this.props.onApproveRecordsClick}>Approve selected ({this.props.selectedRecordsCount})
+                            </button>
+                        }
+                        {
+                            isUser() &&
+                            <Link to="/edit">
+                                <button type="button" className="btn btn-success">New record</button>
+                            </Link>
+                        }
                     </div>
                 </div>
                 {this.state.open &&
