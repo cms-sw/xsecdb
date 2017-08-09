@@ -34,21 +34,24 @@ def get_user_groups():
     
     return groups
 
-def is_user_in_group(required_group):
-    logger.debug(request.headers)
+def is_user_in_group(group_level):
     # return True
-
+    # Get minimum required groups
+    required_groups = CONFIG.USER_ROLES[group_level:]
+    
+    # Get all groups user has
     groups = get_user_groups()
-    return required_group in groups
 
+    result = any(role in required_groups for role in groups)
+    return result
 
-# Decorator wrapped into function which accepts required e-group
-def auth_user_group(required_group):
+# Decorator wrapped into function which accepts required e-group level
+def auth_user_group(group_level):
     def decorated_function(f):
         @wraps(f)
         def func_wrapper(*args, **kwargs):
 
-            if not is_user_in_group(required_group):
+            if not is_user_in_group(group_level):
                 abort(403, "Insufficient permissions")
 
             return f(*args, **kwargs)
@@ -100,7 +103,7 @@ def get_by_id(record_id):
 
 
 @app.route('/api/get', methods=['GET'])
-@auth_user_group(CONFIG.ROLE_USERS)
+@auth_user_group(0) # Role: xsdb-user or higher
 def get_empty():
     logger.debug("GET Empty record")
 
@@ -108,7 +111,7 @@ def get_empty():
 
 
 @app.route('/api/insert', methods=['POST'])
-@auth_user_group(CONFIG.ROLE_USERS)
+@auth_user_group(0)
 def insert():
     logger.debug("INSERT " + str(request.get_json()))
 
@@ -133,7 +136,7 @@ def insert():
 
 
 @app.route('/api/update/<record_id>', methods=['POST'])
-@auth_user_group(CONFIG.ROLE_USERS)
+@auth_user_group(0)
 def update(record_id):
     logger.debug("UPDATE " + str(request.get_json()))
 
@@ -155,7 +158,7 @@ def update(record_id):
 
 
 @app.route('/api/delete/<record_id>', methods=['DELETE'])
-@auth_user_group(CONFIG.ROLE_ADMINS)
+@auth_user_group(2) # Role: xsdb-admin or higher
 def delete(record_id):
     logger.debug("DELETE " + record_id)
 
@@ -191,7 +194,7 @@ def get_fields():
 
 
 @app.route('/api/approve', methods=['POST'])
-@auth_user_group(CONFIG.ROLE_APPROVAL)
+@auth_user_group(1) # Role: xsdb-approval or higher
 def approve_records():
     recordIds = json.loads(request.data)
     user_login = request.headers.get("Adfs-Login") or ""
@@ -211,11 +214,11 @@ def approve_records():
 
 @app.route('/api/roles', methods=['GET'])
 def get_roles():
-    # roles = [CONFIG.ROLE_USERS, CONFIG.ROLE_ADMINS, CONFIG.ROLE_APPROVAL]
-
     groups = get_user_groups()
     # from all user groups take only relevant to xsdb
-    roles = [x for x in groups if x in [CONFIG.ROLE_USERS, CONFIG.ROLE_ADMINS, CONFIG.ROLE_APPROVAL]]
+    roles = [x for x in groups if x in CONFIG.USER_ROLES]
+
+    # roles = ['xsdb-approval']#CONFIG.USER_ROLES
 
     return make_response(jsonify(roles), 200)
 
