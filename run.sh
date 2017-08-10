@@ -11,5 +11,5 @@ mkdir -p logs
 # install pip dependencies
 pip install -r requirements.txt
 # run server
-python main.py
+python main.py &
 

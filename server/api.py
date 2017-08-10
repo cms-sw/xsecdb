@@ -11,6 +11,7 @@ from bson.objectid import ObjectId
 from time import gmtime, strftime
 from flask_cors import CORS
 from models.fields import fields as record_structure
+from mailing import send_mail
 from config import CONFIG
 
 app = Flask(__name__, static_folder="../client/dist",
@@ -31,14 +32,14 @@ def get_user_groups():
 
     if adfs_group is not None:
         groups = adfs_group.split(";")
-    
+
     return groups
 
 def is_user_in_group(group_level):
     # return True
     # Get minimum required groups
     required_groups = CONFIG.USER_ROLES[group_level:]
-    
+
     # Get all groups user has
     groups = get_user_groups()
 
@@ -103,7 +104,7 @@ def get_by_id(record_id):
 
 
 @app.route('/api/get', methods=['GET'])
-@auth_user_group(0) # Role: xsdb-user or higher
+@auth_user_group(0)  # Role: xsdb-user or higher
 def get_empty():
     logger.debug("GET Empty record")
 
@@ -119,7 +120,7 @@ def insert():
         user_login = request.headers.get("Adfs-Login")
         curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         record = request.get_json()
-        
+
         record['createdOn'] = curr_date
         record['modifiedOn'] = curr_date
         record['createdBy'] = user_login
@@ -129,6 +130,9 @@ def insert():
 
         result = collection.find_one({'_id': record_id})
         result["id"] = str(record_id)
+
+        send_mail("There's a record to approve: " + str(record_id), 
+                    "test xsdb admins,approval", CONFIG.GROUP_MAILS[1:])
 
         return make_response(dumps(result), 201)
     else:
@@ -152,13 +156,16 @@ def update(record_id):
         result = collection.find_one({'_id': ObjectId(record_id)})
         result["id"] = record_id
 
+        send_mail("There's a record to approve: " + str(record_id), 
+                    "test xsdb admins,approval", CONFIG.GROUP_MAILS[1:])
+
         return make_response(dumps(result), 201)
     else:
         return {'error': 'Incorrect data format'}, 400
 
 
 @app.route('/api/delete/<record_id>', methods=['DELETE'])
-@auth_user_group(2) # Role: xsdb-admin or higher
+@auth_user_group(2)  # Role: xsdb-admin or higher
 def delete(record_id):
     logger.debug("DELETE " + record_id)
 
@@ -180,6 +187,17 @@ def search():
     for key in query:
         search_dictionary[key] = re.compile(query[key], re.I)
 
+    logger.debug(query)
+    # search_dictionary = {
+    #     # 'status': 'Approved',
+    #     '$and': [
+    #         {'$or': [{'status': 'Approved'}, {'status': 'New'}]},
+    #         {'$or': [{'DAS': 'test DAS'}, {'equivalent_lumi': 'test lumif'}]}
+    #     ]
+    #     # '$or': [ {'status': 'Approved'}, {'status': 'New'} ],
+    #     # '$or': [ {'DAS': 'test DAS'}, {'equivalent_lumi': 'test lumif'} ]
+    # }
+
     cursor = collection.find(search_dictionary).skip(
         current_page * page_size).limit(page_size)
     result = dumps(cursor)
@@ -194,7 +212,7 @@ def get_fields():
 
 
 @app.route('/api/approve', methods=['POST'])
-@auth_user_group(1) # Role: xsdb-approval or higher
+@auth_user_group(1)  # Role: xsdb-approval or higher
 def approve_records():
     recordIds = json.loads(request.data)
     user_login = request.headers.get("Adfs-Login") or ""
@@ -208,9 +226,10 @@ def approve_records():
                                'status': 'Approved',
                                'modifiedOn': curr_date,
                                'approvedBy': user_login
-    }})
+                           }})
 
     return make_response('success', 200)
+
 
 @app.route('/api/roles', methods=['GET'])
 def get_roles():
@@ -218,7 +237,7 @@ def get_roles():
     # from all user groups take only relevant to xsdb
     roles = [x for x in groups if x in CONFIG.USER_ROLES]
 
-    # roles = ['xsdb-approval']#CONFIG.USER_ROLES
+    # roles = ['xsdb-admins']#CONFIG.USER_ROLES
 
     return make_response(jsonify(roles), 200)
 
