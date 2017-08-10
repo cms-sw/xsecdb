@@ -33,6 +33,7 @@ const showAlert = (message, status) => {
 export const getRecord = (recordId) => (dispatch) => {
     dispatch({type: "GET_RECORD_BY_ID_REQUEST"});
 
+    //If recordId passed - get existing, otherwise get new
     const url = !!recordId ? 'get/'+recordId : 'get';
 
     axios.get(url)
@@ -51,7 +52,6 @@ export const getRecord = (recordId) => (dispatch) => {
             });
         })
         .catch(error => {
-            console.log(error);
             dispatch(showAlert(error.message, "ERROR"));
         })
 } 
@@ -83,9 +83,20 @@ export const saveRecord = (recordFields) => (dispatch, getState) => {
             dispatch(showAlert(`Record saved successfully!`, "SUCCESS"));
         })
         .catch(error => {
-            console.log(error);
             dispatch(showAlert(error.message, "ERROR"));
         })    
+}
+
+export const approveRecord = (recordId) => (dispatch, getState) => {
+    axios.post('approve', [recordId])
+        .then(response => {
+            dispatch(showAlert("Approved successfully", "SUCCESS"));
+            // Fetch data again
+            dispatch(getRecord(recordId));
+        })
+        .catch(error => {
+            dispatch(showAlert(error.message, "ERROR"));
+        })
 }
 
 export const onCancelEdit = () => (dispatch, getState) =>{

@@ -125,7 +125,6 @@ export const deleteRecord = (recordId) => (dispatch, getState) => {
             dispatch(showAlert("Record deleted", "SUCCESS"))
         })
         .catch(error => {
-            console.log(error);
             dispatch(showAlert(error.message, "ERROR"));
         })
 }

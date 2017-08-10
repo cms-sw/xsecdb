@@ -26,3 +26,7 @@ def send_mail(body, subject, recipients, **kwargs):
         smtpObj.close()
     except Exception as e:
         print "Error: unable to send email", e.__class__, e.message
+
+def send_mail_approve(record_id):
+    send_mail("There's a record to approve: " + CONFIG.EDIT_PAGE_URL + str(record_id), 
+                    "test xsdb admins,approval", CONFIG.GROUP_MAILS[1:])

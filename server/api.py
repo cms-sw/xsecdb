@@ -11,7 +11,7 @@ from bson.objectid import ObjectId
 from time import gmtime, strftime
 from flask_cors import CORS
 from models.fields import fields as record_structure
-from mailing import send_mail
+from mailing import send_mail, send_mail_approve
 from config import CONFIG
 
 app = Flask(__name__, static_folder="../client/dist",
@@ -74,11 +74,13 @@ def fallback(path):
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
     logger.debug("GET " + record_id)
-
     result = {}
-    record = collection.find_one({'_id': ObjectId(record_id)})
+    record = None
 
-    if record not None:
+    if ObjectId.is_valid(record_id):
+        record = collection.find_one({'_id': ObjectId(record_id)})
+
+    if record is not None:
         del record['_id']
 
         result['id'] = {
@@ -140,8 +142,7 @@ def insert():
         result = collection.find_one({'_id': record_id})
         result["id"] = str(record_id)
 
-        send_mail("There's a record to approve: " + CONFIG.EDIT_PAGE_URL + str(record_id), 
-                    "test xsdb admins,approval", CONFIG.GROUP_MAILS[1:])
+        send_mail_approve(record_id)
 
         return make_response(dumps(result), 201)
     else:
@@ -160,13 +161,12 @@ def update(record_id):
         record['modifiedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         record['modifiedBy'] = user_login
 
-        collection.update({'_id': ObjectId(record_id)}, record)
+        collection.update_one({'_id': ObjectId(record_id)}, record)
 
         result = collection.find_one({'_id': ObjectId(record_id)})
         result["id"] = record_id
 
-        send_mail("There's a record to approve: " + CONFIG.EDIT_PAGE_URL + str(record_id), 
-                    "test xsdb admins,approval", CONFIG.GROUP_MAILS[1:])
+        send_mail_approve(record_id)
 
         return make_response(dumps(result), 201)
     else:
@@ -223,13 +223,13 @@ def get_fields():
 @app.route('/api/approve', methods=['POST'])
 @auth_user_group(1)  # Role: xsdb-approval or higher
 def approve_records():
-    recordIds = json.loads(request.data)
+    record_ids = json.loads(request.data)
     user_login = request.headers.get("Adfs-Login") or ""
 
-    logger.debug("APPROVE:" + str(recordIds) + " - USER " + user_login)
+    logger.debug("APPROVE:" + str(record_ids) + " - USER " + user_login)
 
     curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    object_ids = map(lambda x: ObjectId(x), recordIds)
+    object_ids = map(lambda x: ObjectId(x), record_ids)
     collection.update_many({'_id': {'$in': object_ids}}, {
                            '$set': {
                                'status': 'Approved',

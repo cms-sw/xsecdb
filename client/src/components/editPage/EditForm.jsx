@@ -1,9 +1,19 @@
 import React from 'react';
 import SimpleButton from '../SimpleButton';
 import DynamicField from './DynamicField';
-import { isUser } from '../../auth/AuthService';
+import { isUser, isApproval } from '../../auth/AuthService';
 
-
+const style = {
+    left: {
+        display: 'inline-block',
+        width: '50%'
+    },
+    right: {
+        display: 'inline-block',
+        width: '50%',
+        textAlign: 'right'
+    }
+}
 const INPUTS_IN_ROW = 4;
 
 class EditForm extends React.Component {
@@ -18,15 +28,25 @@ class EditForm extends React.Component {
                     </form>
                 </div>
                 <div className="panel-footer">
-                    {
-                        isUser() &&
-                        <button type="button" className="btn btn-success"
-                            onClick={this.props.onSaveRecord}>Save
+                    <div style={style.left}>
+                        {
+                            isUser() &&
+                            <button type="button" className="btn btn-success"
+                                onClick={this.props.onSaveRecord}>Save
                         </button>
-                    }
-                    <button type="button" className="btn btn-warning"
-                        onClick={this.props.onCancelEdit}>Cancel
+                        }
+                        <button type="button" className="btn btn-warning"
+                            onClick={this.props.onCancelEdit}>Cancel
                     </button>
+                    </div>
+                    <div style={style.right}>
+                        {
+                            isApproval() &&
+                            <button type="button" className="btn btn-primary" disabled={this.props.isNew}
+                                onClick={this.props.onApproveRecord}>Approve
+                        </button>
+                        }
+                    </div>
                 </div>
             </div>
         );

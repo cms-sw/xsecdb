@@ -14,7 +14,6 @@ const editPageReducer = (state = {}, action) => {
         case "GET_EDIT_FIELDS_SUCCESS":
             return action.fields
         case "GET_RECORD_BY_ID_SUCCESS":
-            console.log(action.record)
             return action.fields;
         default:
             return state;
