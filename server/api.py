@@ -65,40 +65,49 @@ def auth_user_group(group_level):
 def index():
     return render_template('index.html')
 
+# for /edit/:id path when client doesn't have js (refresh edit in production env)
+@app.route('/<path:path>', methods=['GET'])
+def fallback(path):
+    return render_template('index.html')
+
 
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
     logger.debug("GET " + record_id)
 
-    record = collection.find_one({'_id': ObjectId(record_id)})
-    del record['_id']
-
     result = {}
-    result['id'] = {
-        'name': 'id',
-        'value': record_id,
-        'type': 'not_render'
-    }
+    record = collection.find_one({'_id': ObjectId(record_id)})
 
-    # Make a copy of field structure, to not mutate it
-    dic_ = copy.deepcopy(record_structure)
+    if record not None:
+        del record['_id']
 
-    # Map record fields to structure
-    for key, value in record.iteritems():
-        if key in dic_:
-            result[key] = dic_[key]  # type, disabled, title
-            result[key]['value'] = value
-        else:
-            result[key] = {
-                'title': key,
-                'type': 'text',
-                'value': value
-            }
+        result['id'] = {
+            'name': 'id',
+            'value': record_id,
+            'type': 'not_render'
+        }
 
-    # Add keys of new fields (which currently are not in record)
-    for key in dic_:
-        if key not in result:
-            result[key] = dic_[key]
+        # Make a copy of field structure, to not mutate it
+        dic_ = copy.deepcopy(record_structure)
+
+        # Map record fields to structure
+        for key, value in record.iteritems():
+            if key in dic_:
+                result[key] = dic_[key]  # type, disabled, title
+                result[key]['value'] = value
+            else:
+                result[key] = {
+                    'title': key,
+                    'type': 'text',
+                    'value': value
+                }
+
+        # Add keys of new fields (which currently are not in record)
+        for key in dic_:
+            if key not in result:
+                result[key] = dic_[key]
+    else:
+        result = record_structure
 
     return make_response(jsonify(result), 200)
 
@@ -131,7 +140,7 @@ def insert():
         result = collection.find_one({'_id': record_id})
         result["id"] = str(record_id)
 
-        send_mail("There's a record to approve: " + str(record_id), 
+        send_mail("There's a record to approve: " + CONFIG.EDIT_PAGE_URL + str(record_id), 
                     "test xsdb admins,approval", CONFIG.GROUP_MAILS[1:])
 
         return make_response(dumps(result), 201)
@@ -156,7 +165,7 @@ def update(record_id):
         result = collection.find_one({'_id': ObjectId(record_id)})
         result["id"] = record_id
 
-        send_mail("There's a record to approve: " + str(record_id), 
+        send_mail("There's a record to approve: " + CONFIG.EDIT_PAGE_URL + str(record_id), 
                     "test xsdb admins,approval", CONFIG.GROUP_MAILS[1:])
 
         return make_response(dumps(result), 201)
