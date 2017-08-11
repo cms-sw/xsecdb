@@ -39,10 +39,9 @@ def is_user_in_group(group_level):
     # return True
     # Get minimum required groups
     required_groups = CONFIG.USER_ROLES[group_level:]
-
     # Get all groups user has
     groups = get_user_groups()
-
+    # Check if user has atleast minimum required role
     result = any(role in required_groups for role in groups)
     return result
 
@@ -65,7 +64,7 @@ def auth_user_group(group_level):
 def index():
     return render_template('index.html')
 
-# for /edit/:id path when client doesn't have js (refresh edit in production env)
+# for /edit/:id path when client doesn't have js (refresh edit does not work without this)
 @app.route('/<path:path>', methods=['GET'])
 def fallback(path):
     return render_template('index.html')
@@ -136,8 +135,9 @@ def insert():
         record['modifiedOn'] = curr_date
         record['createdBy'] = user_login
         record['modifiedBy'] = user_login
+        record['status'] = 'new'       
 
-        record_id = collection.insert(record)
+        record_id = collection.insert_one(record)
 
         result = collection.find_one({'_id': record_id})
         result["id"] = str(record_id)
@@ -161,12 +161,18 @@ def update(record_id):
         record['modifiedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         record['modifiedBy'] = user_login
 
-        collection.update_one({'_id': ObjectId(record_id)}, record)
+        # if user isn't xsdb-approval or xsdb-admin, reset status and send email
+        do_send_mail = False
+        if not is_user_in_group(1):
+            record['status'] = 'new'
+            do_send_mail = True
 
+        collection.update({'_id': ObjectId(record_id)}, record)
         result = collection.find_one({'_id': ObjectId(record_id)})
         result["id"] = record_id
 
-        send_mail_approve(record_id)
+        if do_send_mail:
+            send_mail_approve(record_id)
 
         return make_response(dumps(result), 201)
     else:
@@ -232,9 +238,10 @@ def approve_records():
     object_ids = map(lambda x: ObjectId(x), record_ids)
     collection.update_many({'_id': {'$in': object_ids}}, {
                            '$set': {
-                               'status': 'Approved',
+                               'status': 'approved',
                                'modifiedOn': curr_date,
-                               'approvedBy': user_login
+                               'approvedBy': user_login,
+                               'modifiedBy': user_login
                            }})
 
     return make_response('success', 200)
@@ -245,11 +252,9 @@ def get_roles():
     groups = get_user_groups()
     # from all user groups take only relevant to xsdb
     roles = [x for x in groups if x in CONFIG.USER_ROLES]
-
     # roles = ['xsdb-admins']#CONFIG.USER_ROLES
 
     return make_response(jsonify(roles), 200)
-
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)

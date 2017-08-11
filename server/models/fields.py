@@ -150,8 +150,8 @@ fields = {
     "status": {
         'title': "status",
         'type': "select",
-        'options': ["New", "Approved"],
-        'value': "New",
+        'options': ["new", "approved"],
+        'value': "new",
         'disabled': True
     },
 }
