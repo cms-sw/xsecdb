@@ -52,7 +52,8 @@ export const getRecord = (recordId) => (dispatch) => {
             });
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = error.response.data.error_message || error.message;
+            dispatch(showAlert(message, "ERROR"));
         })
 } 
 
@@ -83,7 +84,14 @@ export const saveRecord = (recordFields) => (dispatch, getState) => {
             dispatch(showAlert(`Record saved successfully!`, "SUCCESS"));
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = error.response.data.error_message || error.message;
+            const errorFields = error.response.data.error_fields || [];
+            dispatch(showAlert(message, "ERROR"));
+
+            dispatch({
+                type: 'EDIT_FIELDS_VALIDATION_ERROR',
+                fieldNames: errorFields
+            })
         })    
 }
 
@@ -95,7 +103,8 @@ export const approveRecord = (recordId) => (dispatch, getState) => {
             dispatch(getRecord(recordId));
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = error.response.data.error_message || error.message;
+            dispatch(showAlert(message, "ERROR"));
         })
 }
 

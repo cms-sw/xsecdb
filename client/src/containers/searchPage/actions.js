@@ -108,7 +108,8 @@ export const getRecordFields = (selectedColumns) => (dispatch) => {
             })
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = error.response.data.error_message || error.message;
+            dispatch(showAlert(message, "ERROR"));
         })
 }
 
@@ -125,7 +126,8 @@ export const deleteRecord = (recordId) => (dispatch, getState) => {
             dispatch(showAlert("Record deleted", "SUCCESS"))
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = error.response.data.error_message || error.message;
+            dispatch(showAlert(message, "ERROR"));
         })
 }
 
@@ -142,7 +144,8 @@ export const getInitialRecords = (query) => (dispatch, getState) => {
             dispatch(getRecordsSuccess(response.data));
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = error.response.data.error_message || error.message;
+            dispatch(showAlert(message, "ERROR"));
         })
 }
 
@@ -166,7 +169,8 @@ export const getFilteredRecords = (query, notShowAlert) => (dispatch, getState) 
             }
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = error.response.data.error_message || error.message;
+            dispatch(showAlert(message, "ERROR"));
         })
 }
 
@@ -185,7 +189,8 @@ export const approveRecords = (recordIds) => (dispatch, getState) => {
             dispatch(getFilteredRecords(getState().searchPage.searchField, true));
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = error.response.data.error_message || error.message;
+            dispatch(showAlert(message, "ERROR"));
         })
 }
 

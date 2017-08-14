@@ -4,14 +4,18 @@ import copy
 import logger
 
 from flask import Flask, request, jsonify, make_response, render_template, abort
-from functools import wraps
+
 from pymongo import MongoClient
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from time import gmtime, strftime
 from flask_cors import CORS
+
 from models.fields import fields as record_structure
 from mailing import send_mail, send_mail_approve
+from utils import get_user_groups, is_user_in_group
+from validate import validate_model
+from decorators import auth_user_group
 from config import CONFIG
 
 app = Flask(__name__, static_folder="../client/dist",
@@ -21,43 +25,6 @@ CORS(app)
 client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
 collection = db.xsdbCollection
-
-##
-def validate_model(record):
-    return True
-
-def get_user_groups():
-    adfs_group = request.headers.get('Adfs-Group')
-    groups = []
-
-    if adfs_group is not None:
-        groups = adfs_group.split(";")
-
-    return groups
-
-def is_user_in_group(group_level):
-    # return True
-    # Get minimum required groups
-    required_groups = CONFIG.USER_ROLES[group_level:]
-    # Get all groups user has
-    groups = get_user_groups()
-    # Check if user has atleast minimum required role
-    result = any(role in required_groups for role in groups)
-    return result
-
-# Decorator wrapped into function which accepts required e-group level
-def auth_user_group(group_level):
-    def decorated_function(f):
-        @wraps(f)
-        def func_wrapper(*args, **kwargs):
-
-            if not is_user_in_group(group_level):
-                abort(403, "Insufficient permissions")
-
-            return f(*args, **kwargs)
-        return func_wrapper
-    return decorated_function
-##
 
 
 @app.route('/', methods=['GET'])
@@ -124,20 +91,22 @@ def get_empty():
 @app.route('/api/insert', methods=['POST'])
 @auth_user_group(0)
 def insert():
-    logger.debug("INSERT " + str(request.get_json()))
+    record = request.get_json()
+    logger.debug("INSERT " + str(record))
 
-    if validate_model(request.data):
+    error_fields = validate_model(record)
+
+    if len(error_fields) == 0:
         user_login = request.headers.get("Adfs-Login")
         curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-        record = request.get_json()
 
         record['createdOn'] = curr_date
         record['modifiedOn'] = curr_date
         record['createdBy'] = user_login
         record['modifiedBy'] = user_login
-        record['status'] = 'new'       
+        record['status'] = 'new'
 
-        record_id = collection.insert_one(record)
+        record_id = collection.insert(record)
 
         result = collection.find_one({'_id': record_id})
         result["id"] = str(record_id)
@@ -146,18 +115,23 @@ def insert():
 
         return make_response(dumps(result), 201)
     else:
-        return {'error': 'Incorrect data format'}, 400
+        return make_response(jsonify({
+            'error_message': 'incorrect data format',
+            'error_fields': error_fields
+        }), 400)
 
 
 @app.route('/api/update/<record_id>', methods=['POST'])
 @auth_user_group(0)
 def update(record_id):
-    logger.debug("UPDATE " + str(request.get_json()))
+    record = request.get_json()
+    logger.debug("UPDATE " + str(record))
 
-    if validate_model(request.data):
+    error_fields = validate_model(record)
+
+    if len(error_fields) == 0:
         user_login = request.headers.get("Adfs-Login")
 
-        record = request.get_json()
         record['modifiedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         record['modifiedBy'] = user_login
 
@@ -176,7 +150,10 @@ def update(record_id):
 
         return make_response(dumps(result), 201)
     else:
-        return {'error': 'Incorrect data format'}, 400
+        return make_response(jsonify({
+            'error_message': 'incorrect data format',
+            'error_fields': error_fields
+        }), 400)
 
 
 @app.route('/api/delete/<record_id>', methods=['DELETE'])
@@ -252,7 +229,7 @@ def get_roles():
     groups = get_user_groups()
     # from all user groups take only relevant to xsdb
     roles = [x for x in groups if x in CONFIG.USER_ROLES]
-    # roles = ['xsdb-admins']#CONFIG.USER_ROLES
+    # roles = ['xsdb-admins']  # CONFIG.USER_ROLES
 
     return make_response(jsonify(roles), 200)
 

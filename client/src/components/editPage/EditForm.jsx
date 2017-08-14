@@ -33,7 +33,7 @@ class EditForm extends React.Component {
                             isUser() &&
                             <button type="button" className="btn btn-success"
                                 onClick={this.props.onSaveRecord}>Save
-                        </button>
+                            </button>
                         }
                         <button type="button" className="btn btn-warning"
                             onClick={this.props.onCancelEdit}>Cancel
@@ -44,7 +44,7 @@ class EditForm extends React.Component {
                             isApproval() &&
                             <button type="button" className="btn btn-primary" disabled={this.props.isNew}
                                 onClick={this.props.onApproveRecord}>Approve
-                        </button>
+                            </button>
                         }
                     </div>
                 </div>
