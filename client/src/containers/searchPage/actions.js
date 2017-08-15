@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import qs from 'query-string';
 
 import { getQueryObject, getVisibleColumnsInt, getVisibleColumnsArray } from '../../utils/parsing';
+import { getCustomHTTPError } from '../../utils/common';
 
 axios.defaults.baseURL = apiUrl;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -67,12 +68,30 @@ export const changePaginationState = (currentPage, pageSize) => {
     }
 }
 
+//Change pagination state and update url string
 export const changePagination = (currentPage, pageSize) => (dispatch, getState) => {
     dispatch(changePaginationState(currentPage, pageSize));
     const params = qs.parse(getState().router.location.search);
     dispatch(updateUrlParams(params));
 }
 
+const updateUrlParams = (params) => (dispatch, getState) => {
+    //selected visible columns
+    const selection = getVisibleColumnsInt(getState().searchPage.columns);
+    params[columnParameterName] = selection;
+
+    //get pagination information
+    const { pageSize, currentPage } = getState().searchPage.pagination;
+    params['pageSize'] = pageSize;
+    params['currentPage'] = currentPage;
+
+    //update browser url
+    dispatch(push({
+        search: qs.stringify(params)
+    }))
+}
+
+//Change visible columns and update url string
 export const visibleColumnToggle = (index) => (dispatch, getState) => {
     dispatch({
         type: "VISIBLE_COLUMNS_TOGGLE",
@@ -90,12 +109,15 @@ const showAlert = (message, status) => {
     }
 }
 
+//Get record field structure for visible columns
 export const getRecordFields = (selectedColumns) => (dispatch) => {
     dispatch({ type: "GET_RECORD_FIELDS_REQUEST" });
 
     axios.get('fields')
         .then(response => {
+            //selectedColumns - decimal representation of visible columns
             const visibleColumns = getVisibleColumnsArray(selectedColumns, response.data.length);
+            //map field structure to simple name: fieldName, isVisible: 
             const columns = response.data.map((field, i) => {
                 return {
                     name: field,
@@ -108,11 +130,12 @@ export const getRecordFields = (selectedColumns) => (dispatch) => {
             })
         })
         .catch(error => {
-            const message = error.response.data.error_message || error.message;
+            const message = getCustomHTTPError(error);
             dispatch(showAlert(message, "ERROR"));
         })
 }
 
+//Delete record and show alert
 export const deleteRecord = (recordId) => (dispatch, getState) => {
     dispatch({ type: "DELETE_RECORD_REQUEST" });
 
@@ -122,18 +145,18 @@ export const deleteRecord = (recordId) => (dispatch, getState) => {
                 type: "DELETE_RECORD_SUCCESS",
                 recordId
             })
+            //refresh record list
             dispatch(getFilteredRecords(getState().searchPage.searchField, true));
             dispatch(showAlert("Record deleted", "SUCCESS"))
         })
         .catch(error => {
-            const message = error.response.data.error_message || error.message;
+            const message = getCustomHTTPError(error);
             dispatch(showAlert(message, "ERROR"));
         })
 }
 
+//Used to get records according to url string search query
 export const getInitialRecords = (query) => (dispatch, getState) => {
-    dispatch({ type: "GET_ALL_RECORDS_REQUEST" });
-
     const request = {
         search: query,
         pagination: getState().searchPage.pagination
@@ -144,11 +167,12 @@ export const getInitialRecords = (query) => (dispatch, getState) => {
             dispatch(getRecordsSuccess(response.data));
         })
         .catch(error => {
-            const message = error.response.data.error_message || error.message;
+            const message = getCustomHTTPError(error);
             dispatch(showAlert(message, "ERROR"));
         })
 }
 
+//Regular search action: gets records according to search field value and pagination
 export const getFilteredRecords = (query, notShowAlert) => (dispatch, getState) => {
     const params = getQueryObject(query);
 
@@ -164,20 +188,21 @@ export const getFilteredRecords = (query, notShowAlert) => (dispatch, getState) 
             dispatch(getRecordsSuccess(response.data));
             dispatch(updateUrlParams(params));
 
-            if(!notShowAlert){
+            if (!notShowAlert) {
                 dispatch(showAlert(`Found ${response.data.length} records`, "SUCCESS"));
             }
         })
         .catch(error => {
-            const message = error.response.data.error_message || error.message;
+            const message = getCustomHTTPError(error);
             dispatch(showAlert(message, "ERROR"));
         })
 }
 
+//Approve selected records, deselect all, refresh record list
 export const approveRecords = (recordIds) => (dispatch, getState) => {
     dispatch({ type: "APPROVE_RECORDS_REQUEST" });
 
-    if(recordIds.length < 1){
+    if (recordIds.length < 1) {
         dispatch(showAlert("There is no records selected", "ERROR"));
         return;
     }
@@ -185,29 +210,11 @@ export const approveRecords = (recordIds) => (dispatch, getState) => {
     axios.post('approve', recordIds)
         .then(response => {
             dispatch(showAlert("Approved successfully", "SUCCESS"));
-            dispatch({type: "DESELECT_ALL_RECORD_ROWS"})
+            dispatch({ type: "DESELECT_ALL_RECORD_ROWS" })
             dispatch(getFilteredRecords(getState().searchPage.searchField, true));
         })
         .catch(error => {
-            const message = error.response.data.error_message || error.message;
+            const message = getCustomHTTPError(error);
             dispatch(showAlert(message, "ERROR"));
         })
 }
-
-function updateUrlParams(params) {
-    return (dispatch, getState) => {
-        //selected visible columns
-        const selection = getVisibleColumnsInt(getState().searchPage.columns);
-        params[columnParameterName] = selection;
-
-        //get pagination information
-        const { pageSize, currentPage } = getState().searchPage.pagination;
-        params['pageSize'] = pageSize;
-        params['currentPage'] = currentPage;
-
-        dispatch(push({
-            search: qs.stringify(params)
-        }))
-    }
-}
-

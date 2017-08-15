@@ -6,7 +6,7 @@ import { routerMiddleware } from 'react-router-redux'
 import rootReducer from './rootReducer';
 
 const history = createHistory({ basename: '/xsdb' });
-const middleware = routerMiddleware(history);
+const routerware = routerMiddleware(history);
 
 const defaultState = {
     searchPage: {
@@ -25,10 +25,18 @@ const defaultState = {
     }
 };
 
-const enhancers = compose(
-    applyMiddleware(...[middleware, thunk]),
-    window.devToolsExtension ? window.devToolsExtension() : f => f
-);
+// Redux dev plugin only in development env
+let enhancers;
+if (process.env.NODE_ENV === 'production') {
+    enhancers = compose(
+        applyMiddleware(...[routerware, thunk])
+    );
+} else {
+    enhancers = compose(
+        applyMiddleware(...[routerware, thunk]),
+        window.devToolsExtension ? window.devToolsExtension() : f => f
+    );
+}
 
 const store = createStore(
     rootReducer,
@@ -38,7 +46,3 @@ const store = createStore(
 
 export { history };
 export default store;
-
-
-
-

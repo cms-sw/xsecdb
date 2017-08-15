@@ -13,3 +13,4 @@ pip install -r requirements.txt
 # run server
 python main.py &
 
+deactivate

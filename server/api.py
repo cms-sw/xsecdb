@@ -25,16 +25,14 @@ client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
 collection = db.xsdbCollection
 
-
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
-# for /edit/:id path when client doesn't have js (refresh edit does not work without this)
+# for [/edit/:id] url path when client doesn't have js (refresh on edit page does not work without this)
 @app.route('/<path:path>', methods=['GET'])
 def fallback(path):
     return render_template('index.html')
-
 
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
@@ -55,35 +53,36 @@ def get_by_id(record_id):
         }
 
         # Make a copy of field structure, to not mutate it
-        dic_ = copy.deepcopy(record_structure)
+        structure = copy.deepcopy(record_structure)
 
-        # Map record fields to structure
+        # Map record fields to information in record_structure (type, disabled, required)
         for key, value in record.iteritems():
-            if key in dic_:
-                result[key] = dic_[key]  # type, disabled, title
-                result[key]['value'] = value
+            if key in structure:
+                result[key] = structure[key]  # type, disabled, title
+                result[key]['value'] = value # overwrite value with true value from db
             else:
+                # if field does not exit in record structure default is:
+                # enabled, not required text field
                 result[key] = {
                     'title': key,
                     'type': 'text',
                     'value': value
                 }
 
-        # Add keys of new fields (which currently are not in record)
-        for key in dic_:
+        # Add new fields (which are not in the record, but exist in record_structure)
+        for key in structure:
             if key not in result:
-                result[key] = dic_[key]
+                result[key] = structure[key]
     else:
         result = record_structure
 
     return make_response(jsonify(result), 200)
 
-
+# Get empty record_structure
 @app.route('/api/get', methods=['GET'])
 @auth_user_group(0)  # Role: xsdb-user or higher
 def get_empty():
     logger.debug("GET Empty record")
-
     return make_response(jsonify(record_structure), 200)
 
 
@@ -93,6 +92,7 @@ def insert():
     record = request.get_json()
     logger.debug("INSERT " + str(record))
 
+    # get list of invalid fields
     error_fields = validate_model(record)
 
     if len(error_fields) == 0:
@@ -169,12 +169,15 @@ def delete(record_id):
 def search():
     json_data = json.loads(request.data)
     logger.debug("SEARCH " + str(json_data))
-
+    
+    # search query json object
     query = json_data['search']
+    # pagination information
     page_size = json_data['pagination']['pageSize']
     current_page = json_data['pagination']['currentPage']
     search_dictionary = {}
 
+    # compile regular expressions
     for key in query:
         search_dictionary[key] = re.compile(query[key], re.I)
 
@@ -190,12 +193,11 @@ def search():
     # }
 
     cursor = collection.find(search_dictionary).skip(current_page * page_size).limit(page_size)
-    # cursor = collection.find(search_dictionary).skip(0).limit(0)
     result = dumps(cursor)
 
     return make_response(result, 200)
 
-
+# get list of record_structure field names (for selecting visible columns)
 @app.route('/api/fields', methods=['GET'])
 def get_fields():
     result = record_structure.keys()
@@ -205,6 +207,7 @@ def get_fields():
 @app.route('/api/approve', methods=['POST'])
 @auth_user_group(1)  # Role: xsdb-approval or higher
 def approve_records():
+    # multiple record Ids 
     record_ids = json.loads(request.data)
     user_login = request.headers.get("Adfs-Login") or ""
 
@@ -222,7 +225,7 @@ def approve_records():
 
     return make_response('success', 200)
 
-
+# get roles user has (used when react app loads)
 @app.route('/api/roles', methods=['GET'])
 def get_roles():
     groups = get_user_groups()

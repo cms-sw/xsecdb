@@ -3,7 +3,7 @@ from models.fields import fields as record_structure
 
 def validate_model(record):
     missing_keys = []
-    # validate against required fiels from record structure
+    # validate against required fields from record structure
     for key, field in record_structure.iteritems():
         if(field['required']):
             value = record.get(key)

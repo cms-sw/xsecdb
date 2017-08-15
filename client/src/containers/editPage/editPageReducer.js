@@ -1,4 +1,3 @@
-
 const editPageReducer = (state = {}, action) => {
     switch (action.type) {
         case "EDIT_FIELD_CHANGE":

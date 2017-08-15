@@ -1,6 +1,5 @@
 import React from 'react';
 import RecordItem from './RecordItem';
-import SimpleButton from '../SimpleButton';
 import PanelHeader from './PanelHeader';
 import ModalDialog from '../ModalDialog';
 import { Link } from 'react-router-dom';
@@ -16,13 +15,14 @@ const styles = {
     }
 }
 
+//Renders recordItems, holds modal window, holds table header
 class RecordList extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             dialogOpen: false,
-            id: null
+            deleteCandidateId: null
         }
         this.toggleDeleteDialog = this.toggleDeleteDialog.bind(this);
         this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this);

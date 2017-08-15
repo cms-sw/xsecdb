@@ -4,8 +4,6 @@ import { bindActionCreators } from 'redux';
 import qs from 'query-string';
 import { columnParameterName } from 'Config';
 
-import InputField from '../../components/InputField';
-import SimpleButton from '../../components/SimpleButton';
 import Pagination from '../../components/Pagination';
 import RecordList from '../../components/searchPage/RecordList';
 import SearchBar from '../../components/searchPage/SearchBar';
@@ -63,7 +61,7 @@ class SearchPage extends React.Component {
         //Extract pagination information
         const { pageSize, currentPage } = searchQuery;
 
-        //Leave only search information on searchQuery object
+        //Leave only search information on searchQuery object (key:value pairs)
         delete searchQuery[columnParameterName];
         delete searchQuery['pageSize'];
         delete searchQuery['currentPage'];
@@ -108,7 +106,7 @@ class SearchPage extends React.Component {
         this.props.getFilteredRecords(this.props.searchField);
         this.props.deselectAllRecordRows();
     }
-
+    
     onToggleSelectedRow(recordId, e) {
         if (this.props.selectedRows.includes(recordId)) {
             this.props.deselectRecordRow(recordId);

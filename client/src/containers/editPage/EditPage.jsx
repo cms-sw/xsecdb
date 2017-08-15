@@ -28,7 +28,7 @@ class EditPage extends React.Component {
             </div>
         )
     }
-
+    //Get record fields - data
     componentDidMount() { 
         const recordId = this.props.match.params.recordId;
         this.props.getRecord(recordId);
@@ -52,6 +52,7 @@ const mapStateToProps = (state) => {
     return {
         record: state.editPage,
         search: state.searchPage,
+        // Record is new when there is no 'id' field provided
         isNew: !state.editPage.some(field => field.name == 'id')
     }
 }

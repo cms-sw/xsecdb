@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import RecordItemCell from './RecordItemCell';
-import SimpleButton from '../SimpleButton';
-
 import { isAdmin } from '../../auth/AuthService';
 
 const style = {
@@ -34,11 +31,12 @@ function renderCells(props) {
     //Record cells only of visible columns
     const items = props.columns.reduce((acc, col, i) => {
         if (col.isVisible) {
-            acc.push(<td key={i} style={style.cell}>{props.record[col.name]}</td>)
+            acc.push(<td key={i} style={style.cell}>{props.record[col.name]}</td>);
         }
         return acc;
     }, []);
 
+    //Checkbox for multiapprove
     const checkBoxCell = (<td key={-1} style={style.checkbox}
         onClick={props.onToggleSelectedRow.bind(this, props.record['id'])}
         role="button"
@@ -47,8 +45,7 @@ function renderCells(props) {
     </td>
     );
 
-    items.unshift(checkBoxCell)
-
+    items.unshift(checkBoxCell);
     return items;
 }
 
@@ -56,7 +53,7 @@ function renderButton(props) {
     return (
         <td style={style.cell}>
             <Link to={`edit/${props.record.id}`} >
-                <SimpleButton>Edit</SimpleButton>
+                <button type="button" className="btn btn-default">Edit</button>
             </Link>
             {
                 isAdmin() &&

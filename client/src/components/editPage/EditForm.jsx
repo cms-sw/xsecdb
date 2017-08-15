@@ -1,5 +1,4 @@
 import React from 'react';
-import SimpleButton from '../SimpleButton';
 import DynamicField from './DynamicField';
 import { isUser, isApproval } from '../../auth/AuthService';
 
@@ -14,10 +13,12 @@ const style = {
         textAlign: 'right'
     }
 }
+
 const INPUTS_IN_ROW = 4;
 
-class EditForm extends React.Component {
 
+// Dynamic - Responsive bootstrap form
+class EditForm extends React.Component {
     render() {
         return (
             <div className="panel panel-default">
@@ -37,7 +38,7 @@ class EditForm extends React.Component {
                         }
                         <button type="button" className="btn btn-warning"
                             onClick={this.props.onCancelEdit}>Cancel
-                    </button>
+                        </button>
                     </div>
                     <div style={style.right}>
                         {
@@ -52,17 +53,19 @@ class EditForm extends React.Component {
         );
     }
 
-    renderForm() {
-        const fields = this.props.fields.filter(f => f.type.toLowerCase() !== "not_render");
-        const n = Math.ceil(fields.length / INPUTS_IN_ROW);
 
+    renderForm() {
+        //Fields that should not be rendered have type "not_render" (for example id field)
+        const fields = this.props.fields.filter(f => f.type.toLowerCase() !== "not_render");
+        //Number of rows
+        const n = Math.ceil(fields.length / INPUTS_IN_ROW);
         let row;
         const result = []
 
         for (let i = 0; i < n; i++) {
             row = (
                 <div className="row" key={i}>
-                    {this.renderInputs(i, fields)}
+                    {this.renderFormRow(i, fields)}
                 </div>
             )
             result.push(row);
@@ -70,12 +73,14 @@ class EditForm extends React.Component {
         return result;
     }
 
-    renderInputs(n, fields) {
-        let index = n * INPUTS_IN_ROW;
-        const count = index + INPUTS_IN_ROW > fields.length ? fields.length : index + INPUTS_IN_ROW;
+    //Renders form row
+    renderFormRow(rowNumber, fields) {
+        let startIndex = rowNumber * INPUTS_IN_ROW;
+        const endIndex = startIndex + INPUTS_IN_ROW > fields.length ? fields.length : startIndex + INPUTS_IN_ROW;
         const result = [];
 
-        for (let i = index; i < count; i++) {
+        //Fields from range [start index:endIndex]
+        for (let i = startIndex; i < endIndex; i++) {
             result.push((
                 <div className="col-lg-3 col-sm-6" key={i}>
                     <DynamicField key={i} {...fields[i]} onChange={this.props.onFieldChange} />

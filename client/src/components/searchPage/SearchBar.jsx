@@ -1,8 +1,5 @@
 import React from 'react';
 
-import InputField from '../InputField';
-import SimpleButton from '../SimpleButton';
-
 const style = {
     col: { paddingLeft: 0, paddingRight: 0 },
     row: { marginLeft: 0, marginRight: 0 },
@@ -23,22 +20,24 @@ const SearchBar = (props) => {
                     </div>
                     <div className="col-sm-1" style={style.col}>
                         <button type="submit" className="btn btn-default"
-                            onClick={props.onSearchButtonClick} style={style.input}
-                        >Search</button>
+                            onClick={props.onSearchButtonClick} style={style.input}>
+                            Search
+                        </button>
                     </div>
                     <div className="col-sm-1" style={style.col}>
                         <button type="button" className="btn btn-default"
-                            onClick={props.onClearButtonClick} style={style.input}
-                        >Clear</button>
+                            onClick={props.onClearButtonClick} style={style.input}>
+                            Clear
+                        </button>
                     </div>
                 </div>
             </form>
 
-            <div className="panel panel-default">
+             {/* <div className="panel panel-default">
                 <div className="panel-body">
                     <b>key=value, key=value,...</b>
                 </div>
-            </div>
+            </div>  */}
         </div >
     )
 }

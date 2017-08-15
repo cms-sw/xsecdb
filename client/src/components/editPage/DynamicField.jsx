@@ -1,11 +1,9 @@
 import React from 'react';
 
-
+// Returns HTML component according to field type
 const DynamicField = (props) => {
     const onChange = props.onChange.bind(this, props.name);
     const hasError = !!props.errorMessage;
-
-
 
     switch (props.type.toUpperCase()) {
         case "TEXT":

@@ -9,8 +9,6 @@ import { history } from './store'
 
 import App from './App';
 
-
-
 const Router = (
     <Provider store={store}>
         <ConnectedRouter history={history}>
@@ -20,6 +18,3 @@ const Router = (
 )
 
 ReactDOM.render(Router, document.getElementById("root"));
-
-
-

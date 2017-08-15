@@ -1,5 +1,4 @@
 import React from 'react';
-import SimpleButton from '../SimpleButton';
 import { Link } from 'react-router-dom';
 
 import { isApproval, isUser } from '../../auth/AuthService';
@@ -64,10 +63,11 @@ class PanelHeader extends React.Component {
                         }
                     </div>
                 </div>
-                {this.state.open &&
+                {
+                    this.state.open &&
                     <div className="panel-body">
                         <div className="row" style={style.row}>
-                            {this.renderFields()}
+                            {this.renderColumnsSelections()}
                         </div>
                     </div>
                 }
@@ -75,7 +75,7 @@ class PanelHeader extends React.Component {
         );
     }
 
-    renderFields() {
+    renderColumnsSelections() {
         return this.props.columns.map((col, i) => (
             <label style={style.column} key={i} role="button">
                 <input type="checkbox" name={col.name}
@@ -85,12 +85,13 @@ class PanelHeader extends React.Component {
         )
     }
 
+    //Open/Close visible columns selection section
     onToggleOpen() {
         this.setState({
             open: !this.state.open
         })
     }
-
+    //Change visibility of a column
     onChangeCheckbox(index, e) {
         this.props.visibleColumnToggle(index);
     }

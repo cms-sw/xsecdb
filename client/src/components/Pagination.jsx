@@ -1,16 +1,13 @@
 import React from 'react';
-
+//How many pages are shown next to current page
 const M = 2;
+//Selections of page size
 const pageSizes = [10, 20, 30, 40, 50]
 const preventDefault = e => e.preventDefault();
 
 export default class Pagination extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            recordCount: this.props.recordCount
-        }
 
         this.onPageSizeChange = this.onPageSizeChange.bind(this);
     }
@@ -44,7 +41,6 @@ export default class Pagination extends React.Component {
 
     renderNavigation() {
         const recordCount = this.props.recordCount;
-        //const recordCount = this.state.recordCount;
         const recordsPerPage = this.props.pageSize;
         const currentPage = this.props.currentPage;
 
@@ -84,7 +80,7 @@ export default class Pagination extends React.Component {
             result.push(<li className="disabled" key={-3}><a href="#">...</a></li>)
         }
 
-        // //M pages before current page
+        //M pages before current page
         for (let i = currentPage - M; i < currentPage; i++) {
             if (i >= 0) {
                 result.push(<li key={i}>
@@ -92,12 +88,13 @@ export default class Pagination extends React.Component {
                 </li>)
             }
         }
+
         //Current page
         result.push(<li className={"active"} key={-4}>
             <a href="#" onClick={preventDefault}>{currentPage}</a>
         </li>);
 
-        //Next >>
+        //Next (>>)
         result.push(<li key={-5} className={notNext ? "disabled" : ""}>
             <a href="#" aria-label="Next" onClick={nextHandler} aria-disabled={true}>
                 <span aria-hidden="true">&raquo;</span>

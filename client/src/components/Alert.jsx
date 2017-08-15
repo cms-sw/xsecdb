@@ -29,7 +29,7 @@ class Alert extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props && nextProps.message) {
             setTimeout(this.handleClose, this.props.autoCloseTime);
-
+            //push to queue - means we will wait longer before closing alert
             this.state.queue.push(1);
         }
     }
@@ -52,6 +52,7 @@ class Alert extends React.Component {
     }
 
     handleClose() {
+        //Remove item from queue
         this.state.queue.pop();
 
         if (this.state.queue.length == 0) {
