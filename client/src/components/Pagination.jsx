@@ -20,7 +20,10 @@ export default class Pagination extends React.Component {
             <div className="row">
                 <div className="col-lg-9 col-md-8 col-xs-7">
                     <ul className="pagination" style={{ margin: 0 }}>
-                        {this.renderNavigation()}
+                        {
+                            this.props.pageSize !== 0 &&
+                            this.renderNavigation()
+                        }
                     </ul>
                 </div>
                 <div className="col-lg-3 col-md-4 col-xs-5 form-group" >
@@ -50,7 +53,7 @@ export default class Pagination extends React.Component {
         let prevHandler = this.onCurrentPageChange.bind(this, currentPage - 1);
         let nextHandler = this.onCurrentPageChange.bind(this, currentPage + 1);
 
-        const notNext = recordCount < recordsPerPage;
+        const notNext = (recordCount < recordsPerPage);
         const notPrev = currentPage < 1;
 
         if (notNext) {
@@ -107,14 +110,16 @@ export default class Pagination extends React.Component {
     renderPageSizeSelect() {
         const result = [];
 
-        //Add "custom" page size selection option
-        if(!pageSizes.includes(this.props.pageSize)){
+        //Add "custom" page size selection option (from url parameter)
+        if(!pageSizes.includes(this.props.pageSize) && this.props.pageSize !== 0){
             pageSizes.push(this.props.pageSize)
         }
 
+        result.push(<option value={0} key={-1}>All</option>);
+
         pageSizes.map((pageSizeValue, i) => {
             result.push(<option value={pageSizeValue} key={i}>{pageSizeValue}</option>)
-        });
+        });        
 
         return result;        
     }

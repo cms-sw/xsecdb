@@ -11,7 +11,7 @@ def get_user_groups():
     return groups
 
 def is_user_in_group(group_level):
-    return True
+    # return True
     # Get minimum required groups
     required_groups = CONFIG.USER_ROLES[group_level:]
     # Get all groups user has

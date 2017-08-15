@@ -3,8 +3,7 @@ import re
 import copy
 import logger
 
-from flask import Flask, request, jsonify, make_response, render_template, abort
-
+from flask import Flask, request, jsonify, make_response, render_template
 from pymongo import MongoClient
 from bson.json_util import dumps
 from bson.objectid import ObjectId
@@ -190,8 +189,8 @@ def search():
     #     # '$or': [ {'DAS': 'test DAS'}, {'equivalent_lumi': 'test lumif'} ]
     # }
 
-    cursor = collection.find(search_dictionary).skip(
-        current_page * page_size).limit(page_size)
+    cursor = collection.find(search_dictionary).skip(current_page * page_size).limit(page_size)
+    # cursor = collection.find(search_dictionary).skip(0).limit(0)
     result = dumps(cursor)
 
     return make_response(result, 200)

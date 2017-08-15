@@ -31,20 +31,5 @@ logger_access.setLevel(10)
 def error(message):
     logger_error.error(message)
 
-def insert(message):
-    logger_error.debug("INSERT: " + str(message))
-
-def update(message):
-    logger_error.debug("UPDATE: " + str(message))
-
-def delete(message):
-    logger_error.debug("DELETE: " + str(message))
-
-def get(message):
-    logger_error.debug("GET: " + str(message))
-
-def search(message):
-    logger_error.debug("SEARCH: " + str(message))
-
 def debug(message):
     logger_error.debug(message)
