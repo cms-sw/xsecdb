@@ -30,7 +30,7 @@ class SearchPage extends React.Component {
         return (
             <div style={{ margin: "0 2%" }}>
                 <SearchBar onSearchButtonClick={this.onSearchButtonClick} onSearchInputChange={this.onSearchInputChange}
-                    searchFieldValue={this.props.searchField}
+                    searchFieldValue={this.props.searchField || ""}
                     onClearButtonClick={this.onClearButtonClick}
                 />
                 <RecordList
@@ -54,29 +54,23 @@ class SearchPage extends React.Component {
 
     componentDidMount() {
         //If there's any query parameters - use them in search
-        const searchQuery = qs.parse(this.props.location.search);
-
+        const urlParams = qs.parse(this.props.location.search);
         //Extract selected columns information
-        const selectedColumns = searchQuery[columnParameterName];
-        //Extract pagination information
-        const { pageSize, currentPage } = searchQuery;
-
-        //Leave only search information on searchQuery object (key:value pairs)
-        delete searchQuery[columnParameterName];
-        delete searchQuery['pageSize'];
-        delete searchQuery['currentPage'];
+        const selectedColumns = urlParams[columnParameterName];
+        //Take pagination info and search query
+        const { pageSize, currentPage, searchQuery } = urlParams;
 
         //If there's pagination information add it to application state
         if (currentPage && pageSize) {
             this.props.changePaginationState(currentPage, pageSize);
         }
 
-        //Fetch records without updating url
-        this.props.getInitialRecords(searchQuery);
         //Fetch columns and map with columns to display
         this.props.getRecordFields(selectedColumns);
         //Fill search field from url search params
         this.props.fillSearchInput(searchQuery);
+        //Fetch records without showing alert
+        this.props.getFilteredRecords(searchQuery, true, true);
     }
 
     onSearchButtonClick(e) {
@@ -106,7 +100,7 @@ class SearchPage extends React.Component {
         this.props.getFilteredRecords(this.props.searchField);
         this.props.deselectAllRecordRows();
     }
-    
+
     onToggleSelectedRow(recordId, e) {
         if (this.props.selectedRows.includes(recordId)) {
             this.props.deselectRecordRow(recordId);

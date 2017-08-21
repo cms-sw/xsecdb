@@ -25,6 +25,7 @@ client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
 collection = db.xsdbCollection
 
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
@@ -33,6 +34,7 @@ def index():
 @app.route('/<path:path>', methods=['GET'])
 def fallback(path):
     return render_template('index.html')
+
 
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
@@ -59,7 +61,8 @@ def get_by_id(record_id):
         for key, value in record.iteritems():
             if key in structure:
                 result[key] = structure[key]  # type, disabled, title
-                result[key]['value'] = value # overwrite value with true value from db
+                # overwrite value with true value from db
+                result[key]['value'] = value
             else:
                 # if field does not exit in record structure default is:
                 # enabled, not required text field
@@ -169,35 +172,29 @@ def delete(record_id):
 def search():
     json_data = json.loads(request.data)
     logger.debug("SEARCH " + str(json_data))
-    
+
     # search query json object
     query = json_data['search']
     # pagination information
     page_size = json_data['pagination']['pageSize']
     current_page = json_data['pagination']['currentPage']
-    search_dictionary = {}
+    search_dictionary = query#{}
 
     # compile regular expressions
-    for key in query:
-        search_dictionary[key] = re.compile(query[key], re.I)
+    # for key in query:
+    #     search_dictionary[key] = re.compile(query[key], re.I)
 
     logger.debug(query)
-    # search_dictionary = {
-    #     # 'status': 'Approved',
-    #     '$and': [
-    #         {'$or': [{'status': 'Approved'}, {'status': 'New'}]},
-    #         {'$or': [{'DAS': 'test DAS'}, {'equivalent_lumi': 'test lumif'}]}
-    #     ]
-    #     # '$or': [ {'status': 'Approved'}, {'status': 'New'} ],
-    #     # '$or': [ {'DAS': 'test DAS'}, {'equivalent_lumi': 'test lumif'} ]
-    # }
 
-    cursor = collection.find(search_dictionary).skip(current_page * page_size).limit(page_size)
+    cursor = collection.find(search_dictionary).skip(
+        current_page * page_size).limit(page_size)
     result = dumps(cursor)
 
     return make_response(result, 200)
 
 # get list of record_structure field names (for selecting visible columns)
+
+
 @app.route('/api/fields', methods=['GET'])
 def get_fields():
     result = record_structure.keys()
@@ -207,7 +204,7 @@ def get_fields():
 @app.route('/api/approve', methods=['POST'])
 @auth_user_group(1)  # Role: xsdb-approval or higher
 def approve_records():
-    # multiple record Ids 
+    # multiple record Ids
     record_ids = json.loads(request.data)
     user_login = request.headers.get("Adfs-Login") or ""
 

@@ -107,7 +107,7 @@ fields = {
     "matrix_generator": {
         'title': "Matrix generator",
         'type': "select",
-        'options': ["none", "none", "Sherpa", "Herwig++", "Herwig7", "Powheg", "Madgraph"],
+        'options': ["none", "Sherpa", "Herwig++", "Herwig7", "Powheg", "Madgraph"],
         'value': "none",
         'disabled': False,
         'required': False

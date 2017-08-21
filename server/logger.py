@@ -26,6 +26,7 @@ logger_error.setLevel(10)
 handler = logging.handlers.RotatingFileHandler(file_access, 'a', maxBytes, backupCount)
 handler.setFormatter(formatter)
 logger_access.addHandler(handler)
+logger_access.setLevel(10)
 
 def error(message):
     logger_error.error(message)

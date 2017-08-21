@@ -3,13 +3,13 @@ import React from 'react';
 const style = {
     col: { paddingLeft: 0, paddingRight: 0 },
     row: { marginLeft: 0, marginRight: 0 },
-    input: { width: '100%' }
+    input: { width: '100%' },
+    container: {marginBottom: '20px'}
 }
 
 const SearchBar = (props) => {
     return (
-        <div className="form-inline">
-
+        <div className="form-inline" style={style.container}>
             <form className="inline-form">
                 <div className="row" style={style.row}>
                     <div className="col-sm-10" style={style.col}>
