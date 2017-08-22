@@ -39,17 +39,10 @@ export const getRecord = (recordId) => (dispatch) => {
 
     axios.get(url)
         .then(response => {
-            const fields = [];
-            //convert object(dictionary) into array of fields
-            Object.keys(response.data).map(key => {
-                fields.push({
-                    name: key,
-                    ...response.data[key]
-                })
-            })
+            //Get array of dictionaries(fields)
             dispatch({
                 type: "GET_RECORD_BY_ID_SUCCESS",
-                fields
+                fields: response.data
             });
         })
         .catch(error => {

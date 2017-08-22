@@ -106,7 +106,7 @@ export const getRecordFields = (selectedColumns) => (dispatch, getState) => {
         .then(response => {
             //selectedColumns - decimal representation of visible columns
             const visibleColumns = getVisibleColumnsArray(selectedColumns, response.data.length);
-            //map field structure to simple name: fieldName, isVisible: 
+            //map field structure to simple name: fieldName, isVisible: bool
             const columns = response.data.map((field, i) => {
                 return {
                     name: field,
@@ -148,14 +148,14 @@ export const deleteRecord = (recordId) => (dispatch, getState) => {
 //Regular search action: gets records according to search field value and pagination
 export const getFilteredRecords = (query, notShowAlert, notUpdateUrl) => (dispatch, getState) => {
     let params = {}
-    try{
-        params = getQueryObject(query);
-    }catch(error){
-        //console.log(error)
-        dispatch(showAlert(error.message, "ERROR"));
-        return;
+    if (query) {
+        try {
+            params = getQueryObject(query);
+        } catch (error) {
+            dispatch(showAlert(error.message, "ERROR"));
+            return;
+        }
     }
-    
 
     dispatch({ type: "GET_FILTERED_RECORDS_REQUEST" });
 

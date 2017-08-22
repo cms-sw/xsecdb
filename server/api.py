@@ -12,7 +12,8 @@ from flask_cors import CORS
 
 from models.fields import fields as record_structure
 from mailing import send_mail, send_mail_approve
-from utils import get_user_groups, is_user_in_group, compile_regex
+from utils import compile_regex, get_ordered_field_list,\
+        get_user_groups, is_user_in_group, get_field_order
 from validate import validate_model
 from decorators import auth_user_group
 from config import CONFIG
@@ -39,7 +40,8 @@ def fallback(path):
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
     logger.debug("GET " + record_id)
-    result = {}
+    result_dic = {}
+    result = []
     record = None
 
     if ObjectId.is_valid(record_id):
@@ -48,25 +50,25 @@ def get_by_id(record_id):
     if record is not None:
         del record['_id']
 
-        result['id'] = {
+        result.append({
             'name': 'id',
             'value': record_id,
             'type': 'not_render'
-        }
+        })
 
         # Make a copy of field structure, to not mutate it
         structure = copy.deepcopy(record_structure)
-
-        # Map record fields to information in record_structure (type, disabled, required)
+        
+        # Map record fields to information in record_structure (type, disabled, required, order)
         for key, value in record.iteritems():
             if key in structure:
-                result[key] = structure[key]  # type, disabled, title
+                result_dic[key] = structure[key]  # type, disabled, title
                 # overwrite value with true value from db
-                result[key]['value'] = value
+                result_dic[key]['value'] = value
             else:
                 # if field does not exit in record structure default is:
                 # enabled, not required text field
-                result[key] = {
+                result_dic[key] = {
                     'title': key,
                     'type': 'text',
                     'value': value
@@ -74,8 +76,12 @@ def get_by_id(record_id):
 
         # Add new fields (which are not in the record, but exist in record_structure)
         for key in structure:
-            if key not in result:
-                result[key] = structure[key]
+            if key not in result_dic:
+                result_dic[key] = structure[key]
+
+        # Order fields by record_structures [order] field and for list structure
+        result = get_ordered_field_list(result_dic)
+
     else:
         result = record_structure
 
@@ -86,7 +92,8 @@ def get_by_id(record_id):
 @auth_user_group(0)  # Role: xsdb-user or higher
 def get_empty():
     logger.debug("GET Empty record")
-    return make_response(jsonify(record_structure), 200)
+    result = get_ordered_field_list(record_structure)
+    return make_response(jsonify(result), 200)
 
 
 @app.route('/api/insert', methods=['POST'])
@@ -186,16 +193,15 @@ def search():
 
     cursor = collection.find(search_dictionary).skip(
         current_page * page_size).limit(page_size)
+
     result = dumps(cursor)
 
     return make_response(result, 200)
 
 # get list of record_structure field names (for selecting visible columns)
-
-
 @app.route('/api/fields', methods=['GET'])
 def get_fields():
-    result = record_structure.keys()
+    result = sorted(record_structure.keys(), key=get_field_order)
     return make_response(jsonify(result), 200)
 
 
