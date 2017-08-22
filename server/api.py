@@ -12,7 +12,7 @@ from flask_cors import CORS
 
 from models.fields import fields as record_structure
 from mailing import send_mail, send_mail_approve
-from utils import get_user_groups, is_user_in_group
+from utils import get_user_groups, is_user_in_group, compile_regex
 from validate import validate_model
 from decorators import auth_user_group
 from config import CONFIG
@@ -178,11 +178,9 @@ def search():
     # pagination information
     page_size = json_data['pagination']['pageSize']
     current_page = json_data['pagination']['currentPage']
-    search_dictionary = query#{}
 
     # compile regular expressions
-    # for key in query:
-    #     search_dictionary[key] = re.compile(query[key], re.I)
+    search_dictionary = compile_regex(query)
 
     logger.debug(query)
 

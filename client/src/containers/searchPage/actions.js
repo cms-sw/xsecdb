@@ -147,7 +147,15 @@ export const deleteRecord = (recordId) => (dispatch, getState) => {
 
 //Regular search action: gets records according to search field value and pagination
 export const getFilteredRecords = (query, notShowAlert, notUpdateUrl) => (dispatch, getState) => {
-    const params = getQueryObject(query);
+    let params = {}
+    try{
+        params = getQueryObject(query);
+    }catch(error){
+        //console.log(error)
+        dispatch(showAlert(error.message, "ERROR"));
+        return;
+    }
+    
 
     dispatch({ type: "GET_FILTERED_RECORDS_REQUEST" });
 
@@ -161,7 +169,7 @@ export const getFilteredRecords = (query, notShowAlert, notUpdateUrl) => (dispat
             dispatch(getRecordsSuccess(response.data));
 
             if (!notUpdateUrl) {
-                const searchQuery = query == '' ? { searchQuery: query } : {};
+                const searchQuery = query !== '' ? { searchQuery: query } : {};
                 dispatch(updateUrlParams(searchQuery));
             }
 

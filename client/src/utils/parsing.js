@@ -1,43 +1,69 @@
 import qs from 'query-string';
 
-const _and = 'AND', _or = 'OR', _assing = '=', _openBrac = '(', _closingBrac = ')';
-let reString = `^([a-zA-Z_]+={1}[a-zA-Z0-9_]+| ${_and} | ${_or} |\\(|\\))`;
+RegExp.escape = function (s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
+
+const and = '&&', or = '||', assign = '=', openBrac = '(', closingBrac = ')';
+
+const _and = RegExp.escape('&&');
+const _or = RegExp.escape('||');
+const _assign = RegExp.escape('=');
+const _openBrac = RegExp.escape('(');
+const _closingBrac = RegExp.escape(')');
+
+//REGEX IN key:VALUE's [VALUE] part does not support symbols (3): | ( )
+let reStringKeyVal = `[a-zA-Z_0-9]+={1}[a-zA-Z0-9_\[\^\$\.\?\*\+]+`;
+let reString = `^(${reStringKeyVal}|${_and}|${_or}|${_openBrac}|${_closingBrac})`;
+
 const reToken = new RegExp(reString);
-reString = `^[a-zA-Z0-9_]+={1}[a-zA-Z0-9_]+`;
-const reKeyVal = new RegExp(reString);
+const reKeyVal = new RegExp(reStringKeyVal);
 
-//Parses search string into key:value object
+const BASE_ERR_MSG = "Incorrect search query format";
+
+
 export const getQueryObject = (query = "") => {
-    const _and = 'AND', _or = 'OR', _assing = '=', _openBrac = '(', _closingBrac = ')';
+    query = query.replace(/\s/g, '');
 
+    // >> SHUNTING YARD ALGORITHM
     const outQueue = [];
     const opStack = [];
+    let keyValCount = 0, opCount = 0;
 
     const precedence = {
-        [_and]: 2,
-        [_or]: 1
+        [and]: 2,
+        [or]: 1
     }
 
     while (query.length > 0) {
-        console.log(outQueue)
-        let token = query.match(reToken)[0];
+        //Match one of possible tokens: key=value, or operator, and operator, parentheses
+        let matches = query.match(reToken);
+        if (matches === null) {
+            throw new Error(BASE_ERR_MSG);
+        }
+
+        const token = matches[0];
         query = query.slice(token.length);
-        token = token.trim();
+
+        if (!token) {
+            throw new Error(BASE_ERR_MSG);
+        }
 
         if (token.match(reKeyVal)) {
             outQueue.push(token);
-        } else if (token === _and || token === _or) {
+            keyValCount++;
+        } else if (token === and || token === or) {
             while (precedence[opStack[opStack.length - 1]] >= precedence[token]) {
                 outQueue.push(opStack.pop());
             }
             opStack.push(token);
-        } else if (token === '(') {
+            opCount++;
+        } else if (token === openBrac) {
             opStack.push(token);
-        } else if (token === ')') {
-            while (opStack[opStack.length - 1] !== '(') {
+        } else if (token === closingBrac) {
+            while (opStack[opStack.length - 1] !== openBrac) {
                 if (opStack[opStack.length - 1] === undefined) {
-                    console.log('ERROR: missmatched parentheses')
-                    break;
+                    throw new Error(`${BASE_ERR_MSG}: missmatched parentheses`);
                 }
                 outQueue.push(opStack.pop());
             }
@@ -49,11 +75,19 @@ export const getQueryObject = (query = "") => {
         while (opStack.length !== 0) {
             outQueue.push(opStack.pop());
         }
+    } else {
+        throw new Error(BASE_ERR_MSG);
+    }
+    // << SHUNTING YARD ALGORITHM
+
+    if (keyValCount - 1 !== opCount) {
+        throw new Error(`${BASE_ERR_MSG}: operator and key=value counts do not match`);
     }
 
+    // >> INTERPRET THE OUT PUT AND FORM MONGO QUERY
     const mongoOperators = {
-        [_or]: '$or',
-        [_and]: '$and'
+        [or]: '$or',
+        [and]: '$and'
     }
 
     const stack = [];
@@ -61,7 +95,7 @@ export const getQueryObject = (query = "") => {
     for (let i = 0; i < outQueue.length; i++) {
         const elem = outQueue[i];
 
-        if (elem === _and || elem === _or) {
+        if (elem === and || elem === or) {
             const a = stack.pop();
             const b = stack.pop();
 
@@ -72,14 +106,16 @@ export const getQueryObject = (query = "") => {
                 ]
             }
             stack.push(res);
+        } else if (elem === openBrac || elem === closingBrac) {
+            throw new Error(`${BASE_ERR_MSG}: missmatched parentheses`);
         } else {
-            const pair = elem.split(_assing);
+            const pair = elem.split(assign);
             stack.push({ [pair[0]]: pair[1] });
         }
     }
 
     const result = stack.pop();
-    console.log(JSON.stringify(result));
+    // << INTERPRET THE OUT PUT AND FORM MONGO QUERY
 
     return result || {};
 }
@@ -112,7 +148,7 @@ export const getSearchPageUrlByParams = (searchState, columnParameterName) => {
 
     // Search query
     if (searchState.searchField) {
-        query = {searchQuery: searchState.searchField}
+        query = { searchQuery: searchState.searchField }
     }
 
     // Selected Columns

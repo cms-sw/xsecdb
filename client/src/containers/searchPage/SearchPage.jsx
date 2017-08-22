@@ -78,7 +78,7 @@ class SearchPage extends React.Component {
         //Search action resets page to 0
         this.props.changePaginationState(0, this.props.pagination.pageSize);
         this.props.deselectAllRecordRows();
-        this.props.getFilteredRecords(this.props.searchField);
+        this.props.getFilteredRecords(this.props.searchField, false, false);
     }
 
     onClearButtonClick(e) {
