@@ -14,7 +14,7 @@ const SearchBar = (props) => {
                 <div className="row" style={style.row}>
                     <div className="col-sm-10" style={style.col}>
                         <input type="text" className="form-control"
-                            id="searchField" placeholder="Search query..." style={style.input}
+                            id="searchField" placeholder="Search query.. e.g. energy=[67]{1} && ( matrix_generator=Herw.* || createdBy=^krepecka$ )" style={style.input}
                             onChange={props.onSearchInputChange} value={props.searchFieldValue}
                         />
                     </div>

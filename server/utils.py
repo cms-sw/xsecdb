@@ -40,7 +40,7 @@ def compile_regex(in_dic):
 
 # Get fields order attribute
 def get_field_order(key):
-    if 'order' in record_structure[key]:
+    if key in record_structure and 'order' in record_structure[key]:
         return record_structure[key]['order']
     else:
         logger.debug(key)

@@ -13,7 +13,7 @@ from flask_cors import CORS
 from models.fields import fields as record_structure
 from mailing import send_mail, send_mail_approve
 from utils import compile_regex, get_ordered_field_list,\
-        get_user_groups, is_user_in_group, get_field_order
+    get_user_groups, is_user_in_group, get_field_order
 from validate import validate_model
 from decorators import auth_user_group
 from config import CONFIG
@@ -58,7 +58,7 @@ def get_by_id(record_id):
 
         # Make a copy of field structure, to not mutate it
         structure = copy.deepcopy(record_structure)
-        
+
         # Map record fields to information in record_structure (type, disabled, required, order)
         for key, value in record.iteritems():
             if key in structure:
@@ -185,13 +185,13 @@ def search():
     # pagination information
     page_size = json_data['pagination']['pageSize']
     current_page = json_data['pagination']['currentPage']
+    order_by = json_data['orderBy']
 
     # compile regular expressions
     search_dictionary = compile_regex(query)
 
     logger.debug(query)
-
-    cursor = collection.find(search_dictionary).skip(
+    cursor = collection.find({'$query': search_dictionary, '$orderby': order_by}).skip(
         current_page * page_size).limit(page_size)
 
     result = dumps(cursor)
@@ -235,6 +235,7 @@ def get_roles():
     # roles = ['xsdb-admins']  # CONFIG.USER_ROLES
 
     return make_response(jsonify(roles), 200)
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)

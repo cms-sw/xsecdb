@@ -21,6 +21,11 @@ const style = {
         display: 'inline-block',
         width: '50%',
         textAlign: 'right'
+    },
+    export: {
+        marginRight: '5px',
+        backgroundColor: 'rgb(155, 156, 151)',
+        color: '#fff'
     }
 }
 
@@ -48,6 +53,10 @@ class PanelHeader extends React.Component {
                         </p>
                     </div>
                     <div style={style.right}>
+                        <button type="button" className="btn btn-default" style={style.export}
+                            onClick={this.props.onExportButtonClick}>
+                            Export <span className="glyphicon glyphicon-download-alt" aria-hidden="true" />
+                        </button>
                         {
                             isApproval() &&
                             <button type="button" style={{ marginRight: '5px' }}

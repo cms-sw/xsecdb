@@ -2,6 +2,7 @@ import { apiUrl, columnParameterName } from 'Config';
 import axios from 'axios';
 import { push } from 'react-router-redux';
 import qs from 'query-string';
+import fileSaver from 'file-saver';
 
 import { getQueryObject, getVisibleColumnsInt, getVisibleColumnsArray } from '../../utils/parsing';
 import { getCustomHTTPError } from '../../utils/common';
@@ -61,6 +62,14 @@ export const changePaginationState = (currentPage, pageSize) => {
     }
 }
 
+export const changeOrderBy = (fieldName, direction) => {
+    return {
+        type: "CHANGE_ORDER_BY",
+        fieldName,
+        direction
+    }
+}
+
 const updateUrlParams = (params) => (dispatch, getState) => {
     //selected visible columns
     const selection = getVisibleColumnsInt(getState().searchPage.columns);
@@ -69,15 +78,29 @@ const updateUrlParams = (params) => (dispatch, getState) => {
         params[columnParameterName] = selection;
     }
 
-    //get pagination information
-    const { pageSize, currentPage } = getState().searchPage.pagination;
-    params['pageSize'] = pageSize;
-    params['currentPage'] = currentPage;
+    //Set pagination and ordering info
+    Object.assign(params, getState().searchPage.pagination, getState().searchPage.orderBy);
 
     //update browser url
     dispatch(push({
         search: qs.stringify(params)
     }))
+}
+
+export const exportFile = (records, visibleColumns) => (dispatch, getState) => {
+    const result = [];
+
+    records.map(record => {
+        let res = {};
+
+        visibleColumns.map(col => {
+            res[col.name] = record[col.name];
+        })
+        result.push(res);
+    })
+    const json = JSON.stringify(result, null, 4);
+    const blob = new Blob([json], { type: "application/json" });
+    fileSaver.saveAs(blob, "test.json");
 }
 
 //Change visible columns and update url string
@@ -156,12 +179,21 @@ export const getFilteredRecords = (query, notShowAlert, notUpdateUrl) => (dispat
             return;
         }
     }
+    const orderByState = getState().searchPage.orderBy;
+    let orderBy = {}
+    if (orderByState) {
+        orderBy = {
+            [orderByState.ordFieldName]: orderByState.ordDirection
+        }
+    }
+
 
     dispatch({ type: "GET_FILTERED_RECORDS_REQUEST" });
 
     const request = {
         search: params,
-        pagination: getState().searchPage.pagination
+        pagination: getState().searchPage.pagination,
+        orderBy
     }
 
     axios.post('search', request)

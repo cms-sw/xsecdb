@@ -14,7 +14,8 @@ const defaultState = {
         columns: [],
         selected: [],
         searchField: "",
-        pagination: { pageSize: 10, currentPage: 0 }
+        pagination: { pageSize: 10, currentPage: 0 },
+        orderBy: {}
     },
     editPage: [],
     utils: {

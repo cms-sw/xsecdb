@@ -43,6 +43,13 @@ const searchPageReducer = (state = [], action) => {
                     currentPage: action.currentPage
                 }
             });
+        case "CHANGE_ORDER_BY":
+            return Object.assign({}, state, {
+                orderBy: {
+                    ordFieldName: action.fieldName,
+                    ordDirection: parseInt(action.direction)
+                }
+            });
         default:
             return state;
     }

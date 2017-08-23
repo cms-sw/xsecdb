@@ -2,18 +2,8 @@ import React from 'react';
 import RecordItem from './RecordItem';
 import PanelHeader from './PanelHeader';
 import ModalDialog from '../ModalDialog';
+import RecordListHeader from './RecordListHeader';
 import { Link } from 'react-router-dom';
-
-const styles = {
-    th: {
-        borderRight: '1px solid #e8e8e8'
-    },
-    checkbox: {
-        borderRight: '1px solid #e8e8e8',
-        verticalAlign: 'middle',
-        textAlign: 'center'
-    }
-}
 
 //Renders recordItems, holds modal window, holds table header
 class RecordList extends React.Component {
@@ -30,7 +20,7 @@ class RecordList extends React.Component {
 
     render() {
         let checkAllChecked = false;
-        if(this.props.selectedRows.length || this.props.records.length){
+        if (this.props.selectedRows.length || this.props.records.length) {
             checkAllChecked = (this.props.selectedRows.length == this.props.records.length);
         }
 
@@ -41,20 +31,19 @@ class RecordList extends React.Component {
                     visibleColumnToggle={this.props.visibleColumnToggle}
                     selectedRecordsCount={this.props.selectedRows.length}
                     onApproveRecordsClick={this.props.onApproveRecordsClick}
+                    onExportButtonClick={this.props.onExportButtonClick}
                 />
                 <div className="table-responsive">
                     <table className="table">
                         <thead style={{ borderTop: '2px solid #dedede' }} >
-                            <tr>
-                                <th onClick={this.props.onToggleSelectAllRows} style={styles.checkbox}>
-                                    <input type="checkbox" checked={checkAllChecked} />
-                                </th>
-                                {
-                                    this.props.columns.filter(col => col.isVisible == true)
-                                        .map((col, i) => <th key={i} style={styles.th}>{col.name}</th>)
-                                }
-                                <th>Actions</th>
-                            </tr>
+                            <RecordListHeader
+                                columns={this.props.columns}
+                                orderBy={this.props.orderBy}
+                                checkAllChecked={checkAllChecked}
+
+                                onToggleSelectAllRows={this.props.onToggleSelectAllRows}
+                                onColumnHeaderClick={this.props.onColumnHeaderClick}
+                            />
                         </thead>
                         <tbody>
                             {this.props.records.map((record, i) =>

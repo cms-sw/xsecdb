@@ -13,18 +13,6 @@ import Alert from '../../components/Alert';
 import * as actionCreators from './actions';
 
 class SearchPage extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.onSearchInputChange = this.onSearchInputChange.bind(this);
-        this.onSearchButtonClick = this.onSearchButtonClick.bind(this);
-        this.onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
-        this.onClearButtonClick = this.onClearButtonClick.bind(this);
-        this.onChangePagination = this.onChangePagination.bind(this);
-        this.onToggleSelectedRow = this.onToggleSelectedRow.bind(this);
-        this.onToggleSelectAllRows = this.onToggleSelectAllRows.bind(this);
-        this.onApproveRecordsClick = this.onApproveRecordsClick.bind(this);
-    }
 
     render() {
         return (
@@ -37,12 +25,15 @@ class SearchPage extends React.Component {
                     records={this.props.records}
                     columns={this.props.columns}
                     selectedRows={this.props.selectedRows}
+                    orderBy={this.props.orderBy}
 
                     onDeleteButtonClick={this.onDeleteButtonClick}
                     onToggleSelectedRow={this.onToggleSelectedRow}
                     onToggleSelectAllRows={this.onToggleSelectAllRows}
                     onApproveRecordsClick={this.onApproveRecordsClick}
+                    onExportButtonClick={this.onExportButtonClick}
                     visibleColumnToggle={this.props.visibleColumnToggle}
+                    onColumnHeaderClick={this.onColumnHeaderClick}
                 />
                 <Pagination recordCount={this.props.records.length}
                     onChangePagination={this.onChangePagination}
@@ -57,12 +48,16 @@ class SearchPage extends React.Component {
         const urlParams = qs.parse(this.props.location.search);
         //Extract selected columns information
         const selectedColumns = urlParams[columnParameterName];
-        //Take pagination info and search query
-        const { pageSize, currentPage, searchQuery } = urlParams;
+        //Take pagination info, search query and ordering info
+        const { pageSize, currentPage, searchQuery, ordFieldName, ordDirection } = urlParams;
 
         //If there's pagination information add it to application state
         if (currentPage && pageSize) {
             this.props.changePaginationState(currentPage, pageSize);
+        }
+
+        if (ordFieldName && ordDirection) {
+            this.props.changeOrderBy(ordFieldName, ordDirection)
         }
 
         //Fetch columns and map with columns to display
@@ -73,7 +68,7 @@ class SearchPage extends React.Component {
         this.props.getFilteredRecords(searchQuery, true, true);
     }
 
-    onSearchButtonClick(e) {
+    onSearchButtonClick = (e) => {
         e.preventDefault();
         //Search action resets page to 0
         this.props.changePaginationState(0, this.props.pagination.pageSize);
@@ -81,27 +76,27 @@ class SearchPage extends React.Component {
         this.props.getFilteredRecords(this.props.searchField, false, false);
     }
 
-    onClearButtonClick(e) {
+    onClearButtonClick = (e) => {
         this.props.deselectAllRecordRows();
         this.props.getFilteredRecords("");
         this.props.searchFieldChange("");
     }
 
-    onSearchInputChange(e) {
+    onSearchInputChange = (e) => {
         this.props.searchFieldChange(e.target.value);
     }
 
-    onDeleteButtonClick(recordId) {
+    onDeleteButtonClick = (recordId) => {
         this.props.deleteRecord(recordId);
     }
 
-    onChangePagination(pageNumber, pageSize) {
+    onChangePagination = (pageNumber, pageSize) => {
         this.props.changePaginationState(pageNumber, pageSize);
         this.props.getFilteredRecords(this.props.searchField);
         this.props.deselectAllRecordRows();
     }
 
-    onToggleSelectedRow(recordId, e) {
+    onToggleSelectedRow = (recordId) => (e) => {
         if (this.props.selectedRows.includes(recordId)) {
             this.props.deselectRecordRow(recordId);
         } else {
@@ -109,7 +104,7 @@ class SearchPage extends React.Component {
         }
     }
 
-    onToggleSelectAllRows(e) {
+    onToggleSelectAllRows = (e) => {
         if (this.props.selectedRows.length == this.props.records.length) {
             this.props.deselectAllRecordRows();
         } else {
@@ -117,9 +112,26 @@ class SearchPage extends React.Component {
         }
     }
 
-    onApproveRecordsClick(e) {
+    onApproveRecordsClick = (e) => {
         this.props.approveRecords(this.props.selectedRows);
         this.props.deselectAllRecordRows();
+    }
+
+    onExportButtonClick = (e) => {
+        const records = this.props.records;
+        const visibleColumns = this.props.columns.filter(c => c.isVisible === true)
+
+        this.props.exportFile(records, visibleColumns);
+    }
+
+    //Order By feature
+    onColumnHeaderClick = (fieldName) => (e) => {
+        let direction = 1;
+        if (this.props.orderBy.ordFieldName === fieldName) {
+            direction = this.props.orderBy.ordDirection * (-1);
+        }
+        this.props.changeOrderBy(fieldName, direction);
+        this.props.getFilteredRecords(this.props.searchField, true);
     }
 }
 
@@ -130,7 +142,8 @@ const mapStateToProps = (state) => {
         columns: state.searchPage.columns,
         searchField: state.searchPage.searchField,
         pagination: state.searchPage.pagination,
-        selectedRows: state.searchPage.selected
+        selectedRows: state.searchPage.selected,
+        orderBy: state.searchPage.orderBy
     }
 }
 
