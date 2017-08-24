@@ -11,11 +11,6 @@ const styles = {
         width: '20%',
         textAlign: 'right'
     },
-    checkbox: {
-        borderRight: '1px solid #e8e8e8',
-        verticalAlign: 'middle',
-        textAlign: 'center'
-    },
     th: { borderRight: '1px solid #e8e8e8' },
     orderInactive: { color: '#bdb8b8' }
 }
@@ -38,10 +33,6 @@ const RecordListHeader = (props) => {
 
     return (
         <tr>
-            <th onClick={props.onToggleSelectAllRows} style={styles.checkbox} role="button">
-                <input type="checkbox" checked={props.checkAllChecked} role="button" />
-            </th>
-            <th style={styles.th}>actions</th>
             { header }
         </tr>
     )

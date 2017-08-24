@@ -4,6 +4,7 @@ import PanelHeader from './PanelHeader';
 import ModalDialog from '../ModalDialog';
 import RecordListHeader from './RecordListHeader';
 import ExportDialog from '../searchPage/ExportDialog';
+import RecordListControlTable from './RecordListControlTable';
 import { Link } from 'react-router-dom';
 
 //Renders recordItems, holds modal window, holds table header
@@ -37,25 +38,34 @@ class RecordList extends React.Component {
                     onApproveRecordsClick={this.props.onApproveRecordsClick}
                     onExportButtonClick={this.handleExportButtonClick}
                 />
-                <div className="table-responsive">
-                    <table className="table">
+                <div className="table-responsive" >
+
+                    <RecordListControlTable
+                        records={this.props.records}
+                        selectedRows={this.props.selectedRows}
+
+                        checkAllChecked={checkAllChecked}
+                        onToggleSelectAllRows={this.props.onToggleSelectAllRows}
+                        onDeleteButtonClick={this.toggleDeleteDialog}
+
+                        onDeleteButtonClick={this.toggleDeleteDialog}
+                        onToggleSelectedRow={this.props.onToggleSelectedRow}
+                    />
+
+                    <table className="table" style={{ position: 'relative', left: '105px' }}>
                         <thead style={{ borderTop: '2px solid #dedede' }} >
                             <RecordListHeader
                                 columns={this.props.columns}
                                 orderBy={this.props.orderBy}
-                                checkAllChecked={checkAllChecked}
 
-                                onToggleSelectAllRows={this.props.onToggleSelectAllRows}
                                 onColumnHeaderClick={this.props.onColumnHeaderClick}
                             />
                         </thead>
                         <tbody>
                             {this.props.records.map((record, i) =>
-                                <RecordItem record={record} key={i}
-                                    onDeleteButtonClick={this.toggleDeleteDialog.bind(this, record.id)}
-                                    onToggleSelectedRow={this.props.onToggleSelectedRow}
+                                <RecordItem key={i}
+                                    record={record}
                                     columns={this.props.columns}
-                                    isSelected={this.props.selectedRows.includes(record.id)}
                                 />
                             )}
                         </tbody>
@@ -73,9 +83,9 @@ class RecordList extends React.Component {
                 }
 
                 {this.state.showExportDialog &&
-                    <ExportDialog onClose={this.handleExportClose} textArea={this.state.exportString}/>
+                    <ExportDialog onClose={this.handleExportClose} textArea={this.state.exportString} />
                 }
-            </div>
+            </div >
         );
     }
 

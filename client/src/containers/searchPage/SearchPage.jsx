@@ -115,7 +115,7 @@ class SearchPage extends React.Component {
         this.props.deselectAllRecordRows();
     }
 
-    //Order By feature
+    //Order By fucntionality
     onColumnHeaderClick = (fieldName) => (e) => {
         let direction = 1;
         if (this.props.orderBy.ordFieldName === fieldName) {
