@@ -2,7 +2,6 @@ import { apiUrl, columnParameterName } from 'Config';
 import axios from 'axios';
 import { push } from 'react-router-redux';
 import qs from 'query-string';
-import fileSaver from 'file-saver';
 
 import { getQueryObject, getVisibleColumnsInt, getVisibleColumnsArray } from '../../utils/parsing';
 import { getCustomHTTPError } from '../../utils/common';
@@ -85,22 +84,6 @@ const updateUrlParams = (params) => (dispatch, getState) => {
     dispatch(push({
         search: qs.stringify(params)
     }))
-}
-
-export const exportFile = (records, visibleColumns) => (dispatch, getState) => {
-    const result = [];
-
-    records.map(record => {
-        let res = {};
-
-        visibleColumns.map(col => {
-            res[col.name] = record[col.name];
-        })
-        result.push(res);
-    })
-    const json = JSON.stringify(result, null, 4);
-    const blob = new Blob([json], { type: "application/json" });
-    fileSaver.saveAs(blob, "test.json");
 }
 
 //Change visible columns and update url string

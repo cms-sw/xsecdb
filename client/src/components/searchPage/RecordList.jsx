@@ -3,6 +3,7 @@ import RecordItem from './RecordItem';
 import PanelHeader from './PanelHeader';
 import ModalDialog from '../ModalDialog';
 import RecordListHeader from './RecordListHeader';
+import ExportDialog from '../searchPage/ExportDialog';
 import { Link } from 'react-router-dom';
 
 //Renders recordItems, holds modal window, holds table header
@@ -11,9 +12,12 @@ class RecordList extends React.Component {
         super(props);
 
         this.state = {
-            dialogOpen: false,
-            deleteCandidateId: null
+            showDeleteDialog: false,
+            deleteCandidateId: null,
+            showExportDialog: false,
+            exportString: ""
         }
+
         this.toggleDeleteDialog = this.toggleDeleteDialog.bind(this);
         this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this);
     }
@@ -31,7 +35,7 @@ class RecordList extends React.Component {
                     visibleColumnToggle={this.props.visibleColumnToggle}
                     selectedRecordsCount={this.props.selectedRows.length}
                     onApproveRecordsClick={this.props.onApproveRecordsClick}
-                    onExportButtonClick={this.props.onExportButtonClick}
+                    onExportButtonClick={this.handleExportButtonClick}
                 />
                 <div className="table-responsive">
                     <table className="table">
@@ -58,7 +62,7 @@ class RecordList extends React.Component {
                     </table>
                 </div>
 
-                {this.state.dialogOpen &&
+                {this.state.showDeleteDialog &&
                     <ModalDialog
                         onClose={this.toggleDeleteDialog}
                         onAction={this.handleDeleteButtonClick}
@@ -67,6 +71,10 @@ class RecordList extends React.Component {
                         headerText={"Are you sure you want to delete this record?"}
                     />
                 }
+
+                {this.state.showExportDialog &&
+                    <ExportDialog onClose={this.handleExportClose} textArea={this.state.exportString}/>
+                }
             </div>
         );
     }
@@ -74,7 +82,7 @@ class RecordList extends React.Component {
     //When record's delete button get clicked - candidateId is set. On close it is cleared
     toggleDeleteDialog(id) {
         this.setState({
-            dialogOpen: !this.state.dialogOpen,
+            showDeleteDialog: !this.state.showDeleteDialog,
             deleteCandidateId: id
         })
     }
@@ -83,6 +91,29 @@ class RecordList extends React.Component {
     handleDeleteButtonClick(recordId, e) {
         this.toggleDeleteDialog(null);
         this.props.onDeleteButtonClick(this.state.deleteCandidateId);
+    }
+
+    handleExportButtonClick = (e) => {
+        const records = this.props.records;
+        const visibleColumns = this.props.columns.filter(c => c.isVisible === true);
+        const result = [];
+        records.map(record => {
+            let res = {};
+
+            visibleColumns.map(col => {
+                res[col.name] = record[col.name];
+            })
+            result.push(res);
+        })
+        const json = JSON.stringify(result, null, 4);
+        this.setState({ showExportDialog: true, exportString: json });
+    }
+
+    handleExportClose = (e) => {
+        this.setState({
+            showExportDialog: false,
+            exportString: null
+        });
     }
 }
 

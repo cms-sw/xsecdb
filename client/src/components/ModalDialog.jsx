@@ -23,10 +23,11 @@ const ModalDialog = (props) => {
                         <h4 className="modal-title">{props.headerText}</h4>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-default"
-                            onClick={props.onClose}>Cancel</button>
+
                         <button type="button" className={"btn btn-" + props.actionClass}
                             onClick={props.onAction}>{props.actionName}</button>
+                        <button type="button" className="btn btn-default"
+                            onClick={props.onClose}>Cancel</button>
                     </div>
                 </div>
             </div>

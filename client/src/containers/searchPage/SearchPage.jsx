@@ -13,7 +13,6 @@ import Alert from '../../components/Alert';
 import * as actionCreators from './actions';
 
 class SearchPage extends React.Component {
-
     render() {
         return (
             <div style={{ margin: "0 2%" }}>
@@ -31,7 +30,6 @@ class SearchPage extends React.Component {
                     onToggleSelectedRow={this.onToggleSelectedRow}
                     onToggleSelectAllRows={this.onToggleSelectAllRows}
                     onApproveRecordsClick={this.onApproveRecordsClick}
-                    onExportButtonClick={this.onExportButtonClick}
                     visibleColumnToggle={this.props.visibleColumnToggle}
                     onColumnHeaderClick={this.onColumnHeaderClick}
                 />
@@ -115,13 +113,6 @@ class SearchPage extends React.Component {
     onApproveRecordsClick = (e) => {
         this.props.approveRecords(this.props.selectedRows);
         this.props.deselectAllRecordRows();
-    }
-
-    onExportButtonClick = (e) => {
-        const records = this.props.records;
-        const visibleColumns = this.props.columns.filter(c => c.isVisible === true)
-
-        this.props.exportFile(records, visibleColumns);
     }
 
     //Order By feature
