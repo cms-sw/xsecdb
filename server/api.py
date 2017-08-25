@@ -50,12 +50,6 @@ def get_by_id(record_id):
     if record is not None:
         del record['_id']
 
-        result.append({
-            'name': 'id',
-            'value': record_id,
-            'type': 'not_render'
-        })
-
         # Make a copy of field structure, to not mutate it
         structure = copy.deepcopy(record_structure)
 
@@ -81,6 +75,13 @@ def get_by_id(record_id):
 
         # Order fields by record_structures [order] field and for list structure
         result = get_ordered_field_list(result_dic)
+
+        # Add ID field
+        result.append({
+            'name': 'id',
+            'value': record_id,
+            'type': 'not_render'
+        })
 
     else:
         result = record_structure

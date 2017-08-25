@@ -38,7 +38,7 @@ def compile_regex(in_dic):
 
     return in_dic
 
-# Get fields order attribute
+# Get field's order attribute
 def get_field_order(key):
     if key in record_structure and 'order' in record_structure[key]:
         return record_structure[key]['order']
