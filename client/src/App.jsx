@@ -18,9 +18,6 @@ class App extends React.Component {
                         <div className="navbar-header">
                             <Link to="/" className="navbar-brand">XSDB</Link>
                         </div>
-                        <ul className="nav navbar-nav">
-                            <li><NavLink to="/">Search</NavLink></li>
-                        </ul>
                     </div>
                 </nav>
                 <Switch>

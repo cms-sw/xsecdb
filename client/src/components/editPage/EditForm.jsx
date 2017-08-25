@@ -22,7 +22,7 @@ class EditForm extends React.Component {
     render() {
         return (
             <div className="panel panel-default">
-                <div className="panel-heading">Panel heading</div>
+                {/* <div className="panel-heading">Panel heading</div> */}
                 <div className="panel-body">
                     <form>
                         {this.renderForm()}
@@ -36,7 +36,7 @@ class EditForm extends React.Component {
                                 onClick={this.props.onSaveRecord}>Save
                             </button>
                         }
-                        <button type="button" className="btn btn-warning"
+                        <button type="button" className="btn btn-default" style={{marginLeft: '5px'}}
                             onClick={this.props.onCancelEdit}>Cancel
                         </button>
                     </div>
