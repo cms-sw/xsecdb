@@ -1,11 +1,14 @@
 import React from 'react';
-
+//How many pages are shown next to current page
 const M = 2;
+//Selections of page size
+const pageSizes = [10, 20, 30, 40, 50]
 const preventDefault = e => e.preventDefault();
 
 export default class Pagination extends React.Component {
     constructor(props) {
         super(props);
+
         this.onPageSizeChange = this.onPageSizeChange.bind(this);
     }
 
@@ -14,7 +17,10 @@ export default class Pagination extends React.Component {
             <div className="row">
                 <div className="col-lg-9 col-md-8 col-xs-7">
                     <ul className="pagination" style={{ margin: 0 }}>
-                        {this.renderNavigation()}
+                        {
+                            this.props.pageSize !== 0 &&
+                            this.renderNavigation()
+                        }
                     </ul>
                 </div>
                 <div className="col-lg-3 col-md-4 col-xs-5 form-group" >
@@ -25,11 +31,7 @@ export default class Pagination extends React.Component {
                         <select className="form-control selectpicker" value={this.props.pageSize}
                             onChange={this.onPageSizeChange}
                         >
-                            <option value={10}>10</option>
-                            <option value={20}>20</option>
-                            <option value={30}>30</option>
-                            <option value={40}>40</option>
-                            <option value={50}>50</option>
+                            {this.renderPageSizeSelect()}
                         </select>
                     </div>
                 </div>
@@ -47,7 +49,7 @@ export default class Pagination extends React.Component {
         let prevHandler = this.onCurrentPageChange.bind(this, currentPage - 1);
         let nextHandler = this.onCurrentPageChange.bind(this, currentPage + 1);
 
-        const notNext = recordCount < recordsPerPage;
+        const notNext = (recordCount < recordsPerPage);
         const notPrev = currentPage < 1;
 
         if (notNext) {
@@ -78,7 +80,7 @@ export default class Pagination extends React.Component {
             result.push(<li className="disabled" key={-3}><a href="#">...</a></li>)
         }
 
-        // //M pages before current page
+        //M pages before current page
         for (let i = currentPage - M; i < currentPage; i++) {
             if (i >= 0) {
                 result.push(<li key={i}>
@@ -86,12 +88,13 @@ export default class Pagination extends React.Component {
                 </li>)
             }
         }
+
         //Current page
         result.push(<li className={"active"} key={-4}>
             <a href="#" onClick={preventDefault}>{currentPage}</a>
         </li>);
 
-        //Next >>
+        //Next (>>)
         result.push(<li key={-5} className={notNext ? "disabled" : ""}>
             <a href="#" aria-label="Next" onClick={nextHandler} aria-disabled={true}>
                 <span aria-hidden="true">&raquo;</span>
@@ -99,6 +102,23 @@ export default class Pagination extends React.Component {
         </li>)
 
         return result;
+    }
+
+    renderPageSizeSelect() {
+        const result = [];
+
+        //Add "custom" page size selection option (from url parameter)
+        if(!pageSizes.includes(this.props.pageSize) && this.props.pageSize !== 0){
+            pageSizes.push(this.props.pageSize)
+        }
+
+        result.push(<option value={0} key={-1}>All</option>);
+
+        pageSizes.map((pageSizeValue, i) => {
+            result.push(<option value={pageSizeValue} key={i}>{pageSizeValue}</option>)
+        });        
+
+        return result;        
     }
 
     onCurrentPageChange(pageNumber, e) {

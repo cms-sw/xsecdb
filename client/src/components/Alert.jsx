@@ -17,12 +17,20 @@ const className = {
 class Alert extends React.Component {
     constructor(props) {
         super(props);
+
+        //to keep showing latest alert for required period of time
+        this.state = {
+            queue: []
+        }
+
         this.handleClose = this.handleClose.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps != this.props && nextProps.errorMessage != '') {
+        if (nextProps !== this.props && nextProps.message) {
             setTimeout(this.handleClose, this.props.autoCloseTime);
+            //push to queue - means we will wait longer before closing alert
+            this.state.queue.push(1);
         }
     }
 
@@ -32,9 +40,7 @@ class Alert extends React.Component {
                 <div className={className[this.props.status]}
                     role="alert" style={style}
                 >
-                    <button type="button" className="close" data-dismiss="alert" aria-label="Close"
-                        onClick={this.handleClose}
-                    >
+                    <button type="button" className="close" aria-label="Close" onClick={this.handleClose} >
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <strong>{this.props.message}</strong>
@@ -46,16 +52,21 @@ class Alert extends React.Component {
     }
 
     handleClose() {
-        this.props.dispatch({
-            type: "ALERT_MESSEGE_RESET"
-        })
+        //Remove item from queue
+        this.state.queue.pop();
+
+        if (this.state.queue.length == 0) {
+            this.props.dispatch({
+                type: "ALERT_MESSEGE_RESET"
+            })
+        }
     }
 }
 
 const mapStateToProps = (state) => {
     return {
         message: state.utils.message,
-        status: state.utils.status
+        status: state.utils.status,
     }
 }
 

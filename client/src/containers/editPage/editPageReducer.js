@@ -1,4 +1,3 @@
-
 const editPageReducer = (state = {}, action) => {
     switch (action.type) {
         case "EDIT_FIELD_CHANGE":
@@ -14,8 +13,24 @@ const editPageReducer = (state = {}, action) => {
         case "GET_EDIT_FIELDS_SUCCESS":
             return action.fields
         case "GET_RECORD_BY_ID_SUCCESS":
-            console.log(action.record)
             return action.fields;
+        case "EDIT_FIELDS_VALIDATION_ERROR":
+            const errorFields = action.fieldNames;
+
+            // Add/clear errors
+            return state.map(field => {
+                if (errorFields.includes(field.name)) {
+                    return {
+                        ...field,
+                        errorMessage: "required field"
+                    }
+                } else {
+                    return {
+                        ...field,
+                        errorMessage: ""
+                    }
+                }
+            })
         default:
             return state;
     }

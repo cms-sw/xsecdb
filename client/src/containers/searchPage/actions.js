@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import qs from 'query-string';
 
 import { getQueryObject, getVisibleColumnsInt, getVisibleColumnsArray } from '../../utils/parsing';
+import { getCustomHTTPError } from '../../utils/common';
 
 axios.defaults.baseURL = apiUrl;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -49,14 +50,7 @@ export const deselectAllRecordRows = () => {
 }
 
 export const fillSearchInput = (query) => {
-    let result = "";
-
-    Object.keys(query).map(key => {
-        result += key + "=" + query[key] + ","
-    })
-
-    result = result.slice(0, result.length - 1);
-    return searchFieldChange(result);
+    return searchFieldChange(query);
 }
 
 export const changePaginationState = (currentPage, pageSize) => {
@@ -67,12 +61,32 @@ export const changePaginationState = (currentPage, pageSize) => {
     }
 }
 
-export const changePagination = (currentPage, pageSize) => (dispatch, getState) => {
-    dispatch(changePaginationState(currentPage, pageSize));
-    const params = qs.parse(getState().router.location.search);
-    dispatch(updateUrlParams(params));
+export const changeOrderBy = (fieldName, direction) => {
+    return {
+        type: "CHANGE_ORDER_BY",
+        fieldName,
+        direction
+    }
 }
 
+const updateUrlParams = (params) => (dispatch, getState) => {
+    //selected visible columns
+    const selection = getVisibleColumnsInt(getState().searchPage.columns);
+
+    if (selection) {
+        params[columnParameterName] = selection;
+    }
+
+    //Set pagination and ordering info
+    Object.assign(params, getState().searchPage.pagination, getState().searchPage.orderBy);
+
+    //update browser url
+    dispatch(push({
+        search: qs.stringify(params)
+    }))
+}
+
+//Change visible columns and update url string
 export const visibleColumnToggle = (index) => (dispatch, getState) => {
     dispatch({
         type: "VISIBLE_COLUMNS_TOGGLE",
@@ -90,29 +104,35 @@ const showAlert = (message, status) => {
     }
 }
 
-export const getRecordFields = (selectedColumns) => (dispatch) => {
+//Get record field structure for visible columns
+export const getRecordFields = (selectedColumns) => (dispatch, getState) => {
     dispatch({ type: "GET_RECORD_FIELDS_REQUEST" });
 
     axios.get('fields')
         .then(response => {
+            //selectedColumns - decimal representation of visible columns
             const visibleColumns = getVisibleColumnsArray(selectedColumns, response.data.length);
+            //map field structure to simple name: fieldName, isVisible: bool
             const columns = response.data.map((field, i) => {
                 return {
                     name: field,
                     isVisible: visibleColumns[i]
                 }
             })
+
             dispatch({
                 type: "GET_RECORD_FIELDS_SUCCESS",
                 fields: columns
             })
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = getCustomHTTPError(error);
+            dispatch(showAlert(message, "ERROR"));
         })
 }
 
-export const deleteRecord = (recordId) => (dispatch) => {
+//Delete record and show alert
+export const deleteRecord = (recordId) => (dispatch, getState) => {
     dispatch({ type: "DELETE_RECORD_REQUEST" });
 
     axios.delete('delete/' + recordId)
@@ -121,57 +141,68 @@ export const deleteRecord = (recordId) => (dispatch) => {
                 type: "DELETE_RECORD_SUCCESS",
                 recordId
             })
+            //refresh record list
+            dispatch(getFilteredRecords(getState().searchPage.searchField, true));
             dispatch(showAlert("Record deleted", "SUCCESS"))
         })
         .catch(error => {
-            console.log(error);
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = getCustomHTTPError(error);
+            dispatch(showAlert(message, "ERROR"));
         })
 }
 
-export const getInitialRecords = (query) => (dispatch, getState) => {
-    dispatch({ type: "GET_ALL_RECORDS_REQUEST" });
-
-    const request = {
-        search: query,
-        pagination: getState().searchPage.pagination
+//Regular search action: gets records according to search field value and pagination
+export const getFilteredRecords = (query, notShowAlert, notUpdateUrl) => (dispatch, getState) => {
+    let params = {}
+    if (query) {
+        try {
+            params = getQueryObject(query);
+        } catch (error) {
+            dispatch(showAlert(error.message, "ERROR"));
+            return;
+        }
+    }
+    const orderByState = getState().searchPage.orderBy;
+    let orderBy = {}
+    if (orderByState) {
+        orderBy = {
+            [orderByState.ordFieldName]: orderByState.ordDirection
+        }
     }
 
-    axios.post('search', request)
-        .then(response => {
-            dispatch(getRecordsSuccess(response.data));
-        })
-        .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
-        })
-}
-
-export const getFilteredRecords = (query) => (dispatch, getState) => {
-    const params = getQueryObject(query);
 
     dispatch({ type: "GET_FILTERED_RECORDS_REQUEST" });
 
     const request = {
         search: params,
-        pagination: getState().searchPage.pagination
+        pagination: getState().searchPage.pagination,
+        orderBy
     }
 
     axios.post('search', request)
         .then(response => {
             dispatch(getRecordsSuccess(response.data));
-            dispatch(updateUrlParams(params));
-            //Needs a separate action, because this one is used on page(pagination) change
-            //dispatch(showAlert(`Found ${response.data.length} records`, "SUCCESS"));
+
+            if (!notUpdateUrl) {
+                const searchQuery = query !== '' ? { searchQuery: query } : {};
+                dispatch(updateUrlParams(searchQuery));
+            }
+
+            if (!notShowAlert) {
+                dispatch(showAlert(`Found ${response.data.length} records`, "SUCCESS"));
+            }
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = getCustomHTTPError(error);
+            dispatch(showAlert(message, "ERROR"));
         })
 }
 
+//Approve selected records, deselect all, refresh record list
 export const approveRecords = (recordIds) => (dispatch, getState) => {
     dispatch({ type: "APPROVE_RECORDS_REQUEST" });
 
-    if(recordIds.length < 1){
+    if (recordIds.length < 1) {
         dispatch(showAlert("There is no records selected", "ERROR"));
         return;
     }
@@ -179,28 +210,11 @@ export const approveRecords = (recordIds) => (dispatch, getState) => {
     axios.post('approve', recordIds)
         .then(response => {
             dispatch(showAlert("Approved successfully", "SUCCESS"));
-            dispatch({type: "DESELECT_ALL_RECORD_ROWS"})
-            dispatch(getFilteredRecords(getState().searchPage.searchField));
+            dispatch({ type: "DESELECT_ALL_RECORD_ROWS" })
+            dispatch(getFilteredRecords(getState().searchPage.searchField, true));
         })
         .catch(error => {
-            dispatch(showAlert(error.message, "ERROR"));
+            const message = getCustomHTTPError(error);
+            dispatch(showAlert(message, "ERROR"));
         })
 }
-
-function updateUrlParams(params) {
-    return (dispatch, getState) => {
-        //selected visible columns
-        const selection = getVisibleColumnsInt(getState().searchPage.columns);
-        params[columnParameterName] = selection;
-
-        //get pagination information
-        const { pageSize, currentPage } = getState().searchPage.pagination;
-        params['pageSize'] = pageSize;
-        params['currentPage'] = currentPage;
-
-        dispatch(push({
-            search: qs.stringify(params)
-        }))
-    }
-}
-

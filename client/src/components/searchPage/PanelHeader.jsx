@@ -1,6 +1,7 @@
 import React from 'react';
-import SimpleButton from '../SimpleButton';
 import { Link } from 'react-router-dom';
+
+import { isApproval, isUser } from '../../auth/AuthService';
 
 const style = {
     heading: {
@@ -20,6 +21,11 @@ const style = {
         display: 'inline-block',
         width: '50%',
         textAlign: 'right'
+    },
+    export: {
+        marginRight: '5px',
+        backgroundColor: 'rgb(155, 156, 151)',
+        color: '#fff'
     }
 }
 
@@ -47,19 +53,30 @@ class PanelHeader extends React.Component {
                         </p>
                     </div>
                     <div style={style.right}>
-                        <button type="button" style={{ marginRight: '5px' }}
-                            className="btn btn-primary"
-                            onClick={this.props.onApproveRecordsClick}>Approve selected ({this.props.selectedRecordsCount})</button>
-
-                        <Link to="/edit">
-                            <button type="button" className="btn btn-success">New record</button>
-                        </Link>
+                        <button type="button" className="btn btn-default" style={style.export}
+                            onClick={this.props.onExportButtonClick}>
+                            Export <span className="glyphicon glyphicon-download-alt" aria-hidden="true" />
+                        </button>
+                        {
+                            isApproval() &&
+                            <button type="button" style={{ marginRight: '5px' }}
+                                className="btn btn-primary"
+                                onClick={this.props.onApproveRecordsClick}>Approve selected ({this.props.selectedRecordsCount})
+                            </button>
+                        }
+                        {
+                            isUser() &&
+                            <Link to="/edit">
+                                <button type="button" className="btn btn-success">New record</button>
+                            </Link>
+                        }
                     </div>
                 </div>
-                {this.state.open &&
+                {
+                    this.state.open &&
                     <div className="panel-body">
                         <div className="row" style={style.row}>
-                            {this.renderFields()}
+                            {this.renderColumnsSelections()}
                         </div>
                     </div>
                 }
@@ -67,7 +84,7 @@ class PanelHeader extends React.Component {
         );
     }
 
-    renderFields() {
+    renderColumnsSelections() {
         return this.props.columns.map((col, i) => (
             <label style={style.column} key={i} role="button">
                 <input type="checkbox" name={col.name}
@@ -77,12 +94,13 @@ class PanelHeader extends React.Component {
         )
     }
 
+    //Open/Close visible columns selection section
     onToggleOpen() {
         this.setState({
             open: !this.state.open
         })
     }
-
+    //Change visibility of a column
     onChangeCheckbox(index, e) {
         this.props.visibleColumnToggle(index);
     }

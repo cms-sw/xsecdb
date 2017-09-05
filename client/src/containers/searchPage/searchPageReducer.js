@@ -1,9 +1,7 @@
 const searchPageReducer = (state = [], action) => {
-    console.log(action);
     switch (action.type) {
         case "GET_RECORDS_SUCCESS":
             const records = action.records.map(r => Object.assign({}, r, { id: r._id.$oid }));
-
             return Object.assign({}, state, { records: records });
         case "SEARCH_FIELD_CHANGE":
             return Object.assign({}, state, { searchField: action.value });
@@ -43,6 +41,13 @@ const searchPageReducer = (state = [], action) => {
                 pagination: {
                     pageSize: action.pageSize,
                     currentPage: action.currentPage
+                }
+            });
+        case "CHANGE_ORDER_BY":
+            return Object.assign({}, state, {
+                orderBy: {
+                    ordFieldName: action.fieldName,
+                    ordDirection: parseInt(action.direction)
                 }
             });
         default:
