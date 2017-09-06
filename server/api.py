@@ -10,7 +10,7 @@ from bson.objectid import ObjectId
 from time import gmtime, strftime
 from flask_cors import CORS
 
-from models.fields import fields as record_structure
+from fields import fields as record_structure
 from mailing import send_mail, send_mail_approve
 from utils import compile_regex, get_ordered_field_list,\
     get_user_groups, is_user_in_group, get_field_order
@@ -84,7 +84,7 @@ def get_by_id(record_id):
         })
 
     else:
-        result = record_structure
+        result = get_ordered_field_list(record_structure)
 
     return make_response(jsonify(result), 200)
 
@@ -233,7 +233,7 @@ def get_roles():
     groups = get_user_groups()
     # from all user groups take only relevant to xsdb
     roles = [x for x in groups if x in CONFIG.USER_ROLES]
-    # roles = ['xsdb-admins']  # CONFIG.USER_ROLES
+    # roles = ['xsdb-admins']  # For testing
 
     return make_response(jsonify(roles), 200)
 

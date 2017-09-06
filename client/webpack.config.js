@@ -35,7 +35,8 @@ module.exports = {
   externals: {
     'Config': JSON.stringify({
       apiUrl: "api",
-      columnParameterName: 'columns'
+      columnParameterName: 'columns',
+      discussionLinkColumnName: 'discussion'
     })
   },
   plugins: [

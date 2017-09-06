@@ -7,6 +7,7 @@
         value - default value. Field is filled with it if no other value is present
         disabled - True means that field is rendered as disabled in edit form
         required - True means that it is not allowed to save record without this field or with this field being empty
+        order - Order in which table columns in search page and edit fields in edit page are displayed
 
     Property types:
         title: string
@@ -24,7 +25,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': True,
-        'order': 25
+        'order': 9
     },
     "MCM": {
         'title': "MCM",
@@ -32,7 +33,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': True,
-        'order': 24
+        'order': 10
     },
     "refs": {
         'title': "refs",
@@ -40,7 +41,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 23
+        'order': 19
     },
     "accuracy": {
         'title': "accuracy",
@@ -49,7 +50,7 @@ fields = {
         'value': "unknown",
         'disabled': False,
         'required': True,
-        'order': 22
+        'order': 7
     },
     "contact": {
         'title': "contact",
@@ -57,7 +58,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 21
+        'order': 8
     },
     "comments": {
         'title': "comments",
@@ -65,7 +66,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 20
+        'order': 18
     },
     "cuts": {
         'title': "cuts",
@@ -73,7 +74,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 19
+        'order': 14
     },
     "cross_section": {
         'title': "cross_section",
@@ -81,7 +82,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': True,
-        'order': 1
+        'order': 4
     },
     "equivalent_lumi": {
         'title': "equivalent_lumi",
@@ -89,7 +90,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 18
+        'order': 11
     },
     "energy": {
         'title': "energy",
@@ -106,7 +107,7 @@ fields = {
         'value': False,
         'disabled': False,
         'required': False,
-        'order': 16
+        'order': 3
     },
     "fraction_negative_weight": {
         'title': "fraction_negative_weight",
@@ -114,7 +115,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 15
+        'order': 12
     },
     "matrix_generator": {
         'title': "Matrix generator",
@@ -123,7 +124,7 @@ fields = {
         'value': "none",
         'disabled': False,
         'required': False,
-        'order': 14
+        'order': 16
     },
     "kFactor": {
         'title': "kFactor",
@@ -131,7 +132,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 13
+        'order': 14
     },
     "other_uncertainty": {
         'title': "Other uncertainity",
@@ -139,7 +140,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 12
+        'order': 6
     },
     "process_name": {
         'title': "Process name",
@@ -147,7 +148,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 11
+        'order': 1
     },
     "reweighting": {
         'title': "Reweighting",
@@ -155,7 +156,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 10
+        'order': 13
     },
     "shower": {
         'title': "Shower",
@@ -164,7 +165,7 @@ fields = {
         'value': "none",
         'disabled': False,
         'required': True,
-        'order': 9
+        'order': 15
     },
     "total_uncertainty": {
         'title': "Total uncertainty",
@@ -172,7 +173,7 @@ fields = {
         'value': "",
         'disabled': False,
         'required': True,
-        'order': 8
+        'order': 5
     },
     "createdOn": {
         'title': "Created on",
@@ -180,7 +181,7 @@ fields = {
         'value': "",
         'disabled': True,
         'required': False,
-        'order': 7
+        'order': 22
     },
     "modifiedOn": {
         'title': "Modified on",
@@ -188,7 +189,7 @@ fields = {
         'value': "",
         'disabled': True,
         'required': False,
-        'order': 6
+        'order': 21
     },
     "createdBy": {
         'title': "Created by",
@@ -196,7 +197,7 @@ fields = {
         'value': "",
         'disabled': True,
         'required': False,
-        'order': 5
+        'order': 25
     },
     "modifiedBy": {
         'title': "Modified by",
@@ -204,7 +205,7 @@ fields = {
         'value': "",
         'disabled': True,
         'required': False,
-        'order': 4
+        'order': 23
     },
     "approvedBy": {
         'title': "Approved by",
@@ -212,7 +213,7 @@ fields = {
         'value': "",
         'disabled': True,
         'required': False,
-        'order': 2
+        'order': 24
     },
     "status": {
         'title': "status",
@@ -221,6 +222,14 @@ fields = {
         'value': "new",
         'disabled': True,
         'required': False,
-        'order': 3
+        'order': 2
+    },
+    "discussion": {
+        'title': "discussion",
+        'type': "href",
+        'value': '',
+        'disabled': False,
+        'required': False,
+        'order': 20
     },
 }

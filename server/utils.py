@@ -2,7 +2,7 @@ import re
 import logger
 from flask import request
 from config import CONFIG
-from models.fields import fields as record_structure
+from fields import fields as record_structure
 
 
 def get_user_groups():

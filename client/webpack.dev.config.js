@@ -48,7 +48,8 @@ module.exports = {
   externals: {
     'Config': JSON.stringify({
       apiUrl: "http://188.185.74.109:4241/api",
-      columnParameterName: 'columns'
+      columnParameterName: 'columns',
+      discussionLinkColumnName: 'discussion'
     })
   },
   plugins: [HTMLWebpackPluginConfig, HotReloader],

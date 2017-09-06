@@ -1,5 +1,5 @@
 import logger
-from models.fields import fields as record_structure
+from fields import fields as record_structure
 
 def validate_model(record):
     missing_keys = []
