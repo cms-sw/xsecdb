@@ -182,11 +182,11 @@ def search():
     logger.debug("SEARCH " + str(json_data))
 
     # search query json object
-    query = json_data['search']
+    query = json_data.get('search', json_data)
     # pagination information
-    page_size = json_data['pagination']['pageSize']
-    current_page = json_data['pagination']['currentPage']
-    order_by = json_data['orderBy']
+    page_size = json_data.get('pagination', {}).get('pageSize', 50)
+    current_page = json_data.get('pagination', {}).get('currentPage', 0)
+    order_by = json_data.get('orderBy', {})
 
     # compile regular expressions
     search_dictionary = compile_regex(query)
