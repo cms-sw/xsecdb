@@ -15,7 +15,7 @@ const styles = {
         textAlign: 'center',
         padding: '6px'
     },
-    th: { borderRight: '1px solid #e8e8e8' },
+    th: { borderRight: '1px solid #e8e8e8', minWidth: '80px'},
     orderInactive: { color: '#bdb8b8' },
     edit: {
         color: 'black',
@@ -45,7 +45,7 @@ const RecordListControlTable = (props) => {
             </td>
 
             <td style={styles.actions}>
-                <Link to={`edit/${record.id}`} style={{ marginRight: '12px' }}>
+                <Link to={`/edit/${record.id}`} style={{ marginRight: '12px' }}>
                     <span className="glyphicon glyphicon-pencil" aria-hidden="true" role="button"
                         style={styles.edit}/>
                 </Link>

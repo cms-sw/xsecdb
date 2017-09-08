@@ -11,7 +11,7 @@ const styles = {
         width: '20%',
         textAlign: 'right'
     },
-    th: { borderRight: '1px solid #e8e8e8' },
+    th: { borderRight: '1px solid #e8e8e8', minWidth: '215px' },
     orderInactive: { color: '#bdb8b8' }
 }
 

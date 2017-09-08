@@ -18,24 +18,22 @@ from validate import validate_model
 from decorators import auth_user_group
 from config import CONFIG
 
-app = Flask(__name__, static_folder="../client/dist",
-            template_folder="../client/templates")
-CORS(app)
+app = Flask(__name__, static_folder="../client/dist", template_folder="../client/templates")
+# CORS(app)
 
 client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
 collection = db.xsdbCollection
 
-
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
-# for [/edit/:id] url path when client doesn't have js (refresh on edit page does not work without this)
 @app.route('/<path:path>', methods=['GET'])
 def fallback(path):
+    """ for [/edit/:id] url path when client doesn't have js 
+        (refreshing edit page does not work without this endpoint) """
     return render_template('index.html')
-
 
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
@@ -88,10 +86,10 @@ def get_by_id(record_id):
 
     return make_response(jsonify(result), 200)
 
-# Get empty record_structure
 @app.route('/api/get', methods=['GET'])
 @auth_user_group(0)  # Role: xsdb-user or higher
 def get_empty():
+    """ get empty record_structure """
     logger.debug("GET Empty record")
     result = get_ordered_field_list(record_structure)
     return make_response(jsonify(result), 200)
@@ -172,7 +170,6 @@ def delete(record_id):
     logger.debug("DELETE " + record_id)
 
     collection.delete_one({'_id': ObjectId(record_id)})
-
     return make_response('success', 200)
 
 
@@ -199,9 +196,10 @@ def search():
 
     return make_response(result, 200)
 
-# get list of record_structure field names (for selecting visible columns)
+
 @app.route('/api/fields', methods=['GET'])
 def get_fields():
+    """ get list of record_structure field names (for selecting visible columns) """
     result = sorted(record_structure.keys(), key=get_field_order)
     return make_response(jsonify(result), 200)
 
@@ -209,7 +207,6 @@ def get_fields():
 @app.route('/api/approve', methods=['POST'])
 @auth_user_group(1)  # Role: xsdb-approval or higher
 def approve_records():
-    # multiple record Ids
     record_ids = json.loads(request.data)
     user_login = request.headers.get("Adfs-Login") or ""
 
@@ -227,9 +224,9 @@ def approve_records():
 
     return make_response('success', 200)
 
-# get roles user has (used when react app loads)
 @app.route('/api/roles', methods=['GET'])
 def get_roles():
+    """ get roles user has (used when react app loads) """
     groups = get_user_groups()
     # from all user groups take only relevant to xsdb
     roles = [x for x in groups if x in CONFIG.USER_ROLES]
