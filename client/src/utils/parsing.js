@@ -12,8 +12,18 @@ const _assign = RegExp.escape('=');
 const _openBrac = RegExp.escape('(');
 const _closingBrac = RegExp.escape(')');
 
-//REGEX IN key:VALUE's [VALUE] part does not support symbols (3): | ( )
-let reStringKeyVal = `[a-zA-Z_0-9]+={1}[a-zA-Z0-9_\[\^\$\.\?\*\+\{\}\\\[\\\]]+`;
+//REGEX EXPLAINED:
+//KEY part
+//  [a-zA-Z_0-9]+ - self explainatory
+//  ={1} - one equality symbol
+//VALUE part
+//  \\\\ - backslash support to allow escape character: '\'
+//  a-zA-Z0-9_ - allow word chars
+//  \\-  - allow dash symbol '-'
+//  \[\^\$\.\?\*\+\{\} - allow '[', '^', '$', '.', '?', '*', '+', '{', '}'
+//  \\\[\\\] - allow '[', ']'
+
+let reStringKeyVal = `[a-zA-Z_0-9]+={1}[\\\\a-zA-Z0-9_\\-\[\^\$\.\?\*\+\{\}\\\[\\\]]+`;
 let reString = `^(${reStringKeyVal}|${_and}|${_or}|${_openBrac}|${_closingBrac})`;
 
 const reToken = new RegExp(reString);
@@ -110,6 +120,13 @@ export const getQueryObject = (query = "") => {
             throw new Error(`${BASE_ERR_MSG}: missmatched parentheses`);
         } else {
             const pair = elem.split(assign);
+
+            try {
+                const reg = new RegExp(pair[1]);
+            } catch (e) {
+                throw new Error(`${BASE_ERR_MSG}: value is incorrect RegExp. Maybe you need to use escape char \\ ?`);
+            }
+
             stack.push({ [pair[0]]: pair[1] });
         }
     }

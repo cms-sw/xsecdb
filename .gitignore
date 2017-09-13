@@ -5,3 +5,4 @@ client/dist
 npm-debug.log
 logs/*
 scripts/cookie*
+jsconfig.json

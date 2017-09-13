@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const styles = {
     left: {
@@ -36,6 +37,12 @@ const RecordListHeader = (props) => {
             { header }
         </tr>
     )
+}
+
+RecordListHeader.propTypes = {
+    columns: PropTypes.array.isRequired,
+    orderBy: PropTypes.object.isRequired,
+    onColumnHeaderClick: PropTypes.func.isRequired
 }
 
 export default RecordListHeader;

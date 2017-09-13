@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 // Returns HTML component according to field type
 const DynamicField = (props) => {
@@ -95,6 +96,15 @@ const DynamicField = (props) => {
         default:
             return <div />;
     }
+}
+
+DynamicField.propTypes = {
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    disabled: PropTypes.bool.isRequired,
+    errorMessage: PropTypes.string,
+    title: PropTypes.string,
+    options: PropTypes.array
 }
 
 export default DynamicField;

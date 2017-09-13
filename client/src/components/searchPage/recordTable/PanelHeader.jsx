@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { isApproval, isUser } from '../../auth/AuthService';
+import { isApproval, isUser } from '../../../auth/AuthService';
 
 const style = {
     heading: {
@@ -36,9 +37,6 @@ class PanelHeader extends React.Component {
         this.state = {
             open: true
         }
-
-        this.onToggleOpen = this.onToggleOpen.bind(this);
-        this.onChangeCheckbox = this.onChangeCheckbox.bind(this);
     }
 
     render() {
@@ -88,22 +86,33 @@ class PanelHeader extends React.Component {
         return this.props.columns.map((col, i) => (
             <label style={style.column} key={i} role="button">
                 <input type="checkbox" name={col.name}
-                    checked={col.isVisible} onChange={this.onChangeCheckbox.bind(this, i)} />
+                    checked={col.isVisible} onChange={this.onChangeCheckbox(i)} />
                 {col.name}
             </label>)
         )
     }
 
     //Open/Close visible columns selection section
-    onToggleOpen() {
+    onToggleOpen = () => {
         this.setState({
             open: !this.state.open
         })
     }
     //Change visibility of a column
-    onChangeCheckbox(index, e) {
-        this.props.visibleColumnToggle(index);
+    onChangeCheckbox = (index) => (e) => {
+        this.props.onVisibleColumnToggle(index);
     }
+}
+
+PanelHeader.propTypes = {
+    //for column checkbox rendering
+    columns: PropTypes.array.isRequired,
+    //for displaying how many records are selected
+    selectedRecordsCount: PropTypes.number.isRequired,
+    onExportButtonClick: PropTypes.func.isRequired,
+    onApproveRecordsClick: PropTypes.func.isRequired,
+    //callback on change column visibility
+    onVisibleColumnToggle: PropTypes.func.isRequired
 }
 
 export default PanelHeader;

@@ -48,8 +48,3 @@ class RequestWrapper:
         self.c.setopt(pycurl.POST, 1)
         self.c.setopt(self.c.POSTFIELDS, post_fields)
         self.c.perform()
-
-
-
-
-    # def insert(keyval_dict):

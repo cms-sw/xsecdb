@@ -16,7 +16,6 @@ const style = {
 
 const INPUTS_IN_ROW = 4;
 
-
 // Dynamic - Responsive bootstrap form
 class EditForm extends React.Component {
     render() {

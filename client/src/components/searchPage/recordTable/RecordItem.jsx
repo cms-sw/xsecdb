@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import sizeMe from 'react-sizeme';
 import { discussionLinkColumnName as discussionColumn } from 'Config';
 
-import { isAdmin } from '../../auth/AuthService';
+import { isAdmin } from '../../../auth/AuthService';
 
 const style = {
     cell: {
@@ -14,18 +16,10 @@ const style = {
 }
 
 const RecordItem = (props) => {
-    return (
-        <tr>
-            {renderCells(props)}
-        </tr>
-    )
-}
-
-function renderCells(props) {
-    //Record cells only of visible columns
-    return props.columns.reduce((acc, col, i) => {
+    const cells = props.columns.reduce((acc, col, i) => {
+        //render only visible columns
         if (col.isVisible) {
-            //To render discussion column as a link
+            //To render discussion column as a clickable link
             let contents;
             if (col.name == discussionColumn) {
                 contents = <a href={props.record[col.name]} target="_blank">{props.record[col.name]}</a>;
@@ -37,6 +31,26 @@ function renderCells(props) {
         }
         return acc;
     }, []);
+
+    return (
+        <tr>
+            {cells}
+        </tr>
+    )
 }
 
-export default RecordItem;
+RecordItem.propTypes = {
+    //Column information: column name, isVisible
+    columns: PropTypes.array.isRequired,
+    //xsdb record
+    record: PropTypes.object.isRequired
+}
+
+//sizeMe make RecordItem component aware of its height
+const sizeMeHOC = sizeMe({
+    noPlaceholder: true,
+    monitorHeight: true,
+    monitorWidth: false
+})
+
+export default sizeMeHOC(RecordItem);

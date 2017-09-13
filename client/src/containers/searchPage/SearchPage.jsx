@@ -5,7 +5,7 @@ import qs from 'query-string';
 import { columnParameterName } from 'Config';
 
 import Pagination from '../../components/Pagination';
-import RecordList from '../../components/searchPage/RecordList';
+import RecordTableContainer from '../../components/searchPage/RecordTableContainer';
 import SearchBar from '../../components/searchPage/SearchBar';
 
 import Alert from '../../components/Alert';
@@ -20,7 +20,7 @@ class SearchPage extends React.Component {
                     searchFieldValue={this.props.searchField || ""}
                     onClearButtonClick={this.onClearButtonClick}
                 />
-                <RecordList
+                <RecordTableContainer
                     records={this.props.records}
                     columns={this.props.columns}
                     selectedRows={this.props.selectedRows}
@@ -30,7 +30,7 @@ class SearchPage extends React.Component {
                     onToggleSelectedRow={this.onToggleSelectedRow}
                     onToggleSelectAllRows={this.onToggleSelectAllRows}
                     onApproveRecordsClick={this.onApproveRecordsClick}
-                    visibleColumnToggle={this.props.visibleColumnToggle}
+                    onVisibleColumnToggle={this.props.visibleColumnToggle}
                     onColumnHeaderClick={this.onColumnHeaderClick}
                 />
                 <Pagination recordCount={this.props.records.length}

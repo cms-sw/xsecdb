@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const style = {
     col: { paddingLeft: 0, paddingRight: 0 },
@@ -14,7 +15,8 @@ const SearchBar = (props) => {
                 <div className="row" style={style.row}>
                     <div className="col-sm-10" style={style.col}>
                         <input type="text" className="form-control"
-                            id="searchField" placeholder="Search query.. e.g. energy=[67]{1} && ( matrix_generator=Herw.* || createdBy=^krepecka$ )" style={style.input}
+                            id="searchField" placeholder="Search query.. e.g. energy=[67]{1} && ( matrix_generator=Herw.* || createdBy=^krepecka$ )" 
+                            style={style.input}
                             onChange={props.onSearchInputChange} value={props.searchFieldValue}
                         />
                     </div>
@@ -32,14 +34,16 @@ const SearchBar = (props) => {
                     </div>
                 </div>
             </form>
-
-             {/* <div className="panel panel-default">
-                <div className="panel-body">
-                    <b>key=value, key=value,...</b>
-                </div>
-            </div>  */}
         </div >
     )
+}
+
+SearchBar.propTypes = {
+    //value of search value
+    searchFieldValue: PropTypes.string.isRequired,
+    onSearchInputChange: PropTypes.func.isRequired,
+    onSearchButtonClick: PropTypes.func.isRequired,
+    onClearButtonClick: PropTypes.func.isRequired
 }
 
 export default SearchBar;

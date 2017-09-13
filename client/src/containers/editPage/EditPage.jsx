@@ -11,8 +11,6 @@ class EditPage extends React.Component {
         super(props);
 
         this.onEditFieldChange = this.onEditFieldChange.bind(this);
-        this.onSaveRecord = this.onSaveRecord.bind(this);
-        this.onApproveRecord = this.onApproveRecord.bind(this);
     }
 
     render() {
@@ -39,11 +37,11 @@ class EditPage extends React.Component {
         this.props.editFieldChange(value, propertyName);
     }
 
-    onSaveRecord() {
+    onSaveRecord = () => {
         this.props.saveRecord(this.props.record);
     }
 
-    onApproveRecord(){
+    onApproveRecord = () => {
         this.props.approveRecord(this.props.match.params.recordId);
     }
 }
@@ -51,7 +49,6 @@ class EditPage extends React.Component {
 const mapStateToProps = (state) => {
     return {
         record: state.editPage,
-        search: state.searchPage,
         // Record is new when there is no 'id' field provided
         isNew: !state.editPage.some(field => field.name == 'id')
     }
