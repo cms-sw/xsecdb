@@ -3,18 +3,18 @@ import pycurl
 import json
 from StringIO import StringIO 
 from urllib import urlencode
+import os
 
 
 class RequestWrapper:
     """ Wrapper for making http requests to xsdb api """
 
-    subprocess.Popen(['cern-get-sso-cookie', '-u', 'https://cms-gen-dev.cern.ch/xsdb',
-                      '-o', 'cookie.txt', '-krb'], stdout=subprocess.PIPE).communicate()[0]
+    subprocess.call(['bash', 'getCookie.sh'])
 
     c = pycurl.Curl()
     c.setopt(pycurl.FOLLOWLOCATION, 1)
-    c.setopt(pycurl.COOKIEJAR, "cookie.txt")
-    c.setopt(pycurl.COOKIEFILE, "cookie.txt")
+    c.setopt(pycurl.COOKIEJAR, os.path.expanduser("~/private/xsdbdev-cookie.txt"))
+    c.setopt(pycurl.COOKIEFILE, os.path.expanduser("~/private/xsdbdev-cookie.txt"))
     c.setopt(pycurl.HTTPHEADER, ['Content-Type:application/json', 'Accept:application/json'])
     c.setopt(pycurl.VERBOSE, 0)
 
@@ -50,6 +50,7 @@ class RequestWrapper:
         self.c.setopt(self.c.WRITEFUNCTION, buffer.write)
         self.c.perform()
         body = buffer.getvalue()
+        print body
         return json.loads(body)
 
     def _perform_post(self, url, post_fields):
