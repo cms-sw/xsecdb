@@ -1,6 +1,7 @@
 import subprocess
 import pycurl
 import json
+from StringIO import StringIO 
 from urllib import urlencode
 
 
@@ -42,6 +43,14 @@ class RequestWrapper:
 
     def update(self, keyval_dict, record_id):
         self._perform_post('https://cms-gen-dev.cern.ch/xsdb/api/update/' + record_id, json.dumps(keyval_dict))
+
+    def get_last_inserted_by_user(self, user_name):
+        buffer = StringIO()
+        self.c.setopt(self.c.URL, 'https://cms-gen-dev.cern.ch/xsdb/api/get_last_by_user/' + user_name)
+        self.c.setopt(self.c.WRITEFUNCTION, buffer.write)
+        self.c.perform()
+        body = buffer.getvalue()
+        return json.loads(body)
 
     def _perform_post(self, url, post_fields):
         self.c.setopt(self.c.URL, url)

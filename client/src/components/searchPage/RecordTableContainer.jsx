@@ -114,10 +114,12 @@ class RecordTableContainer extends React.Component {
         const result = [];
         records.map(record => {
             let res = {};
+            res['id'] = record['id'];
 
             visibleColumns.map(col => {
                 res[col.name] = record[col.name];
             })
+            
             result.push(res);
         })
         const json = JSON.stringify(result, null, 4);

@@ -18,22 +18,26 @@ from validate import validate_model
 from decorators import auth_user_group
 from config import CONFIG
 
-app = Flask(__name__, static_folder="../client/dist", template_folder="../client/templates")
+app = Flask(__name__, static_folder="../client/dist",
+            template_folder="../client/templates")
 # CORS(app)
 
 client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
 collection = db.xsdbCollection
 
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
 
 @app.route('/<path:path>', methods=['GET'])
 def fallback(path):
     """ for [/edit/:id] url path when client doesn't have js 
         (refreshing edit page does not work without this endpoint) """
     return render_template('index.html')
+
 
 @app.route('/api/get/<record_id>', methods=['GET'])
 def get_by_id(record_id):
@@ -85,6 +89,7 @@ def get_by_id(record_id):
         result = get_ordered_field_list(record_structure)
 
     return make_response(jsonify(result), 200)
+
 
 @app.route('/api/get', methods=['GET'])
 @auth_user_group(0)  # Role: xsdb-user or higher
@@ -189,10 +194,10 @@ def search():
     # compile regular expressions
     search_dictionary = compile_regex(dict(query))
 
-    #to enable searching by _id 
+    # to enable searching by _id
     if 'id' in query:
         search_dictionary['_id'] = ObjectId(query['id'])
-        del search_dictionary['id'] 
+        del search_dictionary['id']
 
     cursor = collection.find({'$query': search_dictionary, '$orderby': order_by}).skip(
         current_page * page_size).limit(page_size)
@@ -229,15 +234,16 @@ def approve_records():
 
     return make_response('success', 200)
 
+
 @app.route('/api/get_last_by_user/<user_name>', methods=['GET'])
-@auth_user_group(0)  # Role: xsdb-user or higher
 def get_last_by_user(user_name):
     """ get last record created by specific user """
     logger.debug("GET last record by user: " + str(user_name))
 
-    result = collection.find_one({'createdBy': user_name})
+    result = collection.find({'$query': {'createdBy': user_name}, '$orderby': {'createdOn': -1}}).limit(1)
 
     return make_response(dumps(result), 200)
+
 
 @app.route('/api/roles', methods=['GET'])
 def get_roles():
