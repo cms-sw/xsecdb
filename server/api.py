@@ -10,7 +10,7 @@ from bson.objectid import ObjectId
 from time import gmtime, strftime
 from flask_cors import CORS
 
-from models.fields import fields as record_structure
+from fields import fields as record_structure
 from mailing import send_mail, send_mail_approve
 from utils import compile_regex, get_ordered_field_list,\
     get_user_groups, is_user_in_group, get_field_order
@@ -20,7 +20,7 @@ from config import CONFIG
 
 app = Flask(__name__, static_folder="../client/dist",
             template_folder="../client/templates")
-CORS(app)
+# CORS(app)
 
 client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
@@ -31,9 +31,11 @@ collection = db.xsdbCollection
 def index():
     return render_template('index.html')
 
-# for [/edit/:id] url path when client doesn't have js (refresh on edit page does not work without this)
+
 @app.route('/<path:path>', methods=['GET'])
 def fallback(path):
+    """ for [/edit/:id] url path when client doesn't have js 
+        (refreshing edit page does not work without this endpoint) """
     return render_template('index.html')
 
 
@@ -84,14 +86,15 @@ def get_by_id(record_id):
         })
 
     else:
-        result = record_structure
+        result = get_ordered_field_list(record_structure)
 
     return make_response(jsonify(result), 200)
 
-# Get empty record_structure
+
 @app.route('/api/get', methods=['GET'])
 @auth_user_group(0)  # Role: xsdb-user or higher
 def get_empty():
+    """ get empty record_structure """
     logger.debug("GET Empty record")
     result = get_ordered_field_list(record_structure)
     return make_response(jsonify(result), 200)
@@ -103,10 +106,10 @@ def insert():
     record = request.get_json()
     logger.debug("INSERT " + str(record))
 
-    # get list of invalid fields
-    error_fields = validate_model(record)
+    # get error dictionary and pass it to frontend
+    error_obj = validate_model(record)
 
-    if len(error_fields) == 0:
+    if not error_obj:
         user_login = request.headers.get("Adfs-Login")
         curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
@@ -116,7 +119,7 @@ def insert():
         record['modifiedBy'] = user_login
         record['status'] = 'new'
 
-        record_id = collection.insert(record)
+        record_id = collection.insert_one(record).inserted_id
 
         result = collection.find_one({'_id': record_id})
         result["id"] = str(record_id)
@@ -127,7 +130,7 @@ def insert():
     else:
         return make_response(jsonify({
             'error_message': 'incorrect data format',
-            'error_fields': error_fields
+            'error_fields': error_obj
         }), 400)
 
 
@@ -137,9 +140,9 @@ def update(record_id):
     record = request.get_json()
     logger.debug("UPDATE " + str(record))
 
-    error_fields = validate_model(record)
+    error_obj = validate_model(record)
 
-    if len(error_fields) == 0:
+    if not error_obj:
         user_login = request.headers.get("Adfs-Login")
 
         record['modifiedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -151,10 +154,11 @@ def update(record_id):
             record['status'] = 'new'
             do_send_mail = True
 
-        collection.update({'_id': ObjectId(record_id)}, record)
+        collection.update_one({'_id': ObjectId(record_id)}, {'$set': record})
         result = collection.find_one({'_id': ObjectId(record_id)})
         result["id"] = record_id
 
+        # to not send email before update. In case record does not get inserted
         if do_send_mail:
             send_mail_approve(record_id)
 
@@ -162,7 +166,7 @@ def update(record_id):
     else:
         return make_response(jsonify({
             'error_message': 'incorrect data format',
-            'error_fields': error_fields
+            'error_fields': error_obj
         }), 400)
 
 
@@ -172,7 +176,6 @@ def delete(record_id):
     logger.debug("DELETE " + record_id)
 
     collection.delete_one({'_id': ObjectId(record_id)})
-
     return make_response('success', 200)
 
 
@@ -182,16 +185,20 @@ def search():
     logger.debug("SEARCH " + str(json_data))
 
     # search query json object
-    query = json_data['search']
+    query = json_data.get('search', json_data)
     # pagination information
-    page_size = json_data['pagination']['pageSize']
-    current_page = json_data['pagination']['currentPage']
-    order_by = json_data['orderBy']
+    page_size = json_data.get('pagination', {}).get('pageSize', 50)
+    current_page = json_data.get('pagination', {}).get('currentPage', 0)
+    order_by = json_data.get('orderBy', {})
 
     # compile regular expressions
-    search_dictionary = compile_regex(query)
+    search_dictionary = compile_regex(dict(query))
 
-    logger.debug(query)
+    # to enable searching by _id
+    if 'id' in query:
+        search_dictionary['_id'] = ObjectId(query['id'])
+        del search_dictionary['id']
+
     cursor = collection.find({'$query': search_dictionary, '$orderby': order_by}).skip(
         current_page * page_size).limit(page_size)
 
@@ -199,9 +206,10 @@ def search():
 
     return make_response(result, 200)
 
-# get list of record_structure field names (for selecting visible columns)
+
 @app.route('/api/fields', methods=['GET'])
 def get_fields():
+    """ get list of record_structure field names (for selecting visible columns) """
     result = sorted(record_structure.keys(), key=get_field_order)
     return make_response(jsonify(result), 200)
 
@@ -209,7 +217,6 @@ def get_fields():
 @app.route('/api/approve', methods=['POST'])
 @auth_user_group(1)  # Role: xsdb-approval or higher
 def approve_records():
-    # multiple record Ids
     record_ids = json.loads(request.data)
     user_login = request.headers.get("Adfs-Login") or ""
 
@@ -227,13 +234,24 @@ def approve_records():
 
     return make_response('success', 200)
 
-# get roles user has (used when react app loads)
+
+@app.route('/api/get_last_by_user/<user_name>', methods=['GET'])
+def get_last_by_user(user_name):
+    """ get last record created by specific user """
+    logger.debug("GET last record by user: " + str(user_name))
+
+    result = collection.find({'$query': {'createdBy': user_name}, '$orderby': {'createdOn': -1}}).limit(1)
+
+    return make_response(dumps(result), 200)
+
+
 @app.route('/api/roles', methods=['GET'])
 def get_roles():
+    """ get roles user has (used when react app loads) """
     groups = get_user_groups()
     # from all user groups take only relevant to xsdb
     roles = [x for x in groups if x in CONFIG.USER_ROLES]
-    # roles = ['xsdb-admins']  # CONFIG.USER_ROLES
+    # roles = ['xsdb-admins']  # For testing
 
     return make_response(jsonify(roles), 200)
 

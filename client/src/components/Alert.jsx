@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 const style = {
@@ -15,15 +16,13 @@ const className = {
 }
 
 class Alert extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
 
         //to keep showing latest alert for required period of time
         this.state = {
             queue: []
         }
-
-        this.handleClose = this.handleClose.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -51,7 +50,7 @@ class Alert extends React.Component {
         }
     }
 
-    handleClose() {
+    handleClose = () => {
         //Remove item from queue
         this.state.queue.pop();
 
@@ -61,6 +60,15 @@ class Alert extends React.Component {
             })
         }
     }
+}
+
+Alert.propTypes = {
+    //message text
+    message: PropTypes.string,
+    //status: error or success
+    status: PropTypes.string,
+    //Time after which notification automatically closes
+    autoCloseTime: PropTypes.number.isRequired
 }
 
 const mapStateToProps = (state) => {

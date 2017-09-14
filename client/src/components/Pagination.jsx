@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 //How many pages are shown next to current page
 const M = 2;
 //Selections of page size
@@ -6,12 +7,6 @@ const pageSizes = [10, 20, 30, 40, 50]
 const preventDefault = e => e.preventDefault();
 
 export default class Pagination extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.onPageSizeChange = this.onPageSizeChange.bind(this);
-    }
-
     render() {
         return (
             <div className="row">
@@ -126,7 +121,7 @@ export default class Pagination extends React.Component {
         this.props.onChangePagination(pageNumber, this.props.pageSize);
     }
 
-    onPageSizeChange(e) {
+    onPageSizeChange = (e) => {
         const pageSize = e.target.value;
         //To keep current page in boundaries [0:maxPage]
         let currentPage = 0;
@@ -134,3 +129,9 @@ export default class Pagination extends React.Component {
     }
 }
 
+Pagination.propTypes = {
+    pageSize: PropTypes.number.isRequired,
+    recordCount: PropTypes.number.isRequired,
+    currentPage: PropTypes.number.isRequired,
+    onChangePagination: PropTypes.func.isRequired
+}

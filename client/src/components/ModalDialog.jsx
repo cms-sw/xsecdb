@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const style = {
     position: 'fixed',
@@ -39,6 +40,14 @@ function onBackgroundClick(onClose, e) {
     if (e.target.id === "modalBackground") {
         onClose();
     }
+}
+
+ModalDialog.propTypes = {
+    headerText: PropTypes.string.isRequired,
+    actionClass: PropTypes.string.isRequired,
+    actionName: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onAction: PropTypes.func.isRequired
 }
 
 export default ModalDialog;

@@ -15,14 +15,14 @@ const editPageReducer = (state = {}, action) => {
         case "GET_RECORD_BY_ID_SUCCESS":
             return action.fields;
         case "EDIT_FIELDS_VALIDATION_ERROR":
-            const errorFields = action.fieldNames;
+            const errorFields = action.errorFields;
 
             // Add/clear errors
             return state.map(field => {
-                if (errorFields.includes(field.name)) {
+                if (errorFields[field.name]) {
                     return {
                         ...field,
-                        errorMessage: "required field"
+                        errorMessage: errorFields[field.name]
                     }
                 } else {
                     return {
