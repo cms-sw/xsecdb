@@ -32,7 +32,8 @@ const styles = {
         borderRight: '1px solid #e8e8e8',
         verticalAlign: 'middle',
         textAlign: 'center',
-        minWidth: '80px'
+        minWidth: '80px',
+        height: '36px'
     }
 }
 

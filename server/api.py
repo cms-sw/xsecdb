@@ -101,10 +101,10 @@ def insert():
     record = request.get_json()
     logger.debug("INSERT " + str(record))
 
-    # get list of invalid fields
-    error_fields = validate_model(record)
+    # get error dictionary and pass it to frontend
+    error_obj = validate_model(record)
 
-    if len(error_fields) == 0:
+    if not error_obj:
         user_login = request.headers.get("Adfs-Login")
         curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
@@ -114,7 +114,7 @@ def insert():
         record['modifiedBy'] = user_login
         record['status'] = 'new'
 
-        record_id = collection.insert(record)
+        record_id = collection.insert_one(record).inserted_id
 
         result = collection.find_one({'_id': record_id})
         result["id"] = str(record_id)
@@ -125,7 +125,7 @@ def insert():
     else:
         return make_response(jsonify({
             'error_message': 'incorrect data format',
-            'error_fields': error_fields
+            'error_fields': error_obj
         }), 400)
 
 
@@ -135,9 +135,9 @@ def update(record_id):
     record = request.get_json()
     logger.debug("UPDATE " + str(record))
 
-    error_fields = validate_model(record)
+    error_obj = validate_model(record)
 
-    if len(error_fields) == 0:
+    if not error_obj:
         user_login = request.headers.get("Adfs-Login")
 
         record['modifiedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -149,10 +149,11 @@ def update(record_id):
             record['status'] = 'new'
             do_send_mail = True
 
-        collection.update({'_id': ObjectId(record_id)}, record)
+        collection.update_one({'_id': ObjectId(record_id)}, {'$set': record})
         result = collection.find_one({'_id': ObjectId(record_id)})
         result["id"] = record_id
 
+        # to not send email before update. In case record does not get inserted
         if do_send_mail:
             send_mail_approve(record_id)
 
@@ -160,7 +161,7 @@ def update(record_id):
     else:
         return make_response(jsonify({
             'error_message': 'incorrect data format',
-            'error_fields': error_fields
+            'error_fields': error_obj
         }), 400)
 
 
@@ -186,9 +187,13 @@ def search():
     order_by = json_data.get('orderBy', {})
 
     # compile regular expressions
-    search_dictionary = compile_regex(query)
+    search_dictionary = compile_regex(dict(query))
 
-    logger.debug(query)
+    #to enable searching by _id 
+    if 'id' in query:
+        search_dictionary['_id'] = ObjectId(query['id'])
+        del search_dictionary['id'] 
+
     cursor = collection.find({'$query': search_dictionary, '$orderby': order_by}).skip(
         current_page * page_size).limit(page_size)
 
@@ -223,6 +228,16 @@ def approve_records():
                            }})
 
     return make_response('success', 200)
+
+@app.route('/api/get_last_by_user/<user_name>', methods=['GET'])
+@auth_user_group(0)  # Role: xsdb-user or higher
+def get_last_by_user(user_name):
+    """ get last record created by specific user """
+    logger.debug("GET last record by user: " + str(user_name))
+
+    result = collection.find_one({'createdBy': user_name})
+
+    return make_response(dumps(result), 200)
 
 @app.route('/api/roles', methods=['GET'])
 def get_roles():

@@ -14,6 +14,12 @@ const searchPageReducer = (state = [], action) => {
                     ...state.columns.slice(i + 1)
                 ]
             });
+        case "VISIBLE_COLUMNS_DESELECT":
+            const new_columns = state.columns.slice(0);
+            new_columns.map(col => col.isVisible = 0);
+            new_columns[0].isVisible = true; 
+            
+            return Object.assign({}, state, {columns: new_columns});
         case "GET_RECORD_FIELDS_SUCCESS":
             return Object.assign({}, state, { columns: action.fields });
         case "DELETE_RECORD_SUCCESS":

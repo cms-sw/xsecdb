@@ -23,7 +23,7 @@ const _closingBrac = RegExp.escape(')');
 //  \[\^\$\.\?\*\+\{\} - allow '[', '^', '$', '.', '?', '*', '+', '{', '}'
 //  \\\[\\\] - allow '[', ']'
 
-let reStringKeyVal = `[a-zA-Z_0-9]+={1}[\\\\a-zA-Z0-9_\\-\[\^\$\.\?\*\+\{\}\\\[\\\]]+`;
+let reStringKeyVal = `[a-zA-Z_0-9]+={1}[\\\\a-zA-Z0-9_%"\\-\[\^\$\.\?\*\+\{\}\\\[\\\]]+`;
 let reString = `^(${reStringKeyVal}|${_and}|${_or}|${_openBrac}|${_closingBrac})`;
 
 const reToken = new RegExp(reString);

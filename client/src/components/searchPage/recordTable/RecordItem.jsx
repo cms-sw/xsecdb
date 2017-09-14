@@ -12,6 +12,7 @@ const style = {
         verticalAlign: 'middle',
         textAlign: 'right',
         minWidth: '215px',
+        height: '36px'
     }
 }
 

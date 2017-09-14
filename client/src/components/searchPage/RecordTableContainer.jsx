@@ -44,10 +44,10 @@ class RecordTableContainer extends React.Component {
                     onVisibleColumnToggle={this.props.onVisibleColumnToggle}
                     onApproveRecordsClick={this.props.onApproveRecordsClick}
                     onExportButtonClick={this.handleExportButtonClick}
+                    onDeselectAllColumns={this.props.onDeselectAllColumns}
                 />
-                <div className="table-responsive" >
 
-                    <RecordListControlColumn
+                <RecordListControlColumn
                         records={this.props.records}
                         selectedRows={this.props.selectedRows}
                         rowHeights={this.columnHeights}
@@ -56,9 +56,10 @@ class RecordTableContainer extends React.Component {
                         onToggleSelectAllRows={this.props.onToggleSelectAllRows}
                         onDeleteButtonClick={this.toggleDeleteDialog}
                         onToggleSelectedRow={this.props.onToggleSelectedRow}
-                    />
+                />
 
-                    <table className="table" style={{ position: 'relative', left: '105px' }}>
+                <div className="table-responsive" style={{paddingLeft: '105px'}}>
+                    <table className="table" >
                         <thead style={{ borderTop: '2px solid #dedede' }} >
                             <RecordListHeader
                                 columns={this.props.columns}

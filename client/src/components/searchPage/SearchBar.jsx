@@ -39,7 +39,7 @@ const SearchBar = (props) => {
 }
 
 SearchBar.propTypes = {
-    //value of search value
+    //search string in search field
     searchFieldValue: PropTypes.string.isRequired,
     onSearchInputChange: PropTypes.func.isRequired,
     onSearchButtonClick: PropTypes.func.isRequired,

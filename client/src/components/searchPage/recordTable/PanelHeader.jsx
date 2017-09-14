@@ -14,6 +14,11 @@ const style = {
     row: {
         textAlign: 'left'
     },
+    deselect:{
+        margin: '10px',
+        textDecoration: 'underline',
+        color: '#484747'
+    },
     left: {
         display: 'inline-block',
         width: '50%'
@@ -74,6 +79,10 @@ class PanelHeader extends React.Component {
                     this.state.open &&
                     <div className="panel-body">
                         <div className="row" style={style.row}>
+                            <button style={style.column} key={-1} role="button"
+                                onClick={this.props.onDeselectAllColumns}>
+                                deselect all
+                            </button>
                             {this.renderColumnsSelections()}
                         </div>
                     </div>

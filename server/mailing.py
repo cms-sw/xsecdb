@@ -15,9 +15,6 @@ def send_mail(body, subject, recipients, **kwargs):
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = subject
 
-    logger.debug(msg)
-    logger.debug(recipients)
-
     try:
         msg.attach(MIMEText(body))
         smtpObj = smtplib.SMTP()

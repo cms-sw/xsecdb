@@ -32,6 +32,7 @@ class SearchPage extends React.Component {
                     onApproveRecordsClick={this.onApproveRecordsClick}
                     onVisibleColumnToggle={this.props.visibleColumnToggle}
                     onColumnHeaderClick={this.onColumnHeaderClick}
+                    onDeselectAllColumns={this.props.visibleColumnsDeselect}
                 />
                 <Pagination recordCount={this.props.records.length}
                     onChangePagination={this.onChangePagination}

@@ -69,20 +69,25 @@ export const changeOrderBy = (fieldName, direction) => {
     }
 }
 
-const updateUrlParams = (params) => (dispatch, getState) => {
+const updateUrlParams = (searchParams) => (dispatch, getState) => {
+    //if search params in url do not need to be updated
+    if(!searchParams){
+        searchParams = qs.parse(getState().router.location.search);
+    }
+
     //selected visible columns
     const selection = getVisibleColumnsInt(getState().searchPage.columns);
 
     if (selection) {
-        params[columnParameterName] = selection;
+        searchParams[columnParameterName] = selection;
     }
 
     //Set pagination and ordering info
-    Object.assign(params, getState().searchPage.pagination, getState().searchPage.orderBy);
+    Object.assign(searchParams, getState().searchPage.pagination, getState().searchPage.orderBy);
 
     //update browser url
     dispatch(push({
-        search: qs.stringify(params)
+        search: qs.stringify(searchParams)
     }))
 }
 
@@ -92,8 +97,14 @@ export const visibleColumnToggle = (index) => (dispatch, getState) => {
         type: "VISIBLE_COLUMNS_TOGGLE",
         index
     })
-    const params = qs.parse(getState().router.location.search);
-    dispatch(updateUrlParams(params));
+    dispatch(updateUrlParams());
+}
+
+export const visibleColumnsDeselect = () => (dispatch, getState) => {
+    dispatch({
+        type: "VISIBLE_COLUMNS_DESELECT"
+    })
+    dispatch(updateUrlParams());
 }
 
 const showAlert = (message, status) => {

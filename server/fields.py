@@ -25,7 +25,8 @@ fields = {
         'value': "",
         'disabled': False,
         'required': True,
-        'order': 9
+        'order': 9,
+        'no_whitespace': True
     },
     "MCM": {
         'title': "MCM",
@@ -33,7 +34,8 @@ fields = {
         'value': "",
         'disabled': False,
         'required': True,
-        'order': 10
+        'order': 10,
+        'no_whitespace': True
     },
     "refs": {
         'title': "refs",
@@ -148,7 +150,8 @@ fields = {
         'value': "",
         'disabled': False,
         'required': False,
-        'order': 1
+        'order': 1,
+        'no_whitespace': True
     },
     "reweighting": {
         'title': "Reweighting",
