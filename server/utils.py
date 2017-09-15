@@ -6,6 +6,9 @@ from fields import fields as record_structure
 
 
 def get_user_groups():
+    '''
+        get all groups user has from request header
+    '''
     adfs_group = request.headers.get('Adfs-Group')
     groups = []
 
@@ -16,7 +19,10 @@ def get_user_groups():
 
 
 def is_user_in_group(group_level):
-    # return True
+    '''
+        is user in specific xsdb group
+    '''
+    return True
     # Get minimum required groups
     required_groups = CONFIG.USER_ROLES[group_level:]
     # Get all groups user has
@@ -29,6 +35,9 @@ def is_user_in_group(group_level):
 
 
 def compile_regex(in_dic):
+    '''
+        compile value strings in mongo search query
+    '''
     for key, value in in_dic.iteritems():
         if key != "$or" and key != "$and":
             in_dic[key] = re.compile(value, re.I)
@@ -40,6 +49,9 @@ def compile_regex(in_dic):
 
 # Get field's order attribute
 def get_field_order(key):
+    '''
+        returns order of a record field
+    '''
     if key in record_structure and 'order' in record_structure[key]:
         return record_structure[key]['order']
     else:
@@ -47,7 +59,9 @@ def get_field_order(key):
         return 1024  # return big constant
 
 def get_ordered_field_list(record_dict):
-    logger.debug(record_dict)
+    '''
+        transform record_structure dictionary into ordered list
+    '''
     result = []
     result_ = sorted(record_dict.iteritems(), key=lambda x: get_field_order(x[0]))
     for tupl in result_:
@@ -56,3 +70,13 @@ def get_ordered_field_list(record_dict):
         result.append(dic)
 
     return result
+
+def remove_readonly_fields(record_request):
+    '''
+        remove read only fields from users request
+    '''
+
+    read_only_fields = [key for key, value in record_structure.iteritems() if value.get('read_only', False)]
+    
+    for field_name in read_only_fields:
+        record_request.pop(field_name, None)

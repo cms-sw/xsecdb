@@ -8,7 +8,11 @@ from urllib import urlencode
 class RequestWrapper:
     """ Wrapper for making http requests to xsdb api """
 
-    subprocess.Popen(['cern-get-sso-cookie', '-u', 'https://cms-gen-dev.cern.ch/xsdb',
+    base_url = 'http://188.185.74.109:4241'
+    # base_url = 'https://cms-gen-dev.cern.ch/xsdb'
+    api_url = base_url + '/api'
+
+    subprocess.Popen(['cern-get-sso-cookie', '-u', base_url,
                       '-o', 'cookie.txt', '-krb'], stdout=subprocess.PIPE).communicate()[0]
 
     c = pycurl.Curl()
@@ -19,7 +23,7 @@ class RequestWrapper:
     c.setopt(pycurl.VERBOSE, 0)
 
     def simple_search(self, keyval_dict):
-        self._perform_post('https://cms-gen-dev.cern.ch/xsdb/api/search', json.dumps(keyval_dict))
+        self._perform_post(self.api_url + '/search', json.dumps(keyval_dict))
 
     def adv_search(self, keyval_dict={}, page_size=20, current_page=0, orderby_field="", order_direction=1):
         order_by = {}
@@ -36,17 +40,17 @@ class RequestWrapper:
             'orderBy': order_by
         }
 
-        self._perform_post('https://cms-gen-dev.cern.ch/xsdb/api/search', json.dumps(query))
+        self._perform_post(self.api_url + '/search', json.dumps(query))
 
     def insert(self, keyval_dict={}):
-        self._perform_post('https://cms-gen-dev.cern.ch/xsdb/api/insert', json.dumps(keyval_dict))
+        self._perform_post(self.api_url + '/insert', json.dumps(keyval_dict))
 
     def update(self, keyval_dict, record_id):
-        self._perform_post('https://cms-gen-dev.cern.ch/xsdb/api/update/' + record_id, json.dumps(keyval_dict))
+        self._perform_post(self.api_url + '/update/' + record_id, json.dumps(keyval_dict))
 
     def get_last_inserted_by_user(self, user_name):
         buffer = StringIO()
-        self.c.setopt(self.c.URL, 'https://cms-gen-dev.cern.ch/xsdb/api/get_last_by_user/' + user_name)
+        self.c.setopt(self.c.URL, self.api_url + '/get_last_by_user/' + user_name)
         self.c.setopt(self.c.WRITEFUNCTION, buffer.write)
         self.c.perform()
         body = buffer.getvalue()

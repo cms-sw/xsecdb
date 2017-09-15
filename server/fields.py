@@ -4,9 +4,11 @@
         title - used in record edit form for a label
         type - used to determine what type of field to render in edit form
         options - only for select type field
-        value - default value. Field is filled with it if no other value is present
+        value - prefilled value that is visible when inserting a record.
         disabled - True means that field is rendered as disabled in edit form
         required - True means that it is not allowed to save record without this field or with this field being empty
+        no_whitespace - True means that whitespace characters are not allow (used for URLs)
+        read_only - True means that field value is set automatically and user has no control over it
         order - Order in which table columns in search page and edit fields in edit page are displayed
 
     Property types:
@@ -16,6 +18,9 @@
         value: string
         disabled: boolean
         required: boolean
+        no_whitespace: boolean
+        read_only: boolean
+        order: number
 """
 
 fields = {
@@ -184,7 +189,8 @@ fields = {
         'value': "",
         'disabled': True,
         'required': False,
-        'order': 22
+        'order': 22,
+        'read_only': True
     },
     "modifiedOn": {
         'title': "Modified on",
@@ -192,7 +198,8 @@ fields = {
         'value': "",
         'disabled': True,
         'required': False,
-        'order': 21
+        'order': 21,
+        'read_only': True
     },
     "createdBy": {
         'title': "Created by",
@@ -200,7 +207,8 @@ fields = {
         'value': "",
         'disabled': True,
         'required': False,
-        'order': 25
+        'order': 25,
+        'read_only': True
     },
     "modifiedBy": {
         'title': "Modified by",
@@ -208,7 +216,8 @@ fields = {
         'value': "",
         'disabled': True,
         'required': False,
-        'order': 23
+        'order': 23,
+        'read_only': True
     },
     "approvedBy": {
         'title': "Approved by",
@@ -216,7 +225,8 @@ fields = {
         'value': "",
         'disabled': True,
         'required': False,
-        'order': 24
+        'order': 24,
+        'read_only': True
     },
     "status": {
         'title': "status",
@@ -225,7 +235,8 @@ fields = {
         'value': "new",
         'disabled': True,
         'required': False,
-        'order': 2
+        'order': 2,
+        'read_only': True
     },
     "discussion": {
         'title': "discussion",

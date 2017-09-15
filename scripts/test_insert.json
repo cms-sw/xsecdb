@@ -1,0 +1,38 @@
+{
+    "records": [
+        {
+            "DAS": "testing_insert_script1",
+            "comments": "index 0",
+            "MCM": "testmcm", 
+            "process_name": "insertscript_no_whitespace",
+            "accuracy": "LO", 
+            "cross_section": "0.1", 
+            "energy": "6", 
+            "shower": "Pythia8", 
+            "total_uncertainty": "5%"
+        
+        },
+        {
+            "DAS": "testing_insert_script2",
+            "comments": "index 1",
+            "MCM": "testmcm", 
+            "process_name": "insertscript_no_whitespace",
+            "accuracy": "LO", 
+            "cross_section": "0.1", 
+            "energy": "6", 
+            "shower": "Pythia8", 
+            "total_uncertainty": "5%"
+        },
+        {
+            "DAS": "testing_insert_script3",
+            "comments": "index 2",
+            "MCM": "testmcm", 
+            "process_name": "insertscript",
+            "accuracy": "unknown", 
+            "cross_section": "0.1", 
+            "energy": "6", 
+            "shower": "Pythia8", 
+            "total_uncertainty": "5%"
+        }
+    ]
+}

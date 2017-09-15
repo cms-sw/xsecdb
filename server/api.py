@@ -13,14 +13,14 @@ from flask_cors import CORS
 from fields import fields as record_structure
 from mailing import send_mail, send_mail_approve
 from utils import compile_regex, get_ordered_field_list,\
-    get_user_groups, is_user_in_group, get_field_order
-from validate import validate_model
+    get_user_groups, is_user_in_group, get_field_order, remove_readonly_fields
+from validate import validate_model, validate_model_update
 from decorators import auth_user_group
 from config import CONFIG
 
 app = Flask(__name__, static_folder="../client/dist",
             template_folder="../client/templates")
-# CORS(app)
+CORS(app)
 
 client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
@@ -113,6 +113,8 @@ def insert():
         user_login = request.headers.get("Adfs-Login")
         curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
+        remove_readonly_fields(record)
+
         record['createdOn'] = curr_date
         record['modifiedOn'] = curr_date
         record['createdBy'] = user_login
@@ -140,10 +142,12 @@ def update(record_id):
     record = request.get_json()
     logger.debug("UPDATE " + str(record))
 
-    error_obj = validate_model(record)
+    error_obj = validate_model_update(record)
 
     if not error_obj:
         user_login = request.headers.get("Adfs-Login")
+
+        remove_readonly_fields(record)
 
         record['modifiedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         record['modifiedBy'] = user_login
@@ -251,7 +255,7 @@ def get_roles():
     groups = get_user_groups()
     # from all user groups take only relevant to xsdb
     roles = [x for x in groups if x in CONFIG.USER_ROLES]
-    # roles = ['xsdb-admins']  # For testing
+    roles = ['xsdb-admins']  # For testing
 
     return make_response(jsonify(roles), 200)
 
