@@ -20,7 +20,7 @@ from config import CONFIG
 
 app = Flask(__name__, static_folder="../client/dist",
             template_folder="../client/templates")
-CORS(app)
+# CORS(app)
 
 client = MongoClient(CONFIG.DB_URL)
 db = client.xsdb
@@ -255,7 +255,7 @@ def get_roles():
     groups = get_user_groups()
     # from all user groups take only relevant to xsdb
     roles = [x for x in groups if x in CONFIG.USER_ROLES]
-    roles = ['xsdb-admins']  # For testing
+    # roles = ['xsdb-admins']  # For testing
 
     return make_response(jsonify(roles), 200)
 
