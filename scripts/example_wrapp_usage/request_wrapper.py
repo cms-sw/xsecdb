@@ -3,22 +3,20 @@ import pycurl
 import json
 from StringIO import StringIO 
 from urllib import urlencode
-
+import os
 
 class RequestWrapper:
     """ Wrapper for making http requests to xsdb api """
 
-    base_url = 'http://188.185.74.109:4241'
-    # base_url = 'https://cms-gen-dev.cern.ch/xsdb'
+    base_url = 'https://cms-gen-dev.cern.ch/xsdb'
     api_url = base_url + '/api'
 
-    subprocess.Popen(['cern-get-sso-cookie', '-u', base_url,
-                      '-o', 'cookie.txt', '-krb'], stdout=subprocess.PIPE).communicate()[0]
+    subprocess.call(['bash', 'getCookie.sh'])
 
     c = pycurl.Curl()
     c.setopt(pycurl.FOLLOWLOCATION, 1)
-    c.setopt(pycurl.COOKIEJAR, "cookie.txt")
-    c.setopt(pycurl.COOKIEFILE, "cookie.txt")
+    c.setopt(pycurl.COOKIEJAR, os.path.expanduser("~/private/xsdbdev-cookie.txt"))
+    c.setopt(pycurl.COOKIEFILE, os.path.expanduser("~/private/xsdbdev-cookie.txt"))
     c.setopt(pycurl.HTTPHEADER, ['Content-Type:application/json', 'Accept:application/json'])
     c.setopt(pycurl.VERBOSE, 0)
 
