@@ -16,13 +16,14 @@ const style = {
 
 const INPUTS_IN_ROW = 4;
 
-
 // Dynamic - Responsive bootstrap form
 class EditForm extends React.Component {
     render() {
         return (
             <div className="panel panel-default">
-                {/* <div className="panel-heading">Panel heading</div> */}
+                <div className="panel-heading">
+                    <h4>{this.props.isNew ? "Create a record" : "Edit a record"}</h4>
+                </div>
                 <div className="panel-body">
                     <form>
                         {this.renderForm()}
@@ -53,7 +54,7 @@ class EditForm extends React.Component {
         );
     }
 
-
+    //renders dynamic responsive form
     renderForm() {
         //Fields that should not be rendered have type "not_render" (for example id field)
         const fields = this.props.fields.filter(f => f.type.toLowerCase() !== "not_render");

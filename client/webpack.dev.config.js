@@ -40,7 +40,8 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015', 'react', 'stage-0']
+          presets: ['es2015', 'react', 'stage-0', 'stage-1'],
+          plugins: ["transform-decorators-legacy"]
         },
       }
     ]
@@ -48,7 +49,8 @@ module.exports = {
   externals: {
     'Config': JSON.stringify({
       apiUrl: "http://188.185.74.109:4241/api",
-      columnParameterName: 'columns'
+      columnParameterName: 'columns',
+      discussionLinkColumnName: 'discussion'
     })
   },
   plugins: [HTMLWebpackPluginConfig, HotReloader],

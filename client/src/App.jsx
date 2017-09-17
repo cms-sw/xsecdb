@@ -23,7 +23,7 @@ class App extends React.Component {
                 <Switch>
                     <Route exact path="/" component={SearchPage} />
                     <Route path="/edit/:recordId?" component={EditPage} />
-                    <Route component={ () => <h1>404: We can't find what you're looking for....</h1> } /> 
+                    <Route component={ () => <h1>404: We cannot find what you are looking for...</h1> } /> 
                 </Switch>
 
                 <Alert autoCloseTime={5000} />

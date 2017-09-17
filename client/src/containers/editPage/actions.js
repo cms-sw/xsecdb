@@ -90,7 +90,7 @@ export const saveRecord = (recordFields) => (dispatch, getState) => {
 
             dispatch({
                 type: 'EDIT_FIELDS_VALIDATION_ERROR',
-                fieldNames: errorFields
+                errorFields
             })
         })
 }

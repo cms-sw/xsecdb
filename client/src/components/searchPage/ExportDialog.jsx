@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import fileSaver from 'file-saver';
 
@@ -17,7 +18,7 @@ const style = {
 class ExportDialog extends React.Component {
     constructor(props){
         super(props);
-        this.state = { textData: props.textArea }
+        this.state = { textData: props.exportText }
     }
 
     render() {
@@ -72,6 +73,13 @@ function onBackgroundClick(onClose, e) {
     if (e.target.id === "modalBackground") {
         onClose();
     }
+}
+
+ExportDialog.propTypes = {
+    //text to be displayed in text field
+    exportText: PropTypes.string.isRequired,
+    //callback on close
+    onClose: PropTypes.func.isRequired
 }
 
 export default ExportDialog;
