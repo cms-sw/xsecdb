@@ -152,9 +152,11 @@ def update(record_id):
         record['modifiedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         record['modifiedBy'] = user_login
 
+        old_status = collection.find_one({'_id': ObjectId(record_id)})['status']
+        # logger.debug(old_status)
         # if user isn't xsdb-approval or xsdb-admin, reset status and send email
         do_send_mail = False
-        if not is_user_in_group(1):
+        if not is_user_in_group(1) and old_status == 'approved':
             record['status'] = 'new'
             do_send_mail = True
 
