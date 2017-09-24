@@ -22,7 +22,7 @@ def is_user_in_group(group_level):
     '''
         is user in specific xsdb group
     '''
-    return True
+    # return True
     # Get minimum required groups
     required_groups = CONFIG.USER_ROLES[group_level:]
     # Get all groups user has
