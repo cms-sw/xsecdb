@@ -22,9 +22,24 @@ with open('datasets.txt') as f:
         else:
             with open("getXsec/getXsec_"+dataset.split('/')[1]+".sh", 'r+') as f:
                 content = f.read()
-                if not '/store' in content: 
-                    print "File corrupted, creating file"
+                if not '/store' in content:
+                    with open("getfiles/getfiles_"+dataset.split('/')[1]+".sh", 'r') as f2:
+                        content2 = ""
+                        content2 = f2.read()
+                        if not '--skipexisting "False"' in content2:
+                            print "File corrupted, recreating file"
+                            content2 = content2.replace('--skipexisting "True"','--skipexisting "False"')
+                            with open("getfiles/getfiles_"+dataset.split('/')[1]+".sh", 'w') as f2:
+                                f2.write(content2)
+                                print "setting skipexisting to False"
                     os.popen("sh getfiles/getfiles_"+dataset.split('/')[1]+".sh 2>&1 > getXsec/getXsec_"+dataset.split('/')[1]+".sh").read()
+                    with open("getfiles/getfiles_"+dataset.split('/')[1]+".sh", 'r') as f2:
+                        content2 = ""
+                        content2 = f2.read()
+                        if '--skipexisting "False"' in content2:
+                            content2 = content2.replace('--skipexisting "False"','--skipexisting "True"')
+                            with open("getfiles/getfiles_"+dataset.split('/')[1]+".sh", 'w') as f2:
+                                f2.write(content2)
                 else:
                     print "File found"
         os.system("chmod 755 getXsec/getXsec_"+dataset.split('/')[1]+".sh")
