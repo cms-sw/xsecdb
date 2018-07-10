@@ -17,7 +17,13 @@ for filename in os.listdir(json_output_folder):
     if os.path.isfile(xsecdb_folder+"/update_logs/filldb_"+primary_dataset_name+".log"):
         with open(xsecdb_folder+"/update_logs/filldb_"+primary_dataset_name+".log", 'r') as f:
                     content = f.read()
-                    if '{"status": "new"' in content: 
+                    if '{"status": "new"' in content and campaign in content: 
+                        print 'filldb report existing and valid, skipping dataset'
+                        continue
+    if os.path.isfile(xsecdb_folder+"/update_logs/filldb_"+primary_dataset_name+"_"+campaign+".log"):
+        with open(xsecdb_folder+"/update_logs/filldb_"+primary_dataset_name+"_"+campaign+".log", 'r') as f:
+                    content = f.read()
+                    if '{"status": "new"' in content and campaign in content: 
                         print 'filldb report existing and valid, skipping dataset'
                         continue
     
@@ -31,7 +37,7 @@ for filename in os.listdir(json_output_folder):
     
     os.system(" cd "+xsecdb_folder+"/wrapper;\
             python "+xsecdb_folder+"/xsdb_insert_file.py --file "+json_output_folder+"/xsec_"+primary_dataset_name+".json \
-            2>&1 | tee "+xsecdb_folder+"/update_logs/filldb_"+primary_dataset_name+".log ; \
+            2>&1 | tee "+xsecdb_folder+"/update_logs/filldb_"+primary_dataset_name+"_"+campaign+".log ; \
             cd -; \
             \n\n")
 
