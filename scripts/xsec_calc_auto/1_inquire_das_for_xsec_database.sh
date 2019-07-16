@@ -8,7 +8,7 @@ xsec_script_folder="/your/folder/to/genproductions/test/calculateXSectionAndFilt
 
 # fetch datasets and store them in a file
 echo ${crab_word} | voms-proxy-init -voms cms;
-/cvmfs/cms.cern.ch/common/das_client --query="dataset dataset=/*/*${campaign}*/${datatier}" --limit=0 |grep "^/"> datasets.txt
+/cvmfs/cms.cern.ch/common/dasgoclient --query="dataset dataset=/*/*${campaign}*/${datatier}" --limit=0 |grep "^/"> datasets.txt
 mkdir -p getfiles
 
 while read -r dataset
