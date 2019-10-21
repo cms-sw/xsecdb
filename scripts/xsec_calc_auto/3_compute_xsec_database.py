@@ -35,7 +35,7 @@ with open('datasets.txt') as f:
                     continue
                 if not 'cvmfs' in content:
                     f.seek(0, 0)
-                    f.write("#!/bin/bash\n"+"cd /cvmfs/cms.cern.ch/"+scram_arch+"/cms/cmssw/"+cmssw+"/\n eval `scramv1 runtime -sh`\n cd "+os.getcwd()+"\n\n" + content+"mv xsec_"+dataset.split('/')[1]+".log xsec/")
+                    f.write("#!/bin/bash\n"+"cd /cvmfs/cms.cern.ch/"+scram_arch+"/cms/cmssw/"+cmssw+"/\n eval `scramv1 runtime -sh`\n cd "+os.getcwd()+"/output/"+dataset.split('/')[1]+"_/\n\n" + content+"mv xsec_"+dataset.split('/')[1]+".log xsec/")
             print "Computing cross section"
             if queue != "":
 #                os.system("chmod 755 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh; bsub -q "+queue+" -u ciaociao1 -C 0 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh; sleep 2")
