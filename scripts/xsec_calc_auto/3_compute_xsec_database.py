@@ -1,21 +1,18 @@
 import os, sys
 
-campaign="Moriond17"
-datatier="MINIAODSIM"
 
 crab_word = "" # put here your crab password
 crab_user = "" # put here your crab user (the one that gets returned after voms etc etc)
 
 os.system("echo "+crab_word+" | voms-proxy-init -voms cms; cp /tmp/"+crab_user+" "+os.getcwd())
-os.environ["X509_USER_PROXY"] = os.getcwd()+"/"+crab_user
+os.environ["X509_USER_PROXY"] = crab_user
 
-scram_arch = "slc6_amd64_gcc630"
-cmssw = "CMSSW_9_3_3"
+scram_arch = "slc7_amd64_gcc630"
+cmssw = "CMSSW_10_2_0"
 
-queue = "1nh" # uncomment to use lxbatch (parallel)
+queue = "espresso" # uncomment to use condor (parallel)
 # queue = "" # uncomment to launch interactively (serial)
 
-xsec_script_folder="/your/folder/to/genproductions/test/calculateXSectionAndFilterEfficiency/" # change this folder
 
 njob=0
 with open('datasets.txt') as f:
@@ -38,19 +35,21 @@ with open('datasets.txt') as f:
                     continue
                 if not 'cvmfs' in content:
                     f.seek(0, 0)
-                    f.write("cd /cvmfs/cms.cern.ch/"+scram_arch+"/cms/cmssw/"+cmssw+"/\n eval `scramv1 runtime -sh`\n cd "+os.getcwd()+"\n\n" + content)
+                    f.write("#!/bin/bash\n"+"cd /cvmfs/cms.cern.ch/"+scram_arch+"/cms/cmssw/"+cmssw+"/\n eval `scramv1 runtime -sh`\n cd "+os.getcwd()+"\n\n" + content+"mv xsec_"+dataset.split('/')[1]+".log xsec/")
             print "Computing cross section"
             if queue != "":
-                os.system("chmod 755 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh; bsub -q "+queue+" -u ciaociao1 -C 0 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh; sleep 2")
+#                os.system("chmod 755 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh; bsub -q "+queue+" -u ciaociao1 -C 0 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh; sleep 2")
+                os.system("chmod 755 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh;")
+                os.system("mkdir -p xsec/" )
+                os.system("mkdir -p output/"+dataset.split('/')[1]+"_" )
+                os.system("bash pro_subfile.sh " + dataset.split('/')[1] )
+                os.system("condor_submit "+os.getcwd()+"/output/"+dataset.split('/')[1]+"_/condor.sub" )
                 njob = njob+1
             else:
                 os.system("sh getXsec/getXsec_"+dataset.split('/')[1]+".sh")
         if njob % 100 == 0 and queue != "":
               os.system("echo 'submitted "+str(njob)+" jobs, sleeping 3 minutes'; sleep 200")
-        os.system("rm -rf LSFJOB_* core.*")
         sys.stdout.flush()
         
-while True:
-    os.system("rm -rf LSFJOB_* core.*; sleep 30")
                 
  
