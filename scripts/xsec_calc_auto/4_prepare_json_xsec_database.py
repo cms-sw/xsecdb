@@ -9,12 +9,13 @@ datatier="MINIAODSIM"
 crab_word = "" # put here your crab password
 crab_user = "" # put here your crab user (the one that gets returned after voms etc etc)
 
-xsec_script_folder="/your/folder/to/genproductions/test/calculateXSectionAndFilterEfficiency/" # change this folder
-json_output_folder="/your/folder/to/public/xsecdb/json/" # change this folder
+xsec_script_folder=os.getcwd() # change this folder
+json_output_folder=os.getcwd()+"/json_output" # change this folder
 
-os.system("mkdir -p "+json_output_folder)
+os.system("mkdir -p "+json_output_folder+"/xsec_0/")
+os.system("mkdir -p "+os.getcwd()+"/../update_logs")
 
-os.system("echo "+crab_word+" | voms-proxy-init -voms cms; cp /tmp/"+crab_user+" "+os.getcwd())
+
 
 with open('datasets.txt') as f:
     for dataset in f:
@@ -90,19 +91,22 @@ with open('datasets.txt') as f:
                 if matrix_element == "":
                     matrix_element = "Pythia8"
                     accuracy = "LO"
-                    
+
             os.system("sed -i -e 's/REPLACE_MATRIX_ELEMENT/"+str(matrix_element)+"/g' "+json_output_folder+"/xsec_"+primary_dataset_name+".json")
             os.system("sed -i -e 's/REPLACE_PARTON_SHOWER/"+str(shower)+"/g' "+json_output_folder+"/xsec_"+primary_dataset_name+".json")
             os.system("sed -i -e 's/REPLACE_ACCURACY/"+str(accuracy)+"/g' "+json_output_folder+"/xsec_"+primary_dataset_name+".json")
             # mcm_prepid = os.popen('/cvmfs/cms.cern.ch/common/das_client --query="mcm dataset='+dataset+'"').read().rsplit('\n',2)[1]
             mcm_prepid = os.popen('wget -qO- https://cms-pdmv.cern.ch/mcm/public/restapi/requests/produces'+dataset).read()
-            # print 'mcm_prepid',mcm_prepid
+            #print 'mcm_prepid',mcm_prepid
             if len(mcm_prepid) > 1 and "-" in mcm_prepid:
-                mcm_prepid = mcm_prepid.split('prepid')[1].split(',')[0].replace('\\": \\"',"").replace('\\"',"")
+                mcm_prepid = mcm_prepid.split('prepid')[1].split(',')[0].replace('\\": \\"',"").replace('\\"',"").strip('\"').strip(':').replace(" ",'').replace('\"','')
+                print 'mcm_prepid',mcm_prepid
                 os.system("sed -i -e 's/REPLACE_MCM_PREPID/"+str(mcm_prepid)+"/g' "+json_output_folder+"/xsec_"+primary_dataset_name+".json")
             
             with open(json_output_folder+"/xsec_"+dataset.split('/')[1]+".json", 'r+') as f:
                 print "produced json:\n", f.read()
             # sys.exit()
 
-    
+            if ((float(cross_section[0])) == 0.0 ) :
+                 os.system("mv "+ json_output_folder+"/xsec_"+dataset.split('/')[1]+".json " + json_output_folder+"/xsec_0/")
+                 os.system("echo "+primary_dataset_name+ " >> 0xsex.log")
