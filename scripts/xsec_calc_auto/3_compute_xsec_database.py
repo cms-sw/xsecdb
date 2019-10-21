@@ -38,7 +38,6 @@ with open('datasets.txt') as f:
                     f.write("#!/bin/bash\n"+"cd /cvmfs/cms.cern.ch/"+scram_arch+"/cms/cmssw/"+cmssw+"/\n eval `scramv1 runtime -sh`\n cd "+os.getcwd()+"/output/"+dataset.split('/')[1]+"_/\n\n" + content+"mv xsec_"+dataset.split('/')[1]+".log xsec/")
             print "Computing cross section"
             if queue != "":
-#                os.system("chmod 755 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh; bsub -q "+queue+" -u ciaociao1 -C 0 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh; sleep 2")
                 os.system("chmod 755 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh;")
                 os.system("mkdir -p xsec/;"+"mkdir -p output/"+dataset.split('/')[1]+"_;"+"bash pro_subfile.sh " + dataset.split('/')[1] )
                 os.system("condor_submit "+os.getcwd()+"/output/"+dataset.split('/')[1]+"_/condor.sub" )
