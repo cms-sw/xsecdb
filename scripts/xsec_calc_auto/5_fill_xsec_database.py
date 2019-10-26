@@ -3,8 +3,9 @@ import os, sys
 campaign="Moriond17"
 datatier="MINIAODSIM"
 
-xsecdb_folder = "" # change this folder
+xsecdb_folder = os.getcwd()+"/../" # change this folder
 json_output_folder=os.getcwd()+"/json_output/"
+os.system("mkdir -p "+os.getcwd()+"../update_logs")
 
 for filename in os.listdir(json_output_folder):
     
