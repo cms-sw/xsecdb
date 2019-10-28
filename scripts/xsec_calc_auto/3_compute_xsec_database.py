@@ -44,7 +44,6 @@ with open('datasets.txt') as f:
                 os.system("chmod 755 "+os.getcwd()+"/getXsec/getXsec_"+filename+".sh;mkdir -p xsec/;mkdir -p output/"+filename+"_")
                 dic= os.getcwd() ; dic_executable = dic+"/getXsec/getXsec" ; dic_output = dic+"/output/"+filename+"_/"
                 with open(os.getcwd()+"/output/"+filename+"_/condor.sub", 'w+') as f:
-                        print "hhh"
  			f.write("universe              = vanilla\n"+"executable            = "+dic_executable+"_"+filename+".sh\n"+"output                = "+dic_output+filename+".out\n"+"error                 = "+dic_output+filename+".err\n"+"log                   = "+dic_output+filename+".log\n"+"+MaxRuntime           = 3600\n"+"transfer_input_files  = "+dic+"/"+crab_user+"\n"+"x509userproxy         = "+crab_user+"\n"+"+JobFlavour           = \"espresso\"\n"+"queue")
                 os.system("chmod 777 "+os.getcwd()+"/output/"+filename+"_/condor.sub")
                 os.system("cp genXsec_cfg.py "+"output/"+filename+"_/" )
