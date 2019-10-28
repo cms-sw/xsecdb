@@ -15,7 +15,6 @@ mkdir -p getfiles
 while read -r dataset
 do
         PRIMARY_DATASET_NAME=$(echo $dataset | tr "/" "\n" )
-        echo $PRIMARY_DATASET_NAME
         filename=$(echo $PRIMARY_DATASET_NAME | awk '{print $1"__"$2;}')
         PRIMARY_DATASET_NAME=$(echo $PRIMARY_DATASET_NAME | awk '{print $1;}')
         echo $PRIMARY_DATASET_NAME
