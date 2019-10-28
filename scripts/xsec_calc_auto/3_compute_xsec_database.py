@@ -5,7 +5,7 @@ crab_word = "" # put here your crab password
 crab_user = "" # put here your crab user (the one that gets returned after voms etc etc)
 
 os.system("echo "+crab_word+" | voms-proxy-init -voms cms; cp /tmp/"+crab_user+" "+os.getcwd())
-os.environ["X509_USER_PROXY"] = crab_user
+os.environ["X509_USER_PROXY"] = os.getcwd()+"/"+crab_user
 
 scram_arch = "slc7_amd64_gcc700"
 cmssw = "CMSSW_10_6_0"
