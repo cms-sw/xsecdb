@@ -7,6 +7,7 @@ crab_user = "" # put here your crab user (the one that gets returned after voms 
 
 xsec_script_folder="/your/folder/to/genproductions/test/calculateXSectionAndFilterEfficiency/" # change this folder
 
+
 os.system("mkdir -p getXsec")
 
 with open('datasets.txt') as f:

@@ -113,6 +113,6 @@ with open('datasets.txt') as f:
 
             if ((float(cross_section[0])) == 0.0 ) :
                  os.system("mv "+ json_output_folder+"/xsec_"+filename+".json " + json_output_folder+"/xsec_0/")
-                 os.system("cp output/"+filename+"_ " + json_output_folder+"/xsec_0_output/")
+                 os.system("cp -r output/"+filename+"_ " + json_output_folder+"/xsec_0_output/")
                  os.system("echo "+primary_dataset_name+ " >> 0xsec_pro.log")
                  os.system("echo "+dataset+ " >> 0xsec_da.log")
