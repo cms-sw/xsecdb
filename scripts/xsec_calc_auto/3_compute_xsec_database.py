@@ -46,7 +46,7 @@ with open('datasets.txt') as f:
                 with open(os.getcwd()+"/output/"+filename+"_/condor.sub", 'w+') as f:
  			f.write("universe              = vanilla\n"+"executable            = "+dic_executable+"_"+filename+".sh\n"+"output                = "+dic_output+filename+".out\n"+"error                 = "+dic_output+filename+".err\n"+"log                   = "+dic_output+filename+".log\n"+"+MaxRuntime           = 3600\n"+"transfer_input_files  = "+dic+"/"+crab_user+"\n"+"x509userproxy         = "+crab_user+"\n"+"+JobFlavour           = \"espresso\"\n"+"queue")
                 os.system("chmod 777 "+os.getcwd()+"/output/"+filename+"_/condor.sub")
-                os.system("cp genXsec_cfg.py "+"output/"+filename+"_/" )
+                os.system("cp "+xsec_script_folder+"/genXsec_cfg.py "+"output/"+filename+"_/" )
                 os.system("condor_submit "+os.getcwd()+"/output/"+filename+"_/condor.sub" )
                 njob = njob+1
             else:
