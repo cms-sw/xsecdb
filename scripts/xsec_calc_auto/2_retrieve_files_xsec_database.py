@@ -42,6 +42,8 @@ with open('datasets.txt') as f:
                 else:
                     print "File found"
         os.system("chmod 755 getXsec/getXsec_"+filename+".sh")
+
+os.system("cp -r getXsec/ bgetXsec/")
         
         # f1=open("xsec_"+dataset.split('/')[1]+"_getfiles.sh", 'w')
         # f1.write('python '+xsec_script_folder+'/compute_cross_section.py -f '+dataset+' -c '+campaign+' -n 100000 -d '+datatier+' --skipexisting "True"')
