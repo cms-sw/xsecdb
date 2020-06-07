@@ -6,3 +6,4 @@ npm-debug.log
 logs/*
 scripts/cookie*
 jsconfig.json
+scripts/xsec_calc_auto/.crab_word
