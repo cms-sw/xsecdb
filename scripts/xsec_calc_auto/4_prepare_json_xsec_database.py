@@ -3,18 +3,10 @@ import os, sys
 overwrite=False
 # overwrite=True
 
-campaign="Moriond17"
-datatier="MINIAODSIM"
-
-crab_word = "" # put here your crab password
-crab_user = "" # put here your crab user (the one that gets returned after voms etc etc)
-
-xsec_script_folder="/your/folder/to/genproductions/test/calculateXSectionAndFilterEfficiency/" # change this folder
-json_output_folder="/your/folder/to/public/xsecdb/json/" # change this folder
+xsec_script_folder=os.getcwd()+"/genproductions/test/calculateXSectionAndFilterEfficiency/" # change this folder
+json_output_folder=os.getcwd()+"/json/" # change this folder
 
 os.system("mkdir -p "+json_output_folder)
-
-os.system("echo "+crab_word+" | voms-proxy-init -voms cms; cp /tmp/"+crab_user+" "+os.getcwd())
 
 with open('datasets.txt') as f:
     for dataset in f:
@@ -24,12 +16,17 @@ with open('datasets.txt') as f:
         if not os.path.isfile("xsec/xsec_"+primary_dataset_name+".log"):
             print "Input file not found"
         else:
+            # check the xsec log file
             if not os.path.isfile(json_output_folder+"/xsec_"+primary_dataset_name+".json") or overwrite:
                 with open("xsec/xsec_"+dataset.split('/')[1]+".log", 'r+') as f:
                     content = f.read()
                     if not 'final cross section' in content: 
                         print "Cross section computation not correctly performed, skipping"
+                        os.system("echo "+dataset+" >> dataset_noxsec.txt")
+                        if not 'Successfully opened file' in content:
+                            os.system("echo "+dataset+" >> dataset_filenotfound.txt")
                         continue
+            # check the existing json file
             if os.path.isfile(json_output_folder+"/xsec_"+primary_dataset_name+".json"):
                 with open(json_output_folder+"/xsec_"+dataset.split('/')[1]+".json", 'r') as f:
                     content = f.read()
@@ -98,7 +95,9 @@ with open('datasets.txt') as f:
             mcm_prepid = os.popen('wget -qO- https://cms-pdmv.cern.ch/mcm/public/restapi/requests/produces'+dataset).read()
             # print 'mcm_prepid',mcm_prepid
             if len(mcm_prepid) > 1 and "-" in mcm_prepid:
-                mcm_prepid = mcm_prepid.split('prepid')[1].split(',')[0].replace('\\": \\"',"").replace('\\"',"")
+                print mcm_prepid.split('prepid')[1].split(',')[0]
+                mcm_prepid = mcm_prepid.split('prepid')[1].split(',')[0].replace('\": ',"").replace('\"',"")
+                print mcm_prepid
                 os.system("sed -i -e 's/REPLACE_MCM_PREPID/"+str(mcm_prepid)+"/g' "+json_output_folder+"/xsec_"+primary_dataset_name+".json")
             
             with open(json_output_folder+"/xsec_"+dataset.split('/')[1]+".json", 'r+') as f:
