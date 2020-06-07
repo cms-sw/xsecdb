@@ -3,9 +3,10 @@ import os, sys
 campaign="Moriond17"
 datatier="MINIAODSIM"
 
-xsecdb_folder = "/your/folder/to/xsecdb/scripts" # change this folder
-json_output_folder="/your/folder/to/public/xsecdb/json/"
+xsecdb_folder = os.getcwd()+"/"              # the path for your xsec_calc_auto
+json_output_folder=os.getcwd()+"/json/"
 
+os.system("mkdir -p update_logs/")
 for filename in os.listdir(json_output_folder):
     
     if not filename.endswith(".json"): 
@@ -35,8 +36,8 @@ for filename in os.listdir(json_output_folder):
             print "json corrupted, skipping"
             continue
     
-    os.system(" cd "+xsecdb_folder+"/wrapper;\
-            python "+xsecdb_folder+"/xsdb_insert_file.py --file "+json_output_folder+"/xsec_"+primary_dataset_name+".json \
+    os.system(" cd "+xsecdb_folder+"../wrapper;\
+            python "+xsecdb_folder+"../xsdb_insert_file.py --file "+json_output_folder+"/xsec_"+primary_dataset_name+".json \
             2>&1 | tee "+xsecdb_folder+"/update_logs/filldb_"+primary_dataset_name+"_"+campaign+".log ; \
             cd -; \
             \n\n")
