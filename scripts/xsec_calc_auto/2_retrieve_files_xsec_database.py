@@ -2,13 +2,7 @@ import os, sys
 
 # THIS SCRIPT REQUIRES CMSSW AND VOMS ENVIRONMENT
 
-campaign="Moriond17"
-datatier="MINIAODSIM"
-
-crab_word = "" # put here your crab password
-crab_user = "" # put here your crab user (the one that gets returned after voms etc etc)
-
-xsec_script_folder="/your/folder/to/genproductions/test/calculateXSectionAndFilterEfficiency/" # change this folder
+xsec_script_folder=os.getcwd()+"/genproductions/test/calculateXSectionAndFilterEfficiency/" # change this folder
 
 os.system("mkdir -p getXsec")
 
