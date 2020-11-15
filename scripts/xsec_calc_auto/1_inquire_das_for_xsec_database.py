@@ -5,18 +5,20 @@ with open('.crab_word') as f0:
     crab_word=crab_word.rstrip()
 
 # campaign="RunIIFall17"
-campaign="Moriond17"
+campaign="Fall17"
 datatier="MINIAODSIM"
 xsec_script_folder=os.getcwd()+"/genproductions/test/calculateXSectionAndFilterEfficiency/" # change this folder
 
 # fetch datasets and store them in a file
 os.system("echo "+crab_word+" | voms-proxy-init -voms cms -valid 192:0")
-os.system("/cvmfs/cms.cern.ch/common/dasgoclient --query=\"dataset dataset=/*/*$"+campaign+"*/"+datatier+"\" --limit=10 |grep \"^/\"> datasets.txt")
+os.system("/cvmfs/cms.cern.ch/common/dasgoclient --query=\"dataset dataset=/*/*"+campaign+"*/"+datatier+"\" --limit=3000 |grep \"^/\"> datasets.txt")
 os.system("mkdir -p getfiles")
 
 with open("datasets.txt") as f:
-        lines = f.readlines()
-for line in lines:
+    lines = f.readlines()
+f.close()
+with open("datasets.txt",'w+') as f:
+    for line in lines:
         line = line.rstrip('\n')
         # print line
         PRIMARY_DATASET_NAME = line.split('/')[1]
@@ -32,5 +34,6 @@ for line in lines:
             print "File found"
         else:
            print "Creating file"
+           f.write(line+'\n')
            process_string="python "+xsec_script_folder+"/compute_cross_section.py -f "+line+" -c "+campaign+" -n 100000 -d "+datatier+" --skipexisting \"True\""
            os.system("echo \""+process_string+"\" > getfiles/getfiles_"+PRIMARY_DATASET_NAME+".sh")
