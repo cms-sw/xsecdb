@@ -1,8 +1,8 @@
 import subprocess
 import pycurl
 import json
-from StringIO import StringIO 
-from urllib import urlencode
+from io import StringIO 
+from urllib.parse import urlencode
 import os
 
 class RequestWrapper:

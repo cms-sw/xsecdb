@@ -21,25 +21,25 @@ njob=0
 with open('datasets.txt') as f:
     for dataset in f:
         dataset = dataset.rstrip('\n')
-        print dataset.split('/')[1]
+        print(dataset.split('/')[1])
         if not os.path.isfile("getXsec/getXsec_"+dataset.split('/')[1]+".sh"):
-            print "Input file not found"
+            print("Input file not found")
         else:
             if os.path.isfile("xsec/xsec_"+dataset.split('/')[1]+".log"):
                 with open("xsec/xsec_"+dataset.split('/')[1]+".log", 'r+') as f:
                     content = f.read()
                     if 'final cross section' in content: 
-                        print "Cross section already computed, skipping"
+                        print("Cross section already computed, skipping")
                         continue
             with open("getXsec/getXsec_"+dataset.split('/')[1]+".sh", 'r+') as f:
                 content = f.read()
                 if not '/store' in content:
-                    print "Input script corrupted, skipping"
+                    print("Input script corrupted, skipping")
                     continue
                 if not 'cvmfs' in content:
                     f.seek(0, 0)
                     f.write("cd /cvmfs/cms.cern.ch/"+scram_arch+"/cms/cmssw/"+cmssw+"/\n eval `scramv1 runtime -sh`\n cd "+os.getcwd()+"\n\n" + content)
-            print "Computing cross section"
+            print("Computing cross section")
             if queue != "":
                 os.system("chmod 755 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh; bsub -q "+queue+" -u ciaociao1 -C 0 "+os.getcwd()+"/getXsec/getXsec_"+dataset.split('/')[1]+".sh; sleep 2")
                 njob = njob+1

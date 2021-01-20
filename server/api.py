@@ -1,7 +1,7 @@
 import json
 import re
 import copy
-import logger
+from . import logger
 
 from flask import Flask, request, jsonify, make_response, render_template
 from pymongo import MongoClient
@@ -10,13 +10,13 @@ from bson.objectid import ObjectId
 from time import gmtime, strftime
 from flask_cors import CORS
 
-from fields import fields as record_structure
-from mailing import send_mail, send_mail_approve
-from utils import compile_regex, get_ordered_field_list,\
+from .fields import fields as record_structure
+from .mailing import send_mail, send_mail_approve
+from .utils import compile_regex, get_ordered_field_list,\
     get_user_groups, is_user_in_group, get_field_order, remove_readonly_fields
-from validate import validate_model, validate_model_update
-from decorators import auth_user_group
-from config import CONFIG
+from .validate import validate_model, validate_model_update
+from .decorators import auth_user_group
+from .config import CONFIG
 
 app = Flask(__name__, static_folder="../client/dist",
             template_folder="../client/templates")
@@ -56,7 +56,7 @@ def get_by_id(record_id):
         structure = copy.deepcopy(record_structure)
 
         # Map record fields to information in record_structure (type, disabled, required, order)
-        for key, value in record.iteritems():
+        for key, value in record.items():
             if key in structure:
                 result_dic[key] = structure[key]  # type, disabled, title
                 # overwrite value with true value from db
@@ -216,7 +216,7 @@ def search():
 @app.route('/api/fields', methods=['GET'])
 def get_fields():
     """ get list of record_structure field names (for selecting visible columns) """
-    result = sorted(record_structure.keys(), key=get_field_order)
+    result = sorted(list(record_structure.keys()), key=get_field_order)
     return make_response(jsonify(result), 200)
 
 
@@ -229,7 +229,7 @@ def approve_records():
     logger.debug("APPROVE:" + str(record_ids) + " - USER " + user_login)
 
     curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    object_ids = map(lambda x: ObjectId(x), record_ids)
+    object_ids = [ObjectId(x) for x in record_ids]
     collection.update_many({'_id': {'$in': object_ids}}, {
                            '$set': {
                                'status': 'approved',
