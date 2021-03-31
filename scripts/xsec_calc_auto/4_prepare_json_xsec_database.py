@@ -20,15 +20,15 @@ with open('datasets.txt') as f:
     for dataset in f:
         dataset = dataset.rstrip('\n')
         primary_dataset_name = dataset.split("/")[1]
-        print primary_dataset_name
+        print(primary_dataset_name)
         if not os.path.isfile("xsec/xsec_"+primary_dataset_name+".log"):
-            print "Input file not found"
+            print("Input file not found")
         else:
             if not os.path.isfile(json_output_folder+"/xsec_"+primary_dataset_name+".json") or overwrite:
                 with open("xsec/xsec_"+dataset.split('/')[1]+".log", 'r+') as f:
                     content = f.read()
                     if not 'final cross section' in content: 
-                        print "Cross section computation not correctly performed, skipping"
+                        print("Cross section computation not correctly performed, skipping")
                         continue
             if os.path.isfile(json_output_folder+"/xsec_"+primary_dataset_name+".json"):
                 with open(json_output_folder+"/xsec_"+dataset.split('/')[1]+".json", 'r') as f:
@@ -41,11 +41,11 @@ with open('datasets.txt') as f:
                         and (not "\"MCM\": \"\"," in content) \
                         and (not "\"MCM\": \"None\"," in content): 
                         # and (not "CITo" in primary_dataset_name) \
-                        print "json OK, skipping"
+                        print("json OK, skipping")
                         continue
                     else:
-                        print "json corrupted, reproducing"
-                        print content
+                        print("json corrupted, reproducing")
+                        print(content)
             os.system("cp test_xsecdb_insert.json "+json_output_folder+"/xsec_"+primary_dataset_name+".json")
             os.system("sed -i -e 's/REPLACE_PRIMARY_DATASET_NAME/"+primary_dataset_name+"/g' "+json_output_folder+"/xsec_"+primary_dataset_name+".json")
             os.system("sed -i -e 's/REPLACE_FULL_DATASET_NAME/"+dataset.replace("/","\/")+"/g' "+json_output_folder+"/xsec_"+primary_dataset_name+".json")
@@ -102,7 +102,7 @@ with open('datasets.txt') as f:
                 os.system("sed -i -e 's/REPLACE_MCM_PREPID/"+str(mcm_prepid)+"/g' "+json_output_folder+"/xsec_"+primary_dataset_name+".json")
             
             with open(json_output_folder+"/xsec_"+dataset.split('/')[1]+".json", 'r+') as f:
-                print "produced json:\n", f.read()
+                print("produced json:\n", f.read())
             # sys.exit()
 
     

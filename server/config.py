@@ -1,4 +1,4 @@
-import ConfigParser
+import configparser
 import os
 import json
 
@@ -9,7 +9,7 @@ class UpdatableStruct():
 app_dir = os.path.dirname(__file__)
 
 conf_dict = {}
-cfg_parser = ConfigParser.RawConfigParser()
+cfg_parser = configparser.RawConfigParser()
 a = cfg_parser.read(app_dir + "/config.cfg")
 
 for option in cfg_parser.options("strings"):
