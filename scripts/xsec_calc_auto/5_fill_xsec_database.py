@@ -6,6 +6,8 @@ datatier="MINIAODSIM"
 xsecdb_folder = "/your/folder/to/xsecdb/scripts" # change this folder
 json_output_folder="/your/folder/to/public/xsecdb/json/"
 
+os.system("mkdir -p "+os.getcwd()+"../update_logs")
+
 for filename in os.listdir(json_output_folder):
     
     if not filename.endswith(".json"): 
