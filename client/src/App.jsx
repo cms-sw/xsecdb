@@ -17,6 +17,11 @@ class App extends React.Component {
                     <div className="container-fluid">
                         <div className="navbar-header">
                             <Link to="/" className="navbar-brand">XSDB</Link>
+                            <a href="https://twiki.cern.ch/twiki/bin/view/CMS/XSecDBTool" className="navbar-text text-dark">TWiki</a>
+                            <a href="https://its.cern.ch/jira/projects/XSDB" className="navbar-text">Jira</a>
+                            <a href="https://twiki.cern.ch/twiki/bin/view/CMS/HowToGenXSecAnalyzer" className="navbar-text">GenXsecAnalyzer</a>
+                            <a href="https://twiki.cern.ch/twiki/bin/view/CMS/GenXsecTaskForce#Xsec_Tables_for_reference" className="navbar-text">Reference results</a>
+                            <a href="https://twiki.cern.ch/twiki/bin/view/CMS/MCKnownIssues" className="navbar-text" title="Known issues from GEN">Known issues</a>
                         </div>
                     </div>
                 </nav>

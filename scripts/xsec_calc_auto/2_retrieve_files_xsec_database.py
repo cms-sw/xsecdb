@@ -2,13 +2,7 @@ import os, sys
 
 # THIS SCRIPT REQUIRES CMSSW AND VOMS ENVIRONMENT
 
-campaign="Moriond17"
-datatier="MINIAODSIM"
-
-crab_word = "" # put here your crab password
-crab_user = "" # put here your crab user (the one that gets returned after voms etc etc)
-
-xsec_script_folder="/your/folder/to/genproductions/test/calculateXSectionAndFilterEfficiency/" # change this folder
+xsec_script_folder=os.getcwd()+"/genproductions/test/calculateXSectionAndFilterEfficiency/" # change this folder
 
 os.system("mkdir -p getXsec")
 
@@ -42,7 +36,7 @@ with open('datasets.txt') as f:
                                 f2.write(content2)
                 else:
                     print "File found"
-        os.system("chmod 755 getXsec/getXsec_"+dataset.split('/')[1]+".sh")
+        os.system("chmod 777 getXsec/getXsec_"+dataset.split('/')[1]+".sh")
         
         # f1=open("xsec_"+dataset.split('/')[1]+"_getfiles.sh", 'w')
         # f1.write('python '+xsec_script_folder+'/compute_cross_section.py -f '+dataset+' -c '+campaign+' -n 100000 -d '+datatier+' --skipexisting "True"')
