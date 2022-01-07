@@ -1,5 +1,5 @@
 Flask==1.0
-Flask-Cors==3.0.3
+Flask-Cors==3.0.9
 Flask-WTF==0.14.2
 Jinja2==2.11.3
 MarkupSafe==1.0
