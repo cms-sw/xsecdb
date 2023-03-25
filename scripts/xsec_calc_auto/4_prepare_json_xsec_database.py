@@ -63,7 +63,7 @@ with open('datasets.txt') as f:
             if len(center_of_mass_energy) > 1 and center_of_mass_energy[-1].isdigit():
                 center_of_mass_energy = int(center_of_mass_energy[-1])
             # print 'center_of_mass_energy',center_of_mass_energy
-            if center_of_mass_energy in [0.9,7,8,13,14]:
+            if center_of_mass_energy in [0.9,7,8,13,13.6,14]:
                 os.system("sed -i -e 's/REPLACE_ENERGY/"+str(center_of_mass_energy)+"/g' "+json_output_folder+"/xsec_"+primary_dataset_name+".json")
             matrix_element = "none"
             # "accuracy": "incorrect option selected. Allowed: ['LO', 'NLO', 'NNLO', 'NNNLO', 'unknown']"
