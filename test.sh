@@ -11,4 +11,5 @@ touch logs/access.log
 # install pip dependencies
 pip install -r requirements.txt
 # run server
+echo $PWD
 python main.py &> out.log &
