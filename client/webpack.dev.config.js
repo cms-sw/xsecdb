@@ -48,7 +48,7 @@ module.exports = {
   },
   externals: {
     'Config': JSON.stringify({
-      apiUrl: "http://0.0.0.0:5000/api",
+      apiUrl: "http://0.0.0.0:8080/api",
       columnParameterName: 'columns',
       discussionLinkColumnName: 'discussion'
     })
