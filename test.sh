@@ -3,5 +3,10 @@ cd client && npm install && npm install --save history
 # compile frontend files
 npm run compile && cd ..
 
+# create logs directory if doesn't exist
+mkdir -p logs
+
+# install pip dependencies
+pip install -r requirements.txt
 # run server
-python main.py
+python main.py &> out.log &
