@@ -30,6 +30,7 @@ collection = db.xsdbCollection
 
 @app.route('/', methods=['GET'])
 def index():
+    print(os.listdir())
     return render_template('index.html')
 
 
