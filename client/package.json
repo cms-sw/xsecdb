@@ -4,7 +4,7 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "webpack-dev-server --public 0.0.0.0:8080 --port 5000 --hot --host 0.0.0.0 --config webpack.dev.config.js",
+    "start": "webpack-dev-server --public 0.0.0.0:8080 --port 8080 --hot --host 0.0.0.0 --config webpack.dev.config.js",
     "compile": "webpack -p --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
