@@ -5,6 +5,8 @@ npm run compile && cd ..
 
 # create logs directory if doesn't exist
 mkdir -p logs
+touch logs/error.log
+touch logs/access.log
 
 # install pip dependencies
 pip install -r requirements.txt
