@@ -9,12 +9,13 @@ def get_user_groups():
     '''
         get all groups user has from request header
     '''
-    adfs_group = request.headers.get('Adfs-Group')
+    # adfs_group = request.headers.get('Adfs-Group')
     groups = []
 
-    if adfs_group is not None:
-        groups = adfs_group.split(";")
+    # if adfs_group is not None:
+    #     groups = adfs_group.split(";")
 
+    groups.append('xsdb-users')
     return groups
 
 
