@@ -19,8 +19,8 @@ from validate import validate_model, validate_model_update
 from decorators import auth_user_group
 from config import CONFIG
 
-app = Flask(__name__, static_folder="../client/dist",
-            template_folder="../client/templates")
+app = Flask(__name__, static_folder="client/dist",
+            template_folder="client/templates")
 # CORS(app)
 
 client = MongoClient(CONFIG.DB_URL)
