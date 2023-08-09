@@ -2,6 +2,7 @@ import json
 import re
 import copy
 import logger
+import os
 
 from flask import Flask, request, jsonify, make_response, render_template
 from pymongo import MongoClient
@@ -29,7 +30,6 @@ collection = db.xsdbCollection
 
 @app.route('/', methods=['GET'])
 def index():
-    print(os.listdir())
     return render_template('index.html')
 
 
