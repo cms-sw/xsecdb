@@ -5,7 +5,7 @@ require('es6-promise').polyfill()
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
-  template: + '/public/index.html',
+  template: __dirname + '/public/index.html',
   hash: true,
   filename: 'index.html',
   inject: 'body'
@@ -21,7 +21,7 @@ module.exports = {
     './src/index.jsx'
   ],
   output: {
-    path: '/dist',
+    path: __dirname + '/dist',
     filename: 'bundle.js',
     publicPath: '/'
   },
@@ -55,7 +55,7 @@ module.exports = {
   },
   plugins: [HTMLWebpackPluginConfig, HotReloader],
   devServer: {
-    contentBase: '/dist',
+    contentBase: __dirname + '/dist',
     hot: true,
     historyApiFallback: true
   }
