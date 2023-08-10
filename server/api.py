@@ -103,7 +103,7 @@ def get_empty():
 
 
 @app.route('/api/insert', methods=['POST'])
-@auth_user_group(0)
+@auth_user_group(1)
 def insert():
     record = request.get_json()
     logger.debug("INSERT " + str(record))
@@ -139,7 +139,7 @@ def insert():
 
 
 @app.route('/api/update/<record_id>', methods=['POST'])
-@auth_user_group(0)
+@auth_user_group(1)
 def update(record_id):
     record = request.get_json()
     logger.debug("UPDATE " + str(record))
