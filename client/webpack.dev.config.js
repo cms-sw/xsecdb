@@ -21,7 +21,7 @@ module.exports = {
     './src/index.jsx'
   ],
   output: {
-    path: __dirname + '/dist',
+    path: '/dist',
     filename: 'bundle.js',
     publicPath: '/'
   },
@@ -55,7 +55,7 @@ module.exports = {
   },
   plugins: [HTMLWebpackPluginConfig, HotReloader],
   devServer: {
-    contentBase: __dirname + '/dist',
+    contentBase: '/dist',
     hot: true,
     historyApiFallback: true
   }
