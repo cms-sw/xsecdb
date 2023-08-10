@@ -69,9 +69,7 @@ class PanelHeader extends React.Component {
                         }
                         {
                             isApproval() &&
-                            <Link to="/edit">
-                                <button type="button" className="btn btn-success">New record</button>
-                            </Link>
+                            <button type="button" className="btn btn-success" onClick="/edit">New record</button>
                         }
                     </div>
                 </div>
