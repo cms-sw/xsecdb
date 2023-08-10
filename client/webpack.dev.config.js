@@ -5,7 +5,7 @@ require('es6-promise').polyfill()
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
-  template: __dirname + '/public/index.html',
+  template: + '/public/index.html',
   hash: true,
   filename: 'index.html',
   inject: 'body'
