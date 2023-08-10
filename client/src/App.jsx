@@ -27,7 +27,7 @@ class App extends React.Component {
                 </nav>
                 <Switch>
                     <Route exact path="/" component={SearchPage} />
-                    {/* <Route path="/edit/:recordId?" component={EditPage} /> */}
+                    <Route path="/edit/:recordId?" component={EditPage} />
                     <Route component={ () => <h1>404: We cannot find what you are looking for...</h1> } /> 
                 </Switch>
 
