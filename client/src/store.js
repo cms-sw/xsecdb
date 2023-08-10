@@ -5,7 +5,7 @@ import { routerMiddleware } from 'react-router-redux'
 
 import rootReducer from './rootReducer';
 
-const history = createHistory({ basename: '/xsdb' });
+const history = createHistory({ basename: '/' });
 const routerware = routerMiddleware(history);
 
 const defaultState = {
