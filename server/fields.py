@@ -102,7 +102,7 @@ fields = {
     "energy": {
         'title': "energy",
         'type': "select",
-        'options': ["6", "7", "8", "13", "14"],
+        'options': ["6", "7", "8", "13", "13.6", "14"],
         'value': "6",
         'disabled': False,
         'required': True,
