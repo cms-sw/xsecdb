@@ -112,7 +112,8 @@ def insert():
     error_obj = validate_model(record)
 
     if not error_obj:
-        user_login = request.headers.get("Adfs-Login")
+        # user_login = request.headers.get("Adfs-Login")
+        user_login = request.headers.get("X-Forwarded-User")
         curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
         remove_readonly_fields(record)
@@ -147,8 +148,8 @@ def update(record_id):
     error_obj = validate_model_update(record)
 
     if not error_obj:
-        user_login = request.headers.get("Adfs-Login")
-
+        # user_login = request.headers.get("Adfs-Login")
+        user_login = request.headers.get("X-Forwarded-User")
         remove_readonly_fields(record)
 
         record['modifiedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -226,8 +227,8 @@ def get_fields():
 @auth_user_group(1)  # Role: xsdb-approval or higher
 def approve_records():
     record_ids = json.loads(request.data)
-    user_login = request.headers.get("Adfs-Login") or ""
-
+    # user_login = request.headers.get("Adfs-Login") or ""
+    user_login = request.headers.get("X-Forwarded-User") or ""
     logger.debug("APPROVE:" + str(record_ids) + " - USER " + user_login)
 
     curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
