@@ -18,7 +18,7 @@ def get_user_groups():
     #     groups = adfs_group.split(";")
 
     groups.append('xsdb-users')
-    print(reqeust.headers.get('X-Forwarded-User'))
+    print(request.headers.get('X-Forwarded-User'))
     print(request.headers.get('X-Forwarded-Groups'))
     return groups
 
