@@ -71,7 +71,7 @@ class PanelHeader extends React.Component {
                         }
                         {
                             isApproval() &&
-                            <Link to="/edit" className="btn btn-success">
+                            <Link to="/edit">
                             <button type="button" style={{ marginRight: '5px' }}
                             className="btn btn-success">
                                     New record
