@@ -20,6 +20,15 @@ def get_user_groups():
     groups.append('xsdb-users')
     print(request.headers.get('X-Forwarded-User'))
     print(request.headers.get('X-Forwarded-Groups'))
+    group_map = {
+        'xsdb-users': 'default-role',
+        'xsdb-admins': 'admins-rule',
+        'xsdb-approval': 'approval-rule',
+    }
+    for group in request.headers.get('X-Forwarded-Groups').split(','):
+        if group in group_map:
+            groups.append(group_map[group])
+    print(groups)
     return groups
 
 
