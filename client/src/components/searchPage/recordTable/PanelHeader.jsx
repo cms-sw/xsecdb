@@ -71,7 +71,10 @@ class PanelHeader extends React.Component {
                             isApproval() &&
                             <button type="button" 
                                 className="btn btn-success" 
-                                onClick={"location.href='./edit'"}>
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    window.location.href='./edit';
+                                    }}>
                                     New record
                             </button>
                         }
