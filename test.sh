@@ -1,4 +1,5 @@
 # install frontend dependencies
+export NODE_ENV=development
 cd client && npm install && npm install --save history
 # compile frontend files
 npm run compile && cd ..
