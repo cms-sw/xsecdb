@@ -23,7 +23,7 @@ def get_user_groups():
     group_map = {
         'default-role':'xsdb-users',
         'admins-rule':'xsdb-admins',
-        'approval-rule':'xsdb-approval',
+        'approval-role':'xsdb-approval',
     }
     for group in request.headers.get('X-Forwarded-Groups').split(','):
         if group in group_map:
