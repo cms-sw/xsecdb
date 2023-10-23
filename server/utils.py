@@ -10,12 +10,16 @@ def get_user_groups():
         get all groups user has from request header
     '''
     # adfs_group = request.headers.get('Adfs-Group')
+    ## test here for new SSO
+    
     groups = []
 
     # if adfs_group is not None:
     #     groups = adfs_group.split(";")
 
     groups.append('xsdb-users')
+    print(reqeust.headers.get('X-Forwarded-User'))
+    print(request.headers.get('X-Forwarded-Groups'))
     return groups
 
 
