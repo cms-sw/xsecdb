@@ -17,13 +17,13 @@ def get_user_groups():
     # if adfs_group is not None:
     #     groups = adfs_group.split(";")
 
-    groups.append('xsdb-users')
+    # groups.append('xsdb-users')
     print(request.headers.get('X-Forwarded-User'))
     print(request.headers.get('X-Forwarded-Groups'))
     group_map = {
-        'xsdb-users': 'default-role',
-        'xsdb-admins': 'admins-rule',
-        'xsdb-approval': 'approval-rule',
+        'default-role':'xsdb-users',
+        'admins-rule':'xsdb-admins',
+        'approval-rule':'xsdb-approval',
     }
     for group in request.headers.get('X-Forwarded-Groups').split(','):
         if group in group_map:
