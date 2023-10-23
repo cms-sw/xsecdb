@@ -17,6 +17,7 @@ def send_mail(body, subject, recipients, **kwargs):
 
     try:
         msg.attach(MIMEText(body))
+        print msg
         smtpObj = smtplib.SMTP()
         smtpObj.connect()
         smtpObj.sendmail(sender, recipients, msg.as_string())
