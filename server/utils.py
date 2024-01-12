@@ -9,12 +9,26 @@ def get_user_groups():
     '''
         get all groups user has from request header
     '''
-    adfs_group = request.headers.get('Adfs-Group')
+    # adfs_group = request.headers.get('Adfs-Group')
+    ## test here for new SSO
+    
     groups = []
 
-    if adfs_group is not None:
-        groups = adfs_group.split(";")
+    # if adfs_group is not None:
+    #     groups = adfs_group.split(";")
 
+    # groups.append('xsdb-users')
+    print(request.headers.get('X-Forwarded-User'))
+    print(request.headers.get('X-Forwarded-Groups'))
+    group_map = {
+        'default-role':'xsdb-users',
+        'admins-rule':'xsdb-admins',
+        'approval-role':'xsdb-approval',
+    }
+    for group in request.headers.get('X-Forwarded-Groups').split(','):
+        if group in group_map:
+            groups.append(group_map[group])
+    print(groups)
     return groups
 
 

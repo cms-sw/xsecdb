@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 import { isApproval, isUser } from '../../../auth/AuthService';
 
+
+
 const style = {
     heading: {
         backgroundColor: "#f5f5f5"
@@ -68,9 +70,12 @@ class PanelHeader extends React.Component {
                             </button>
                         }
                         {
-                            isUser() &&
+                            isApproval() &&
                             <Link to="/edit">
-                                <button type="button" className="btn btn-success">New record</button>
+                            <button type="button" style={{ marginRight: '5px' }}
+                            className="btn btn-success">
+                                    New record
+                            </button>
                             </Link>
                         }
                     </div>
@@ -125,3 +130,4 @@ PanelHeader.propTypes = {
 }
 
 export default PanelHeader;
+

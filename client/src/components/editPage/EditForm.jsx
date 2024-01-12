@@ -32,7 +32,7 @@ class EditForm extends React.Component {
                 <div className="panel-footer">
                     <div style={style.left}>
                         {
-                            isUser() &&
+                            isApproval() &&
                             <button type="button" className="btn btn-success"
                                 onClick={this.props.onSaveRecord}>Save
                             </button>

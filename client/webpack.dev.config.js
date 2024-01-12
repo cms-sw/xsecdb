@@ -16,7 +16,7 @@ var HotReloader = new webpack.HotModuleReplacementPlugin();
 module.exports = {
   devtool: 'source-map',
   entry: [
-    'webpack-dev-server/client?http://188.185.74.109:8080',
+    'webpack-dev-server/client?http://0.0.0.0:8080',
     'webpack/hot/dev-server',
     './src/index.jsx'
   ],
@@ -48,7 +48,7 @@ module.exports = {
   },
   externals: {
     'Config': JSON.stringify({
-      apiUrl: "http://188.185.74.109:5000/api",
+      apiUrl: "http://0.0.0.0:5000/api",
       columnParameterName: 'columns',
       discussionLinkColumnName: 'discussion'
     })

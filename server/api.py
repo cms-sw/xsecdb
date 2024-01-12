@@ -2,6 +2,7 @@ import json
 import re
 import copy
 import logger
+import os
 
 from flask import Flask, request, jsonify, make_response, render_template
 from pymongo import MongoClient
@@ -29,6 +30,7 @@ collection = db.xsdbCollection
 
 @app.route('/', methods=['GET'])
 def index():
+    logger.debug(os.listdir('./'))
     return render_template('index.html')
 
 
@@ -101,7 +103,7 @@ def get_empty():
 
 
 @app.route('/api/insert', methods=['POST'])
-@auth_user_group(0)
+@auth_user_group(1)
 def insert():
     record = request.get_json()
     logger.debug("INSERT " + str(record))
@@ -110,7 +112,8 @@ def insert():
     error_obj = validate_model(record)
 
     if not error_obj:
-        user_login = request.headers.get("Adfs-Login")
+        # user_login = request.headers.get("Adfs-Login")
+        user_login = request.headers.get("X-Forwarded-User")
         curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
         remove_readonly_fields(record)
@@ -137,7 +140,7 @@ def insert():
 
 
 @app.route('/api/update/<record_id>', methods=['POST'])
-@auth_user_group(0)
+@auth_user_group(1)
 def update(record_id):
     record = request.get_json()
     logger.debug("UPDATE " + str(record))
@@ -145,8 +148,8 @@ def update(record_id):
     error_obj = validate_model_update(record)
 
     if not error_obj:
-        user_login = request.headers.get("Adfs-Login")
-
+        # user_login = request.headers.get("Adfs-Login")
+        user_login = request.headers.get("X-Forwarded-User")
         remove_readonly_fields(record)
 
         record['modifiedOn'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -224,8 +227,8 @@ def get_fields():
 @auth_user_group(1)  # Role: xsdb-approval or higher
 def approve_records():
     record_ids = json.loads(request.data)
-    user_login = request.headers.get("Adfs-Login") or ""
-
+    # user_login = request.headers.get("Adfs-Login") or ""
+    user_login = request.headers.get("X-Forwarded-User") or ""
     logger.debug("APPROVE:" + str(record_ids) + " - USER " + user_login)
 
     curr_date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
