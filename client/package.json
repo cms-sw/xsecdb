@@ -3,9 +3,6 @@
   "version": "0.0.1",
   "description": "",
   "main": "webpack.config.js",
-  "engines": {
-    "npm": "^6.14.10"
-  },
   "scripts": {
     "start": "webpack-dev-server --public 0.0.0.0:8080 --port 8080 --hot --host 0.0.0.0 --config webpack.dev.config.js",
     "compile": "webpack -p --config webpack.config.js",
