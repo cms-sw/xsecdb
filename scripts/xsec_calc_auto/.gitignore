@@ -1,0 +1,8 @@
+genproductions/
+command_script/
+condor/
+json/
+fetch_files/
+insert_xsdb_logs/
+user_config.yaml
+*.txt

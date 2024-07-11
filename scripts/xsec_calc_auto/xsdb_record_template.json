@@ -1,0 +1,18 @@
+{
+    "records": [
+        {
+            "DAS": "$DAS",
+            "comments": "Automatically computed",
+            "process_name": "$process_name",
+            "accuracy": "$accuracy", 
+            "cross_section": "$cross_section", 
+            "energy": "$energy", 
+            "total_uncertainty": "$total_uncertainty", 
+            "equivalent_lumi": "$equivalent_lumi", 
+            "fraction_negative_weight": "$fraction_negative_weight", 
+            "matrix_generator": "$matrix_generator", 
+            "shower": "$shower", 
+            "MCM": "$MCM"
+        }
+    ]
+}
