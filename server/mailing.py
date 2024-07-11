@@ -17,13 +17,13 @@ def send_mail(body, subject, recipients, **kwargs):
 
     try:
         msg.attach(MIMEText(body))
-        print msg
+        print(msg)
         smtpObj = smtplib.SMTP()
         smtpObj.connect()
         smtpObj.sendmail(sender, recipients, msg.as_string())
         smtpObj.close()
     except Exception as e:
-        print "Error: unable to send email", e.__class__, e.message
+        print("Error: unable to send email", e.__class__, e.message)
 
 
 def send_mail_approve(record_id):
