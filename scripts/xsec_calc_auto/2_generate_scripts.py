@@ -3,11 +3,9 @@
 import os, yaml
 
 # For Run3
-scram_arch = "slc7_amd64_gcc11"
-cmssw = "CMSSW_13_0_16"
+#cmssw = "CMSSW_13_0_16"
 # For RunII
-#scram_arch = "slc7_amd64_gcc700"
-#cmssw = "CMSSW_10_6_0"
+cmssw = "CMSSW_10_6_0"
 
 def generate_command_scripts(indir='./fetch_files', outdir='./command_script'):
     os.system(f'rm -rf {outdir}')
@@ -82,7 +80,7 @@ def generate_condor_scripts(indir='./command_script', condor_dir='./condor', mod
 
         if mode == 'local':
             print("Computing cross section for process")
-            os.system(f"cd /cvmfs/cms.cern.ch/{scram_arch}/cms/cmssw/{cmssw}/; eval `scramv1 runtime -sh`; cd -; sh {command_script}")
+            os.system(f"cmsrel {cmssw}; cd {cmssw}/src; eval `scramv1 runtime -sh`; cd -; sh {command_script}")
         elif mode == 'condor':
             print("Generating condor files")
             log_file = os.path.join(condor_dir, f'log/{process_name}.log')
@@ -101,7 +99,7 @@ def generate_condor_scripts(indir='./command_script', condor_dir='./condor', mod
                 f.write("export X509_USER_PROXY=$1\n")
                 f.write("voms-proxy-info -all -file $1\n")
                 f.write("source /cvmfs/cms.cern.ch/cmsset_default.sh\n")
-                f.write(f"cd /cvmfs/cms.cern.ch/{scram_arch}/cms/cmssw/{cmssw}/; eval `scramv1 runtime -sh`; cd - \n\n")
+                f.write(f"cmsrel {cmssw}; cd {cmssw}/src; eval `scramv1 runtime -sh`; cd - \n\n")
                 f.write(command)
                 f.seek(0, 2)
             os.system(f"chmod 777 {exec_script}")
@@ -112,7 +110,7 @@ def generate_condor_scripts(indir='./command_script', condor_dir='./condor', mod
                 f.write("universe = vanilla\n")
                 f.write(f"arguments = {proxy_path}\n")
                 f.write(f"executable = {exec_script}\n")
-                f.write("requirements = (OpSysAndVer =?= \"CentOS7\")\n")
+                #f.write("requirements = (OpSysAndVer =?= \"CentOS7\")\n")
                 f.write(f"transfer_input_files = {genXsec_cfg}\n")
                 f.write("+JobFlavour = testmatch\n")
                 f.write("should_transfer_files = YES\n")
@@ -126,5 +124,5 @@ def generate_condor_scripts(indir='./command_script', condor_dir='./condor', mod
 
 
 if __name__ == "__main__":
-    generate_command_scripts(indir='./fetch_files', outdir='./command_script')
+    #generate_command_scripts(indir='./fetch_files', outdir='./command_script')
     generate_condor_scripts(indir='./command_script', condor_dir='./condor', mode='condor')

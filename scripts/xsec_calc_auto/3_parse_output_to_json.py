@@ -66,6 +66,7 @@ def parse_condor_output_to_json(infile = 'datasets.txt', condor_dir = './condor'
         # ToDo
         allowed_energy = ['0.9', '7', '8', '13', '13.6', '14']
         if energy not in allowed_energy:
+            continue
             raise ValueError(f"energy of {process_name} is {energy}: not in {allowed_energy}!")
         record['energy'] = energy
         

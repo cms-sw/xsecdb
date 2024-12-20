@@ -2,7 +2,7 @@
 import os, pycurl, json, os, io, yaml
 
 
-CAMPAIGN = "Run3"
+CAMPAIGN = "RunII"
 DATATIER = "MINIAODSIM"
 DATASET = f"/*/*{CAMPAIGN}*/{DATATIER}"
 
