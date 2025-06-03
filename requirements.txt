@@ -2,7 +2,7 @@ Flask==1.0
 Flask-Cors==3.0.3
 Flask-WTF==0.14.2
 Jinja2==2.11.3
-MarkupSafe==1.0
+MarkupSafe>=2.0.1,<2.2
 WTForms==2.1
 Werkzeug==0.12.2
 click==6.7
@@ -10,5 +10,5 @@ itsdangerous==0.24
 ordereddict==1.1
 pymongo==3.4.0
 six==1.10.0
-
+pymongo==4.3
  
