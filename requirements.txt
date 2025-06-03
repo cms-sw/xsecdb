@@ -5,7 +5,7 @@ Jinja2==3.0.3
 MarkupSafe==2.0.1
 WTForms==2.1
 Werkzeug>=0.14
-click==6.7
+click==7.1.2
 itsdangerous==2.0.0
 ordereddict==1.1
 pymongo==4.3.2
