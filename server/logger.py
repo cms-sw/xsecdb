@@ -1,12 +1,13 @@
 """
     Logger functions and handlers
 """
-import logging
+import logging, os
 import logging.handlers
 
 maxBytes = 100000
 backupCount = 50
 
+os.makedirs('logs', exist_ok=True)
 file_error = "logs/error.log"
 file_access = "logs/access.log"
 

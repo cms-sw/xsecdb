@@ -3,7 +3,7 @@
 client/node_modules
 client/dist
 npm-debug.log
-logs/*
+logs/
 scripts/cookie*
 jsconfig.json
 scripts/xsec_calc_auto/.crab_word
