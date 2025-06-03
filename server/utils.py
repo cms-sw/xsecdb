@@ -52,7 +52,7 @@ def compile_regex(in_dic):
     '''
         compile value strings in mongo search query
     '''
-    for key, value in in_dic.iteritems():
+    for key, value in in_dic.items():
         if key != "$or" and key != "$and":
             in_dic[key] = re.compile(value, re.I)
         else:
@@ -77,7 +77,7 @@ def get_ordered_field_list(record_dict):
         transform record_structure dictionary into ordered list
     '''
     result = []
-    result_ = sorted(record_dict.iteritems(), key=lambda x: get_field_order(x[0]))
+    result_ = sorted(record_dict.items(), key=lambda x: get_field_order(x[0]))
     for tupl in result_:
         dic = tupl[1]
         dic['name'] = tupl[0]
@@ -90,7 +90,7 @@ def remove_readonly_fields(record_request):
         remove read only fields from users request
     '''
 
-    read_only_fields = [key for key, value in record_structure.iteritems() if value.get('read_only', False)]
+    read_only_fields = [key for key, value in record_structure.items() if value.get('read_only', False)]
     
     for field_name in read_only_fields:
         record_request.pop(field_name, None)

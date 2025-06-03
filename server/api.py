@@ -58,7 +58,7 @@ def get_by_id(record_id):
         structure = copy.deepcopy(record_structure)
 
         # Map record fields to information in record_structure (type, disabled, required, order)
-        for key, value in record.iteritems():
+        for key, value in record.items():
             if key in structure:
                 result_dic[key] = structure[key]  # type, disabled, title
                 # overwrite value with true value from db
