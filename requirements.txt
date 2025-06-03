@@ -4,7 +4,7 @@ Flask-WTF==0.14.2
 Jinja2==2.11.3
 MarkupSafe>=2.0.1,<2.2
 WTForms==2.1
-Werkzeug==0.12.2
+Werkzeug>=0.14
 click==6.7
 itsdangerous==0.24
 ordereddict==1.1
