@@ -8,6 +8,6 @@ Werkzeug==0.12.2
 click==6.7
 itsdangerous==0.24
 ordereddict==1.1
-pymongo==4.3
+pymongo==4.3.2
 six==1.10.0
  
