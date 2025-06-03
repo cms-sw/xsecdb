@@ -1,10 +1,10 @@
 import smtplib
-import logger
 
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
-from email.Utils import COMMASPACE, formatdate
-from config import CONFIG
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import COMMASPACE, formatdate
+from . import logger
+from .config import CONFIG
 
 def send_mail(body, subject, recipients, **kwargs):
     sender = CONFIG.MAIL_SEND_FROM
@@ -17,13 +17,13 @@ def send_mail(body, subject, recipients, **kwargs):
 
     try:
         msg.attach(MIMEText(body))
-        print msg
+        print(msg)
         smtpObj = smtplib.SMTP()
         smtpObj.connect()
         smtpObj.sendmail(sender, recipients, msg.as_string())
         smtpObj.close()
     except Exception as e:
-        print "Error: unable to send email", e.__class__, e.message
+        print("Error: unable to send email", e.__class__, e.message)
 
 
 def send_mail_approve(record_id):

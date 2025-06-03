@@ -1,8 +1,8 @@
 import re
-import logger
 from flask import request
-from config import CONFIG
-from fields import fields as record_structure
+from . import logger
+from .config import CONFIG
+from .fields import fields as record_structure
 
 
 def get_user_groups():
