@@ -1,6 +1,6 @@
-import logger
 import re
-from fields import fields as record_structure
+from . import logger
+from .fields import fields as record_structure
 
 re_whitespace = re.compile(r'\s+')
 
