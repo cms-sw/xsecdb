@@ -2,7 +2,7 @@
 import os, pycurl, json, os, io, yaml
 
 
-CAMPAIGN = "RunII"
+CAMPAIGN = "RunIII"
 DATATIER = "MINIAODSIM"
 DATASET = f"/*/*{CAMPAIGN}*/{DATATIER}"
 
@@ -22,15 +22,15 @@ def remove_datasets_existed_on_db(infile='./datasets.txt'):
     api_url = os.path.join(base_url, 'api')
 
     # you can also create this cookie manually
-    os.remove(os.path.expanduser("~/private/xsdbdev-cookie.txt"))
-    os.system(f"auth-get-sso-cookie -u {base_url} -o ~/private/xsdbdev-cookie.txt")
+    #os.remove(os.path.expanduser("~/private/xsdbdev-cookie.txt"))
+    #os.system(f"auth-get-sso-cookie -u {base_url} -o ~/private/xsdbdev-cookie.txt")
 
     c = pycurl.Curl()
     c.setopt(c.FOLLOWLOCATION, 1)
     c.setopt(c.COOKIEJAR, os.path.expanduser("~/private/xsdbdev-cookie.txt"))
     c.setopt(c.COOKIEFILE, os.path.expanduser("~/private/xsdbdev-cookie.txt"))
     c.setopt(c.HTTPHEADER, ['Content-Type:application/json', 'Accept:application/json'])
-    c.setopt(c.VERBOSE, False)  # set to True for debug
+    c.setopt(c.VERBOSE, True)  # set to True for debug
     c.setopt(c.URL, os.path.join(api_url, 'search'))
     c.setopt(c.POST, True)
 

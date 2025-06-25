@@ -80,8 +80,10 @@ def parse_condor_output_to_json(infile = 'datasets.txt', condor_dir = './condor'
             matrix_element, accuracy = "Madgraph", "NLO"
         elif "sherpa" in process_name:
             matrix_element, accuracy, shower = "Sherpa", "NLO", "Sherpa"
-        elif "pythia8" in process_name:
-            matrix_element, accuracy, shower = "Pythia8", "LO", "Pythia8"
+        if "pythia8" in process_name:
+            shower = "Pythia8"
+            if matrix_element == "none":
+                matrix_element, accuracy = "Pythia8", "LO"
         if accuracy not in ['LO', 'NLO', 'NNLO', 'NNNLO', 'unknown']:
             raise ValueError(f"accuracy of {process_name} is {accuracy}: not in ['LO', 'NLO', 'NNLO', 'NNNLO', 'unknown']!")
         record['matrix_generator'] = matrix_element
