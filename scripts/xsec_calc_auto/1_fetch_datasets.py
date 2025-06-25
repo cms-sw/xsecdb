@@ -22,8 +22,8 @@ def remove_datasets_existed_on_db(infile='./datasets.txt'):
     api_url = os.path.join(base_url, 'api')
 
     # you can also create this cookie manually
-    #os.remove(os.path.expanduser("~/private/xsdbdev-cookie.txt"))
-    #os.system(f"auth-get-sso-cookie -u {base_url} -o ~/private/xsdbdev-cookie.txt")
+    os.remove(os.path.expanduser("~/private/xsdbdev-cookie.txt"))
+    os.system(f"auth-get-sso-cookie -u {base_url} -o ~/private/xsdbdev-cookie.txt")
 
     c = pycurl.Curl()
     c.setopt(c.FOLLOWLOCATION, 1)
