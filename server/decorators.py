@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import request, make_response, jsonify
-from utils import get_user_groups, is_user_in_group
+from .utils import get_user_groups, is_user_in_group
 
 # Decorator wrapped into function which accepts required e-group level
 def auth_user_group(group_level):

@@ -1,6 +1,6 @@
-import logger
 import re
-from fields import fields as record_structure
+from . import logger
+from .fields import fields as record_structure
 
 re_whitespace = re.compile(r'\s+')
 
@@ -11,7 +11,7 @@ def validate_model(record):
     error_obj = {}
     
     # validate against required fields from record structure
-    for key, field in record_structure.iteritems():
+    for key, field in record_structure.items():
         validate_field_(field, key=key, value=record.get(key), error_obj=error_obj)
 
     logger.debug(error_obj)
@@ -25,7 +25,7 @@ def validate_model_update(record_part):
     '''
     error_obj = {}
 
-    for key, value in record_part.iteritems():
+    for key, value in record_part.items():
         field = record_structure.get(key)
 
         validate_field_(field, key, value, error_obj)

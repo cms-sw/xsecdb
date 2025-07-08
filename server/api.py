@@ -1,7 +1,6 @@
 import json
 import re
 import copy
-import logger
 import os
 
 from flask import Flask, request, jsonify, make_response, render_template
@@ -11,13 +10,14 @@ from bson.objectid import ObjectId
 from time import gmtime, strftime
 from flask_cors import CORS
 
-from fields import fields as record_structure
-from mailing import send_mail, send_mail_approve
-from utils import compile_regex, get_ordered_field_list,\
+from . import logger
+from .fields import fields as record_structure
+from .mailing import send_mail, send_mail_approve
+from .utils import compile_regex, get_ordered_field_list,\
     get_user_groups, is_user_in_group, get_field_order, remove_readonly_fields
-from validate import validate_model, validate_model_update
-from decorators import auth_user_group
-from config import CONFIG
+from .validate import validate_model, validate_model_update
+from .decorators import auth_user_group
+from .config import CONFIG
 
 app = Flask(__name__, static_folder="../client/dist",
             template_folder="../client/templates")
@@ -58,7 +58,7 @@ def get_by_id(record_id):
         structure = copy.deepcopy(record_structure)
 
         # Map record fields to information in record_structure (type, disabled, required, order)
-        for key, value in record.iteritems():
+        for key, value in record.items():
             if key in structure:
                 result_dic[key] = structure[key]  # type, disabled, title
                 # overwrite value with true value from db

@@ -4,4 +4,4 @@
 #
 # Usage: ./getCookie.sh
 
-env -i KRB5CCNAME="$KRB5CCNAME" cern-get-sso-cookie -u https://cms-gen-dev.cern.ch/xsdb -o ~/private/xsdbdev-cookie.txt --krb  -r
+env -i KRB5CCNAME="$KRB5CCNAME" cern-get-sso-cookie -u https://xsecdb-xsdb-official.app.cern.ch/ -o ~/private/xsdbdev-cookie.txt --krb  -r

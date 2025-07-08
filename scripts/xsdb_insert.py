@@ -64,6 +64,6 @@ parser.add_argument('--discussion', dest='discussion',
 
 args = parser.parse_args()
 args_dict = vars(args)
-request_dict = dict((key, value) for key, value in args_dict.iteritems() if value is not None)
+request_dict = dict((key, value) for key, value in args_dict.items() if value is not None)
 
 xsdb_req.insert(keyval_dict=request_dict)

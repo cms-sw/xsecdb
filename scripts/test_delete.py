@@ -25,7 +25,7 @@ with open('id_list', 'r') as f:
     lines = f.readlines()
     for line in lines:
         line = line.rstrip('\n')
-        print line
+        print(line)
         c.setopt(c.URL,api_url+'/delete/'+line)
         c.setopt(c.CUSTOMREQUEST, "DELETE")
         c.perform()
